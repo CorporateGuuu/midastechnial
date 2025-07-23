@@ -1,0 +1,19 @@
+```php
+<?php get_header(); ?>
+<main class="container">
+    <h1>Welcome to Your Store</h1>
+    <?php if (have_posts()) : ?>
+        <div class="posts">
+            <?php while (have_posts()) : the_post(); ?>
+                <article>
+                    <h2><?php the_title(); ?></h2>
+                    <?php the_content(); ?>
+                </article>
+            <?php endwhile; ?>
+        </div>
+    <?php else : ?>
+        <p>No content found.</p>
+    <?php endif; ?>
+</main>
+<?php get_footer(); ?>
+```
