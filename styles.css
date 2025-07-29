@@ -1,0 +1,250 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #000000; /* black background */
+  color: #ffffff; /* white text */
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header styles */
+header {
+  background-color: #111111; /* very dark black */
+  padding: 1rem 0;
+  border-bottom: 2px solid #bfa14a; /* gold border */
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-icon {
+  background-color: #bfa14a; /* gold */
+  color: #000000;
+  font-weight: 700;
+  font-size: 1.8rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+.logo-main {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.logo-sub {
+  font-size: 0.8rem;
+  color: #bfa14a; /* gold */
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #d42a2a; /* red accent */
+}
+
+/* Cart icon */
+.cart-icon {
+  font-size: 1.5rem;
+  color: #bfa14a; /* gold */
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hero section */
+.hero {
+  background-color: #111111; /* dark background */
+  padding: 4rem 0;
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+
+.hero-container {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.hero-text {
+  flex: 1 1 400px;
+}
+
+.hero-text h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #bfa14a; /* gold */
+}
+
+.hero-text p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #ddd;
+}
+
+.search-form {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.search-form input[type="search"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-form button {
+  background-color: #d42a2a; /* red */
+  border: none;
+  color: #fff;
+  padding: 0 1.5rem;
+  font-weight: 600;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+  background-color: #a02121;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.primary-btn {
+  background-color: #bfa14a; /* gold */
+  color: #000;
+  border-color: #bfa14a;
+}
+
+.primary-btn:hover {
+  background-color: #a68f3a;
+  border-color: #a68f3a;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: #bfa14a; /* gold */
+  border-color: #bfa14a;
+}
+
+.secondary-btn:hover {
+  background-color: #bfa14a;
+  color: #000;
+}
+
+/* Hero stats */
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+.hero-stats div {
+  text-align: center;
+}
+
+/* Hero image placeholder */
+.hero-image {
+  flex: 1 1 300px;
+  background-color: #222;
+  border-radius: 12px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bfa14a;
+  font-weight: 700;
+  font-size: 1.5rem;
+  user-select: none;
+}
+
+/* Footer */
+footer {
+  margin-top: 4rem;
+  padding: 1rem 0;
+  background-color: #111111;
+  text-align: center;
+  color: #bfa14a;
+  font-weight: 600;
+  border-top: 2px solid #bfa14a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-container {
+    flex-direction: column;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav ul li {
+    margin-bottom: 0.5rem;
+  }
+}
