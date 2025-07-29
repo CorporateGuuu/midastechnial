@@ -1,6 +1,5 @@
-```php
 <?php
-function mobilesentrix_theme_setup() {
+function nexustechhub_usa_theme_setup() {
     // Add theme support
     add_theme_support('woocommerce');
     add_theme_support('title-tag');
@@ -14,14 +13,13 @@ function mobilesentrix_theme_setup() {
     
     // Register navigation menu
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'mobilesentrix-theme'),
+        'primary' => __('Primary Menu', 'nexustechhub-usa-theme'),
     ));
 }
-add_action('wp_enqueue_scripts', 'mobilesentrix_theme_setup');
+add_action('wp_enqueue_scripts', 'nexustechhub_usa_theme_setup');
 
 // Add WooCommerce support for product gallery
 add_theme_support('wc-product-gallery-zoom');
 add_theme_support('wc-product-gallery-lightbox');
 add_theme_support('wc-product-gallery-slider');
 ?>
-```
