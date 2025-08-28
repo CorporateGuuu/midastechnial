@@ -1,10 +1,14 @@
 ```php
 <?php
 // ** MySQL settings - You can get this info from your web host ** //
-define('DB_NAME', 'your_database_name');
-define('DB_USER', 'your_database_user');
-define('DB_PASSWORD', 'your_database_password');
-define('DB_HOST', 'localhost');
+/**
+ * Database settings - Replace the placeholders below with your actual database credentials.
+ * You can get this info from your web host.
+ */
+define('DB_NAME', 'your_database_name'); // TODO: Replace with your database name
+define('DB_USER', 'your_database_user'); // TODO: Replace with your database user
+define('DB_PASSWORD', 'your_database_password'); // TODO: Replace with your database password
+define('DB_HOST', 'localhost'); // TODO: Replace with your database host if different
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 
@@ -14,15 +18,18 @@ define('WP_MEMORY_LIMIT', '256M');
 // Enable caching
 define('WP_CACHE', true);
 
-// Security keys (replace with unique keys from https://api.wordpress.org/secret-key/1.1/salt/)
-define('AUTH_KEY',         'your-unique-key');
-define('SECURE_AUTH_KEY',  'your-unique-key');
-define('LOGGED_IN_KEY',    'your-unique-key');
-define('NONCE_KEY',        'your-unique-key');
-define('AUTH_SALT',        'your-unique-key');
-define('SECURE_AUTH_SALT', 'your-unique-key');
-define('LOGGED_IN_SALT',   'your-unique-key');
-define('NONCE_SALT',       'your-unique-key');
+/**
+ * Security keys - Replace the placeholders below with unique keys.
+ * Generate your unique keys at https://api.wordpress.org/secret-key/1.1/salt/
+ */
+define('AUTH_KEY',         'your-unique-key'); // TODO: Replace with unique key
+define('SECURE_AUTH_KEY',  'your-unique-key'); // TODO: Replace with unique key
+define('LOGGED_IN_KEY',    'your-unique-key'); // TODO: Replace with unique key
+define('NONCE_KEY',        'your-unique-key'); // TODO: Replace with unique key
+define('AUTH_SALT',        'your-unique-key'); // TODO: Replace with unique key
+define('SECURE_AUTH_SALT', 'your-unique-key'); // TODO: Replace with unique key
+define('LOGGED_IN_SALT',   'your-unique-key'); // TODO: Replace with unique key
+define('NONCE_SALT',       'your-unique-key'); // TODO: Replace with unique key
 
 // Table prefix
 $table_prefix = 'wp_';

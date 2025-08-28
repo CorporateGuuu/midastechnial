@@ -1,10 +1,9 @@
-```php
-    <footer>
+<footer>
         <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.</p>
+            <p>© <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.</p>
+            <p>Contact us: +1-800-555-1234 | Professional mobile repair parts and tools - Nexus TechHub USA</p>
         </div>
     </footer>
     <?php wp_footer(); ?>
 </body>
 </html>
-```

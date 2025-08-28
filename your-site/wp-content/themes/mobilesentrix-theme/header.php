@@ -8,7 +8,11 @@
 <body <?php body_class(); ?>>
 <header id="masthead" class="site-header">
     <div class="site-branding">
-        <h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>" rel="home"><?php bloginfo('name'); ?></a></h1>
+        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+            <img src="<?php echo get_template_directory_uri(); ?>/images/logo.png" alt="<?php bloginfo('name'); ?> Logo" />
+        </a>
         <p class="site-description"><?php bloginfo('description'); ?></p>
     </div>
 </header>
+</body>
+</html>
