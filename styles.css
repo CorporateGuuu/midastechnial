@@ -30,6 +30,16 @@ nav ul li {
     margin: 20px 0;
 }
 
+.buyback {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.app-prompt {
+    text-align: center;
+    margin: 20px 0;
+}
+
 button {
     background-color: #0072ff;
     color: white;
@@ -42,14 +52,4 @@ button {
 
 button:hover {
     background-color: #005bb5;
-}
-
-.buyback {
-    text-align: center;
-    margin: 50px 0;
-}
-
-.app-prompt {
-    text-align: center;
-    margin: 20px 0;
 }
