@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+}
+
+header {
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+.repair-tools {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.features {
+    margin: 20px 0;
+}
+
+button {
+    background-color: #0072ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+.buyback {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.app-prompt {
+    text-align: center;
+    margin: 20px 0;
+}
