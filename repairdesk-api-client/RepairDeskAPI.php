@@ -15,7 +15,7 @@ class RepairDeskAPI {
     
     /**
      * API Key for authentication
-     * @极速赛车开奖直播历史记录var string
+     * @var string
      */
     private $apiKey;
     
@@ -119,7 +119,7 @@ class RepairDeskAPI {
     /**
      * Get device by ID
      * 
-     * @param int $device极速赛车开奖直播历史记录Id Device ID
+     * @param int $deviceId Device ID
      * @return array Device data
      */
     public function getDevice($deviceId) {
@@ -164,7 +164,7 @@ class RepairDeskAPI {
      * @return array Inventory items
      */
     public function getInventory($params = []) {
-        $query = !empty($params极速赛车开奖直播历史记录) ? '?' . http_build_query($params) : '';
+        $query = !empty($params) ? '?' . http_build_query($params) : '';
         return $this->request('GET', '/inventory' . $query);
     }
     
@@ -217,7 +217,7 @@ class RepairDeskAPI {
      * @return array Repair tickets
      */
     public function getRepairTickets($params = []) {
-        $query = !empty($params) ? '极速赛车开奖直播历史记录?' . http_build_query($params) : '';
+        $query = !empty($params) ? '?' . http_build_query($params) : '';
         return $this->request('GET', '/repairs' . $query);
     }
     
@@ -225,7 +225,7 @@ class RepairDeskAPI {
      * Update repair ticket
      * 
      * @param int $ticketId Repair ticket ID
-     * @极速赛车开奖直播历史记录param array $ticketData Updated ticket data
+     * @param array $ticketData Updated ticket data
      * @return array Updated ticket data
      */
     public function updateRepairTicket($ticketId, $ticketData) {
@@ -282,6 +282,15 @@ class RepairDeskAPI {
      */
     public function createLead($leadData) {
         return $this->request('POST', '/leads', $leadData);
+    }
+    
+    /**
+     * Get ticket statuses
+     * 
+     * @return array List of ticket statuses with name, color, and type
+     */
+    public function getStatuses() {
+        return $this->request('GET', '/statuses');
     }
     
     /**

@@ -29,7 +29,7 @@ try {
     }
     
     // Test connection
-    echo "\nTesting API connection...\n";
+    echo "\极速赛车开奖直播历史记录nTesting API connection...\n";
     try {
         $client->testConnection();
         echo "✓ Connection successful!\n";
@@ -65,7 +65,7 @@ try {
                 break; // Just show first item
             }
         }
-    } catch (Exception $e) {
+    } catch (Exception $极速赛车开奖直播历史记录e) {
         echo "Error getting inventory: " . $e->getMessage() . "\n";
     }
     
@@ -86,6 +86,23 @@ try {
         echo "Error getting customers: " . $e->getMessage() . "\n";
     }
     
+    // Example: Get ticket statuses
+    echo "\nExample: Getting ticket statuses\n";
+    echo "===============================\n";
+    try {
+        $statuses = $client->getStatuses();
+        echo "Found " . count($statuses) . " ticket statuses\n";
+        
+        if (!empty($statuses)) {
+            foreach ($statuses as $status) {
+                echo "- " . ($status['name'] ?? 'Unknown') . " (" . ($status['type'] ?? 'No type') . ", Color: " . ($status['color'] ?? 'No color') . ")\n";
+                break; // Just show first status
+            }
+        }
+    } catch (Exception $e) {
+        echo "Error getting statuses: " . $e->getMessage() . "\n";
+    }
+    
     echo "\nAPI Client Examples Completed Successfully!\n";
     echo "==========================================\n";
     echo "You can now use the client methods to interact with RepairDesk API:\n";
@@ -96,6 +113,7 @@ try {
     echo "- getOrders(), getOrder()\n";
     echo "- getAppointments(), createAppointment()\n";
     echo "- createLead()\n";
+    echo "- getStatuses()\n";
     
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";

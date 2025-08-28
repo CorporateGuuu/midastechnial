@@ -23,7 +23,7 @@ class RepairDeskAPIClient {
      * HTTP Client (cURL)
      * @var resource
      */
-    private $ch;
+    private $ch; // cURL handle
     
     /**
      * Debug mode
@@ -272,7 +272,7 @@ class RepairDeskAPIClient {
      * 
      * @param int $ticketId Repair ticket ID
      * @param array $ticketData Updated ticket data
-     |* @return array Updated ticket data
+     * @return array Updated ticket data
      */
     public function updateRepairTicket($ticketId, $ticketData) {
         return $this->request('PUT', "/repairs/$ticketId", $ticketData);
@@ -328,6 +328,15 @@ class RepairDeskAPIClient {
      */
     public function createLead($leadData) {
         return $this->request('POST', '/leads', $leadData);
+    }
+    
+    /**
+     * Get ticket statuses
+     * 
+     * @return array List of ticket statuses with name, color, and type
+     */
+    public function getStatuses() {
+        return $this->request('GET', '/statuses');
     }
     
     /**

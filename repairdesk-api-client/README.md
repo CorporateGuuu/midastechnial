@@ -193,6 +193,20 @@ The client supports the following endpoints:
 
 This project is open source and available under the MIT License.
 
+## API Documentation
+
+Detailed API documentation is available in multiple formats:
+
+1. **API_DOCUMENTATION.md** - Comprehensive human-readable documentation
+2. **openapi.yaml** - OpenAPI 3.0 specification for automated tooling
+
+### Viewing OpenAPI Documentation
+
+You can view the interactive API documentation using tools like:
+- [Swagger Editor](https://editor.swagger.io/)
+- [Redoc](https://redocly.github.io/redoc/)
+- Postman (import the openapi.yaml file)
+
 ## Support
 
 For issues with the API client, please check:
