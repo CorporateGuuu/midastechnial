@@ -58,12 +58,13 @@ try {
             echo "\n   Status Details:\n";
             echo "   " . str_repeat("-", 50) . "\n";
             
-            foreach ($statuses as $index => $status) {
-                echo "   " . ($index + 1) . ". " . ($status['name'] ?? 'Unknown') . "\n";
+            $i = 1;
+            foreach ($statuses as $status) {
+                echo "   " . $i . ". " . ($status['name'] ?? 'Unknown') . "\n";
                 echo "      Type: " . ($status['type'] ?? 'N/A') . "\n";
                 echo "      Color: " . ($status['color'] ?? 'N/A') . "\n";
                 echo "      ID: " . ($status['id'] ?? 'N/A') . "\n";
-                
+
                 // Check if it's a valid status object
                 if (isset($status['name']) && isset($status['type'])) {
                     echo "      ✓ Valid status object\n";
@@ -71,6 +72,7 @@ try {
                     echo "      ⚠ Missing required fields\n";
                 }
                 echo "\n";
+                $i++;
             }
             
             // Validate response structure
