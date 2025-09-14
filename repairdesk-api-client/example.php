@@ -117,11 +117,40 @@ try {
         echo "Error updating ticket status: " . $e->getMessage() . "\n";
     }
 
-    // Example: Create new repair ticket
-    echo "\nExample: Creating a new repair ticket\n";
-    echo "=====================================\n";
+    // Example: Create new repair ticket (Basic)
+    echo "\nExample: Creating a basic repair ticket\n";
+    echo "=======================================\n";
     try {
-        $ticketData = [
+        $basicTicketData = [
+            'devices' => [
+                [
+                    'imei' => '114231112421231',
+                    'public_comments' => 'Screen replacement needed',
+                    'status' => 'In Progress',
+                    'device' => '845618', // Device ID from RepairDesk
+                    'price' => 150.00,
+                    'assigned_to' => 10111, // Employee ID
+                    'repairCategId' => '34826' // Repair category ID
+                ]
+            ],
+            'summary' => [
+                'customer_id' => 388, // Customer ID from RepairDesk
+                'employee_id' => 10111 // Employee ID who created the ticket
+            ]
+        ];
+
+        echo "Creating basic ticket with minimal required fields...\n";
+        $response = $client->createTicket($basicTicketData);
+        echo "✓ Basic ticket created successfully: " . json_encode($response, JSON_PRETTY_PRINT) . "\n";
+    } catch (Exception $e) {
+        echo "✗ Error creating basic ticket: " . $e->getMessage() . "\n";
+    }
+
+    // Example: Create comprehensive repair ticket
+    echo "\nExample: Creating a comprehensive repair ticket\n";
+    echo "===============================================\n";
+    try {
+        $comprehensiveTicketData = [
             'devices' => [
                 [
                     'imei' => '114231112421231',
@@ -133,7 +162,7 @@ try {
                     'task_type' => 1,
                     'gst' => 14.894,
                     'device' => '845618',
-                    'staff_comments' => '',
+                    'staff_comments' => 'Customer reported screen issues',
                     'warranty' => '5',
                     'lineItemId' => 0,
                     'repairProdItems' => [
@@ -144,25 +173,25 @@ try {
                     ],
                     'line_discount' => 0,
                     'taxclass' => 28632,
-                    'device_location' => '',
+                    'device_location' => 'Front Desk',
                     'warranty_timeframe' => '3',
                     'Parts' => [
                         [
                             'product_id' => '7516552',
                             'name' => 'Huawei Mate 9 Screen Replacement Blk',
-                            'price' => '0.00',
+                            'price' => '120.00',
                             'quantity' => 1,
-                            'supplier' => '',
-                            'warranty_timeframe' => '',
-                            'warrenty' => '',
-                            'serials' => ['0' => ''],
-                            'sku' => ''
+                            'supplier' => 'Parts Supplier Inc',
+                            'warranty_timeframe' => '12',
+                            'warrenty' => '12',
+                            'serials' => ['0' => 'SN123456'],
+                            'sku' => 'HW-M9-SCR-BLK'
                         ]
                     ],
                     'supplied' => [],
                     'security_code' => '',
-                    'network' => '',
-                    'serial' => '',
+                    'network' => 'Unlocked',
+                    'serial' => 'HW987654321',
                     'price' => 184.105,
                     'due_on' => 1588156799,
                     'tax_inclusive' => '1',
@@ -184,18 +213,19 @@ try {
                 ]
             ],
             'summary' => [
-                'signature' => '',
-                'how_did_u_find_us' => '',
+                'signature' => 'Customer Signature',
+                'how_did_u_find_us' => 'Google Search',
                 'customer_id' => 388,
-                'estimate_id' => '',
+                'estimate_id' => 'EST-001',
                 'employee_id' => 10111
             ]
         ];
 
-        $response = $client->createTicket($ticketData);
-        echo "Ticket created successfully: " . json_encode($response) . "\n";
+        echo "Creating comprehensive ticket with all optional fields...\n";
+        $response = $client->createTicket($comprehensiveTicketData);
+        echo "✓ Comprehensive ticket created successfully: " . json_encode($response, JSON_PRETTY_PRINT) . "\n";
     } catch (Exception $e) {
-        echo "Error creating ticket: " . $e->getMessage() . "\n";
+        echo "✗ Error creating comprehensive ticket: " . $e->getMessage() . "\n";
     }
     
     echo "\nAPI Client Examples Completed Successfully!\n";

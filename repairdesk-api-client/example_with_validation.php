@@ -101,7 +101,7 @@ try {
                 'task_type' => 1,
                 'gst' => 14.894,
                 'device' => '845618',
-                'staff_comments' => '',
+                'staff_comments' => 'Customer reported screen issues',
                 'warranty' => '5',
                 'lineItemId' => 0,
                 'repairProdItems' => [
@@ -112,25 +112,25 @@ try {
                 ],
                 'line_discount' => 0,
                 'taxclass' => 28632,
-                'device_location' => '',
+                'device_location' => 'Front Desk',
                 'warranty_timeframe' => '3',
                 'Parts' => [
                     [
                         'product_id' => '7516552',
                         'name' => 'Huawei Mate 9 Screen Replacement Blk',
-                        'price' => '0.00',
+                        'price' => '120.00',
                         'quantity' => 1,
-                        'supplier' => '',
-                        'warranty_timeframe' => '',
-                        'warrenty' => '',
-                        'serials' => ['0' => ''],
-                        'sku' => ''
+                        'supplier' => 'Parts Supplier Inc',
+                        'warranty_timeframe' => '12',
+                        'warrenty' => '12',
+                        'serials' => ['0' => 'SN123456'],
+                        'sku' => 'HW-M9-SCR-BLK'
                     ]
                 ],
                 'supplied' => [],
                 'security_code' => '',
-                'network' => '',
-                'serial' => '',
+                'network' => 'Unlocked',
+                'serial' => 'HW987654321',
                 'price' => 184.105,
                 'due_on' => 1588156799,
                 'tax_inclusive' => '1',
@@ -152,10 +152,10 @@ try {
             ]
         ],
         'summary' => [
-            'signature' => '',
-            'how_did_u_find_us' => '',
+            'signature' => 'Customer Signature',
+            'how_did_u_find_us' => 'Google Search',
             'customer_id' => 388,
-            'estimate_id' => '',
+            'estimate_id' => 'EST-001',
             'employee_id' => 10111
         ]
     ];
@@ -180,6 +180,19 @@ try {
         echo "- devices: ✓ Is a non-empty array\n";
     } else {
         echo "- devices: ✗ Must be a non-empty array\n";
+    }
+
+    echo "\nExample: Testing createTicket with Validation\n";
+    echo "============================================\n";
+
+    try {
+        echo "Testing comprehensive ticket creation...\n";
+        $response = $client->createTicket($comprehensiveTicket);
+        echo "✓ Ticket created successfully!\n";
+        echo "Response: " . json_encode($response, JSON_PRETTY_PRINT) . "\n";
+    } catch (Exception $e) {
+        echo "✗ Error creating ticket: " . $e->getMessage() . "\n";
+        echo "This is expected if using dummy API key for validation testing.\n";
     }
     
     echo "\nError Handling Examples:\n";

@@ -432,13 +432,17 @@ paths:
     put:
       tags: [Repair Tickets]
       summary: Update ticket line item status
+      description: |
+        Update the status of a specific ticket line item. This endpoint allows changing
+        the status of individual device repairs within a ticket, with optional line item specification.
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
-          description: Ticket ID
+          description: Ticket ID to update
+          example: 12345
         - name: api_key
           in: query
           required: true
@@ -451,15 +455,79 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TicketStatusUpdateInput'
+            examples:
+              basic:
+                summary: Basic status update
+                value:
+                  status: "In Progress"
+              with_line_item:
+                summary: Status update with specific line item
+                value:
+                  status: "Completed"
+                  lineItemId: 456
       responses:
         '200':
-          $ref: '#/components/responses/Success'
+          description: Ticket status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Ticket status updated successfully"
+                  data:
+                    type: object
+                    description: Updated ticket data
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request - Invalid status data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Invalid status or line item ID"
+                  data:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "Ticket not found"
+                  data:
+                    type: object
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -467,6 +535,9 @@ paths:
     post:
       tags: [Repair Tickets]
       summary: Create ticket with comprehensive device and custom field data
+      description: |
+        Create a new repair ticket with detailed device information, custom fields, and customer data.
+        This endpoint supports complex ticket structures with multiple devices, parts, and custom field data.
       parameters:
         - name: api_key
           in: query
@@ -480,12 +551,84 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TicketInput'
+            examples:
+              basic:
+                summary: Basic ticket creation
+                value:
+                  devices:
+                    - imei: "114231112421231"
+                      public_comments: "Our team is working on it"
+                      status: "In Progress"
+                      device: "845618"
+                      price: 184.105
+                      assigned_to: 10111
+                      repairCategId: "34826"
+                  summary:
+                    customer_id: 388
+                    employee_id: 10111
+              comprehensive:
+                summary: Comprehensive ticket with all fields
+                value:
+                  devices:
+                    - imei: "114231112421231"
+                      public_comments: "Our team is working on it"
+                      public_comment_flag: 1
+                      PreConditions: []
+                      status: "In Progress"
+                      PostPreCategory: "34826"
+                      task_type: 1
+                      gst: 14.894
+                      device: "845618"
+                      staff_comments: ""
+                      warranty: "5"
+                      lineItemId: 0
+                      repairProdItems:
+                        - id: "7516047"
+                          name: "Huawei Mate 9 Screen Replacement Blk"
+                      line_discount: 0
+                      taxclass: 28632
+                      device_location: ""
+                      warranty_timeframe: "3"
+                      Parts:
+                        - product_id: "7516552"
+                          name: "Huawei Mate 9 Screen Replacement Blk"
+                          price: "0.00"
+                          quantity: 1
+                          supplier: ""
+                          warranty_timeframe: ""
+                          warrenty: ""
+                          serials:
+                            "0": ""
+                          sku: ""
+                      supplied: []
+                      security_code: ""
+                      network: ""
+                      serial: ""
+                      price: 184.105
+                      due_on: 1588156799
+                      tax_inclusive: "1"
+                      assigned_to: 10111
+                      repairCategId: "34826"
+                      images: []
+                  customFields:
+                    - racknumber:
+                        label: "Rack Number"
+                        value: "311"
+                      shipmentnum:
+                        label: "Shipment Number"
+                        value: "12344211"
+                  summary:
+                    signature: ""
+                    how_did_u_find_us: ""
+                    customer_id: 388
+                    estimate_id: ""
+                    employee_id: 10111
       responses:
         '200':
           description: Ticket created successfully
           content:
             application/json:
-             极速赛车开奖直播历史记录 schema:
+              schema:
                 type: object
                 properties:
                   success:
@@ -498,11 +641,34 @@ paths:
                     type: string
                     example: "Ticket was created successfully"
                   data:
-                    $ref: '#/components/s极速赛车开奖直播历史记录chemas/TicketResponse'
+                    $ref: '#/components/schemas/TicketResponse'
+        '400':
+          description: Bad Request - Invalid ticket data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Validation failed"
+                  data:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
   /orders:
     get:
