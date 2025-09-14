@@ -1,20 +1,108 @@
--- SQL schema for Supabase 'parts' table
+-- SQL schema for Supabase 'parts' table with enhanced security and performance
 
+-- Enable Row Level Security (RLS)
+ALTER TABLE IF EXISTS public.parts ENABLE ROW LEVEL SECURITY;
+
+-- Create the parts table with comprehensive constraints
 CREATE TABLE IF NOT EXISTS public.parts (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL CHECK (length(trim(name)) > 0),
   description TEXT,
-  price NUMERIC(10, 2),
-  category VARCHAR(100),
-  stock_quantity INTEGER DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  price NUMERIC(10, 2) CHECK (price >= 0),
+  category VARCHAR(100) NOT NULL CHECK (length(trim(category)) > 0),
+  stock_quantity INTEGER DEFAULT 0 CHECK (stock_quantity >= 0),
+  sku VARCHAR(100) UNIQUE NOT NULL CHECK (length(trim(sku)) > 0),
+  manufacturer VARCHAR(100),
+  model VARCHAR(100),
+  compatibility TEXT[], -- Array of compatible devices
+  warranty_period INTEGER DEFAULT 12 CHECK (warranty_period > 0), -- months
+  weight_grams INTEGER CHECK (weight_grams > 0),
+  dimensions_cm VARCHAR(50), -- e.g., "10x5x2"
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+  created_by VARCHAR(100),
+  updated_by VARCHAR(100)
 );
 
--- Index for faster search on name
+-- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_parts_name ON public.parts USING gin (to_tsvector('english', name));
+CREATE INDEX IF NOT EXISTS idx_parts_category ON public.parts (category);
+CREATE INDEX IF NOT EXISTS idx_parts_price ON public.parts (price);
+CREATE INDEX IF NOT EXISTS idx_parts_stock ON public.parts (stock_quantity);
+CREATE INDEX IF NOT EXISTS idx_parts_sku ON public.parts (sku);
+CREATE INDEX IF NOT EXISTS idx_parts_manufacturer ON public.parts (manufacturer);
+CREATE INDEX IF NOT EXISTS idx_parts_active ON public.parts (is_active);
+CREATE INDEX IF NOT EXISTS idx_parts_created_at ON public.parts (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_parts_updated_at ON public.parts (updated_at DESC);
 
--- Trigger to update updated_at on row update
+-- Composite indexes for common queries
+CREATE INDEX IF NOT EXISTS idx_parts_category_active ON public.parts (category, is_active);
+CREATE INDEX IF NOT EXISTS idx_parts_price_category ON public.parts (price, category);
+CREATE INDEX IF NOT EXISTS idx_parts_stock_category ON public.parts (stock_quantity, category);
+
+-- Partial index for active parts only
+CREATE INDEX IF NOT EXISTS idx_parts_active_only ON public.parts (name, price, category)
+WHERE is_active = true;
+
+-- GIN index for array compatibility search
+CREATE INDEX IF NOT EXISTS idx_parts_compatibility ON public.parts USING gin (compatibility);
+
+-- Create audit log table for tracking changes
+CREATE TABLE IF NOT EXISTS public.parts_audit (
+  id SERIAL PRIMARY KEY,
+  part_id INTEGER REFERENCES public.parts(id) ON DELETE CASCADE,
+  action VARCHAR(10) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
+  old_values JSONB,
+  new_values JSONB,
+  changed_by VARCHAR(100),
+  changed_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+-- Index for audit table
+CREATE INDEX IF NOT EXISTS idx_parts_audit_part_id ON public.parts_audit (part_id);
+CREATE INDEX IF NOT EXISTS idx_parts_audit_changed_at ON public.parts_audit (changed_at DESC);
+
+-- Create categories lookup table for data integrity
+CREATE TABLE IF NOT EXISTS public.part_categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  parent_category_id INTEGER REFERENCES public.part_categories(id),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+-- Insert standard categories
+INSERT INTO public.part_categories (name, description) VALUES
+('iPhone Parts', 'Apple iPhone repair parts and components'),
+('iPad Parts', 'Apple iPad repair parts and components'),
+('MacBook Parts', 'Apple MacBook repair parts and components'),
+('Samsung Parts', 'Samsung device repair parts'),
+('Tools', 'Repair tools and equipment'),
+('Accessories', 'Device accessories and peripherals')
+ON CONFLICT (name) DO NOTHING;
+
+-- Create manufacturers lookup table
+CREATE TABLE IF NOT EXISTS public.manufacturers (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  country VARCHAR(100),
+  website VARCHAR(255),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+);
+
+-- Insert common manufacturers
+INSERT INTO public.manufacturers (name, country) VALUES
+('Apple Inc.', 'United States'),
+('Samsung Electronics', 'South Korea'),
+('Foxconn', 'Taiwan'),
+('Pegatron', 'Taiwan'),
+('Wistron', 'Taiwan')
+ON CONFLICT (name) DO NOTHING;
+
+-- Updated trigger to update updated_at on row update
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -24,10 +112,151 @@ END;
 $$ language 'plpgsql';
 
 DROP TRIGGER IF EXISTS update_parts_updated_at ON public.parts;
-
 CREATE TRIGGER update_parts_updated_at
 BEFORE UPDATE ON public.parts
 FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+-- Audit trigger function
+CREATE OR REPLACE FUNCTION audit_parts_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    INSERT INTO public.parts_audit (part_id, action, old_values, changed_by)
+    VALUES (OLD.id, 'DELETE', row_to_json(OLD), current_setting('app.current_user', true));
+    RETURN OLD;
+  ELSIF TG_OP = 'UPDATE' THEN
+    INSERT INTO public.parts_audit (part_id, action, old_values, new_values, changed_by)
+    VALUES (NEW.id, 'UPDATE', row_to_json(OLD), row_to_json(NEW), current_setting('app.current_user', true));
+    RETURN NEW;
+  ELSIF TG_OP = 'INSERT' THEN
+    INSERT INTO public.parts_audit (part_id, action, new_values, changed_by)
+    VALUES (NEW.id, 'INSERT', row_to_json(NEW), current_setting('app.current_user', true));
+    RETURN NEW;
+  END IF;
+  RETURN NULL;
+END;
+$$ language 'plpgsql';
+
+-- Create audit trigger
+DROP TRIGGER IF EXISTS audit_parts_trigger ON public.parts;
+CREATE TRIGGER audit_parts_trigger
+AFTER INSERT OR UPDATE OR DELETE ON public.parts
+FOR EACH ROW EXECUTE PROCEDURE audit_parts_changes();
+
+-- Row Level Security policies (if using Supabase auth)
+-- Uncomment and modify based on your authentication setup
+
+-- CREATE POLICY "Enable read access for all users" ON public.parts
+-- FOR SELECT USING (is_active = true);
+
+-- CREATE POLICY "Enable insert for authenticated users only" ON public.parts
+-- FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- CREATE POLICY "Enable update for authenticated users only" ON public.parts
+-- FOR UPDATE USING (auth.role() = 'authenticated');
+
+-- Function to get low stock alerts
+CREATE OR REPLACE FUNCTION get_low_stock_parts(threshold INTEGER DEFAULT 5)
+RETURNS TABLE (
+  id INTEGER,
+  name VARCHAR(255),
+  stock_quantity INTEGER,
+  category VARCHAR(100)
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT p.id, p.name, p.stock_quantity, p.category
+  FROM public.parts p
+  WHERE p.stock_quantity <= threshold
+    AND p.is_active = true
+  ORDER BY p.stock_quantity ASC;
+END;
+$$ language 'plpgsql';
+
+-- Function to update stock levels safely
+CREATE OR REPLACE FUNCTION update_part_stock(
+  part_id INTEGER,
+  quantity_change INTEGER,
+  updated_by_user VARCHAR(100) DEFAULT 'system'
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+  new_quantity INTEGER;
+BEGIN
+  -- Update the stock
+  UPDATE public.parts
+  SET stock_quantity = stock_quantity + quantity_change,
+      updated_at = now(),
+      updated_by = updated_by_user
+  WHERE id = part_id
+    AND is_active = true
+  RETURNING stock_quantity INTO new_quantity;
+
+  -- Check if update was successful
+  IF new_quantity IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  -- Ensure stock doesn't go negative
+  IF new_quantity < 0 THEN
+    -- Rollback by subtracting the change again
+    UPDATE public.parts
+    SET stock_quantity = stock_quantity - quantity_change,
+        updated_at = now()
+    WHERE id = part_id;
+
+    RAISE EXCEPTION 'Stock quantity cannot be negative';
+  END IF;
+
+  RETURN TRUE;
+END;
+$$ language 'plpgsql';
+
+-- Function to search parts with full-text search
+CREATE OR REPLACE FUNCTION search_parts(
+  search_query TEXT,
+  category_filter VARCHAR(100) DEFAULT NULL,
+  min_price NUMERIC DEFAULT NULL,
+  max_price NUMERIC DEFAULT NULL,
+  in_stock_only BOOLEAN DEFAULT false,
+  limit_count INTEGER DEFAULT 50
+)
+RETURNS TABLE (
+  id INTEGER,
+  name VARCHAR(255),
+  description TEXT,
+  price NUMERIC(10, 2),
+  category VARCHAR(100),
+  stock_quantity INTEGER,
+  sku VARCHAR(100),
+  manufacturer VARCHAR(100)
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    p.id,
+    p.name,
+    p.description,
+    p.price,
+    p.category,
+    p.stock_quantity,
+    p.sku,
+    p.manufacturer
+  FROM public.parts p
+  WHERE p.is_active = true
+    AND (search_query IS NULL OR to_tsvector('english', p.name || ' ' || COALESCE(p.description, '')) @@ plainto_tsquery('english', search_query))
+    AND (category_filter IS NULL OR p.category = category_filter)
+    AND (min_price IS NULL OR p.price >= min_price)
+    AND (max_price IS NULL OR p.price <= max_price)
+    AND (NOT in_stock_only OR p.stock_quantity > 0)
+  ORDER BY
+    CASE WHEN search_query IS NOT NULL THEN
+      ts_rank(to_tsvector('english', p.name || ' ' || COALESCE(p.description, '')), plainto_tsquery('english', search_query))
+    ELSE 0 END DESC,
+    p.created_at DESC
+  LIMIT limit_count;
+END;
+$$ language 'plpgsql';
 
 -- Insert iPhone 13 Genuine OEM Parts
 INSERT INTO public.parts (name, description, price, category, stock_quantity) VALUES

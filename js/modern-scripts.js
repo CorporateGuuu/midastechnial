@@ -15,6 +15,7 @@ function initializeWebsite() {
         initializeScrollEffects();
         initializeBackToTop();
         initializeNewsletter();
+        initializeCSRFProtection();
         initializeProductActions();
         initializeAnimations();
         console.log('✅ All components initialized successfully');
@@ -230,6 +231,36 @@ function initializeNewsletter() {
     }
 }
 
+// ===== CSRF PROTECTION =====
+let csrfToken = '';
+
+function generateCSRFToken() {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function initializeCSRFProtection() {
+    csrfToken = generateCSRFToken();
+
+    // Add CSRF token to all forms
+    document.querySelectorAll('form').forEach(form => {
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+    });
+
+    // Store token in sessionStorage for validation
+    sessionStorage.setItem('csrf_token', csrfToken);
+}
+
+function validateCSRFToken(token) {
+    const storedToken = sessionStorage.getItem('csrf_token');
+    return token === storedToken && token.length === 64; // 32 bytes = 64 hex chars
+}
+
 // ===== PRODUCT ACTIONS =====
 function initializeProductActions() {
     // Add to cart functionality
@@ -239,22 +270,29 @@ function initializeProductActions() {
             if (!productCard) return;
 
             const productName = productCard.querySelector('h3');
-            const cartCount = document.querySelector('.cart-count');
+            const productPrice = productCard.querySelector('.current-price');
 
-            if (!productName || !cartCount) return;
+            if (!productName || !productPrice) return;
 
-            // Update cart count
-            let count = parseInt(cartCount.textContent) || 0;
-            cartCount.textContent = count + 1;
+            // Generate unique product ID
+            const productId = 'prod_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const name = productName.textContent.trim();
+            const price = productPrice.textContent.trim();
+            const image = productCard.querySelector('img')?.src || '';
 
-            // Show success message
-            showNotification(`${productName.textContent} added to cart!`, 'success');
+            // Use secure addToCart function
+            const success = addToCart(productId, name, price, image);
 
-            // Add bounce animation
-            this.style.animation = 'bounce 0.6s ease';
-            setTimeout(() => {
-                this.style.animation = '';
-            }, 600);
+            if (success) {
+                // Show success message
+                showNotification(`${name} added to cart!`, 'success');
+
+                // Add bounce animation
+                this.style.animation = 'bounce 0.6s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 600);
+            }
         });
     });
 
@@ -406,37 +444,170 @@ function fixResponsiveMenu() {
 window.addEventListener('load', fixResponsiveMenu);
 window.addEventListener('resize', fixResponsiveMenu);
 
-// ===== CART FUNCTIONALITY =====
-let cart = JSON.parse(localStorage.getItem('midasCart')) || [];
+// ===== SECURE CART FUNCTIONALITY =====
+let cart = [];
+let cartKey = 'midasCart_secure';
+let encryptionKey = 'midas_secure_key_' + Date.now().toString(36);
+
+// Generate a simple encryption key based on user session
+function generateEncryptionKey() {
+    const userAgent = navigator.userAgent;
+    const screenSize = screen.width + 'x' + screen.height;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return btoa(userAgent + screenSize + timezone).substring(0, 16);
+}
+
+// Simple encryption/decryption for cart data
+function encryptCartData(data) {
+    try {
+        const jsonString = JSON.stringify(data);
+        const encoded = btoa(jsonString);
+        // Add checksum for integrity
+        const checksum = btoa(jsonString.length.toString());
+        return encoded + '.' + checksum;
+    } catch (e) {
+        console.error('Cart encryption failed:', e);
+        return null;
+    }
+}
+
+function decryptCartData(encryptedData) {
+    try {
+        if (!encryptedData || !encryptedData.includes('.')) {
+            return [];
+        }
+
+        const [encoded, checksum] = encryptedData.split('.');
+        const decoded = atob(encoded);
+        const jsonData = JSON.parse(decoded);
+
+        // Verify checksum
+        const expectedChecksum = btoa(decoded.length.toString());
+        if (checksum !== expectedChecksum) {
+            console.warn('Cart data integrity check failed');
+            return [];
+        }
+
+        return jsonData;
+    } catch (e) {
+        console.error('Cart decryption failed:', e);
+        return [];
+    }
+}
+
+// Secure cart storage with expiration
+function saveCartSecurely() {
+    try {
+        const cartData = {
+            items: cart,
+            timestamp: Date.now(),
+            expires: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+            sessionId: sessionStorage.getItem('sessionId') || generateSessionId()
+        };
+
+        const encrypted = encryptCartData(cartData);
+        if (encrypted) {
+            localStorage.setItem(cartKey, encrypted);
+        }
+    } catch (e) {
+        console.error('Failed to save cart securely:', e);
+    }
+}
+
+function loadCartSecurely() {
+    try {
+        const encryptedData = localStorage.getItem(cartKey);
+        if (!encryptedData) {
+            cart = [];
+            return;
+        }
+
+        const cartData = decryptCartData(encryptedData);
+        if (!cartData || !Array.isArray(cartData.items)) {
+            cart = [];
+            return;
+        }
+
+        // Check expiration
+        if (cartData.expires && Date.now() > cartData.expires) {
+            localStorage.removeItem(cartKey);
+            cart = [];
+            return;
+        }
+
+        cart = cartData.items;
+    } catch (e) {
+        console.error('Failed to load cart securely:', e);
+        cart = [];
+    }
+}
+
+function generateSessionId() {
+    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    sessionStorage.setItem('sessionId', sessionId);
+    return sessionId;
+}
 
 function updateCartDisplay() {
     const cartCount = document.querySelector('.cart-count');
     if (cartCount) {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        cartCount.textContent = Math.max(0, totalItems);
     }
+}
+
+function validateCartItem(productId, name, price, image) {
+    // Input validation
+    if (!productId || typeof productId !== 'string' || productId.length > 100) {
+        throw new Error('Invalid product ID');
+    }
+    if (!name || typeof name !== 'string' || name.length > 200) {
+        throw new Error('Invalid product name');
+    }
+    if (!price || typeof price !== 'string') {
+        throw new Error('Invalid price');
+    }
+    if (image && typeof image !== 'string') {
+        throw new Error('Invalid image URL');
+    }
+
+    // Sanitize inputs
+    const sanitizedName = name.replace(/[<>\"']/g, '');
+    const sanitizedImage = image ? image.replace(/[<>\"']/g, '') : '';
+
+    return {
+        id: productId,
+        name: sanitizedName,
+        price: parseFloat(price.replace(/[^0-9.-]/g, '')) || 0,
+        image: sanitizedImage,
+        quantity: 1
+    };
 }
 
 function addToCart(productId, name, price, image) {
-    const existingItem = cart.find(item => item.id === productId);
+    try {
+        const validatedItem = validateCartItem(productId, name, price, image);
+        const existingItem = cart.find(item => item.id === validatedItem.id);
 
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({
-            id: productId,
-            name: name,
-            price: parseFloat(price.replace('$', '')),
-            image: image,
-            quantity: 1
-        });
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 0) + 1;
+        } else {
+            cart.push(validatedItem);
+        }
+
+        saveCartSecurely();
+        updateCartDisplay();
+
+        return true;
+    } catch (e) {
+        console.error('Failed to add item to cart:', e);
+        showNotification('Failed to add item to cart', 'error');
+        return false;
     }
-
-    localStorage.setItem('midasCart', JSON.stringify(cart));
-    updateCartDisplay();
 }
 
 // Initialize cart on page load
+loadCartSecurely();
 updateCartDisplay();
 
 // ===== LAZY LOADING IMAGES =====

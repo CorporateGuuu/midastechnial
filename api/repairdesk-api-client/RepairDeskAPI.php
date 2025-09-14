@@ -21,9 +21,15 @@ class RepairDeskAPI {
     
     /**
      * HTTP Client (cURL)
-     * @var resource
+     * @var CurlHandle
      */
     private $ch;
+
+    /**
+     * Rate limiting storage
+     * @var array
+     */
+    private $rateLimit = [];
     
     /**
      * Constructor
@@ -55,57 +61,187 @@ class RepairDeskAPI {
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Accept: application/json'
+            'Accept: application/json',
+            'Authorization: Bearer ' . $this->apiKey
         ]);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($this->ch, CURLOPT_TIMEOUT, 30);
+    }
+
+    /**
+     * Validate input data
+     *
+     * @param array $data Data to validate
+     * @param array $rules Validation rules
+     * @throws Exception
+     */
+    private function validateInput($data, $rules) {
+        foreach ($rules as $field => $rule) {
+            if (isset($rule['required']) && $rule['required'] && !isset($data[$field])) {
+                throw new Exception("Required field '$field' is missing");
+            }
+
+            if (isset($data[$field])) {
+                $value = $data[$field];
+
+                // Type validation
+                if (isset($rule['type'])) {
+                    switch ($rule['type']) {
+                        case 'string':
+                            if (!is_string($value)) {
+                                throw new Exception("Field '$field' must be a string");
+                            }
+                            break;
+                        case 'int':
+                            if (!is_int($value) && !is_numeric($value)) {
+                                throw new Exception("Field '$field' must be an integer");
+                            }
+                            break;
+                        case 'float':
+                            if (!is_float($value) && !is_numeric($value)) {
+                                throw new Exception("Field '$field' must be a number");
+                            }
+                            break;
+                        case 'array':
+                            if (!is_array($value)) {
+                                throw new Exception("Field '$field' must be an array");
+                            }
+                            break;
+                    }
+                }
+
+                // Length validation for strings
+                if (isset($rule['max_length']) && is_string($value)) {
+                    if (strlen($value) > $rule['max_length']) {
+                        throw new Exception("Field '$field' exceeds maximum length of {$rule['max_length']}");
+                    }
+                }
+
+                // Range validation for numbers
+                if (isset($rule['min']) && is_numeric($value)) {
+                    if ($value < $rule['min']) {
+                        throw new Exception("Field '$field' must be at least {$rule['min']}");
+                    }
+                }
+
+                if (isset($rule['max']) && is_numeric($value)) {
+                    if ($value > $rule['max']) {
+                        throw new Exception("Field '$field' must be at most {$rule['max']}");
+                    }
+                }
+
+                // Sanitize string inputs
+                if (is_string($value)) {
+                    $data[$field] = $this->sanitizeString($value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sanitize string input
+     *
+     * @param string $string String to sanitize
+     * @return string Sanitized string
+     */
+    private function sanitizeString($string) {
+        // Remove null bytes
+        $string = str_replace("\0", "", $string);
+
+        // Remove potential script tags
+        $string = preg_replace('/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/i', '', $string);
+
+        // Trim whitespace
+        return trim($string);
+    }
+
+    /**
+     * Check rate limit
+     *
+     * @param string $endpoint API endpoint
+     * @throws Exception
+     */
+    private function checkRateLimit($endpoint) {
+        $now = time();
+        $key = md5($endpoint);
+
+        // Simple rate limiting: max 100 requests per minute per endpoint
+        if (!isset($this->rateLimit[$key])) {
+            $this->rateLimit[$key] = ['count' => 0, 'reset' => $now + 60];
+        }
+
+        if ($now > $this->rateLimit[$key]['reset']) {
+            $this->rateLimit[$key] = ['count' => 0, 'reset' => $now + 60];
+        }
+
+        if ($this->rateLimit[$key]['count'] >= 100) {
+            throw new Exception('Rate limit exceeded. Please try again later.');
+        }
+
+        $this->rateLimit[$key]['count']++;
     }
     
     /**
      * Make API request
-     * 
+     *
      * @param string $method HTTP method (GET, POST, PUT, DELETE)
      * @param string $endpoint API endpoint
      * @param array $data Request data
+     * @param array $validationRules Validation rules for the data
      * @return array Response data
      * @throws Exception
      */
-    private function request($method, $endpoint, $data = []) {
-        // Add API key as query parameter
+    private function request($method, $endpoint, $data = [], $validationRules = []) {
+        // Check rate limit
+        $this->checkRateLimit($endpoint);
+
+        // Validate input data if rules are provided
+        if (!empty($validationRules) && !empty($data)) {
+            $this->validateInput($data, $validationRules);
+        }
+
+        // Build URL without exposing API key in query parameters
         $url = $this->baseUrl . $endpoint;
-        $separator = strpos($url, '?') === false ? '?' : '&';
-        $url .= $separator . 'api_key=' . urlencode($this->apiKey);
-        
+
+        // Add query parameters if provided (excluding API key for security)
+        if (!empty($data) && $method === 'GET') {
+            $url .= '?' . http_build_query($data);
+        }
+
         curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $method);
-        
-        if (!empty($data)) {
+
+        // Reset POST data for non-POST requests
+        if ($method !== 'POST' && $method !== 'PUT') {
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, null);
+        } elseif (!empty($data)) {
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, json_encode($data));
         }
-        
+
         $response = curl_exec($this->ch);
         $httpCode = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
-        
+
         if (curl_error($this->ch)) {
             throw new Exception('cURL Error: ' . curl_error($this->ch));
         }
-        
+
         $result = json_decode($response, true);
-        
+
         if ($httpCode >= 400) {
             // Handle RepairDesk API response format
             $errorMessage = isset($result['message']) ? $result['message'] : 'Unknown error occurred';
             $errorDetails = '';
-            
+
             if (isset($result['data']) && isset($result['data']['message'])) {
                 $errorDetails = ' Details: ' . $result['data']['message'];
             } elseif (isset($result['errors'])) {
                 $errorDetails = ' Details: ' . json_encode($result['errors']);
             }
-            
+
             throw new Exception("API Error ($httpCode): $errorMessage$errorDetails");
         }
-        
+
         // Return data portion if available, otherwise return full response
         // Handle different response formats from different endpoints
         if (isset($result['data'])) {

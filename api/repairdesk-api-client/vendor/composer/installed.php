@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'ab3fcc130b83b6afea31e79e70a40f0f773e6689',
+        'reference' => 'eff6f6fef342c97b3d89b83bf8b78ff9f0405a88',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'ab3fcc130b83b6afea31e79e70a40f0f773e6689',
+            'reference' => 'eff6f6fef342c97b3d89b83bf8b78ff9f0405a88',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -83,9 +83,9 @@
             'dev_requirement' => false,
         ),
         'lcobucci/clock' => array(
-            'pretty_version' => '2.2.0',
-            'version' => '2.2.0.0',
-            'reference' => 'fb533e093fd61321bfcbac08b131ce805fe183d3',
+            'pretty_version' => '2.3.0',
+            'version' => '2.3.0.0',
+            'reference' => 'c7aadcd6fd97ed9e199114269c0be3f335e38876',
             'type' => 'library',
             'install_path' => __DIR__ . '/../lcobucci/clock',
             'aliases' => array(),
@@ -135,6 +135,12 @@
             'install_path' => __DIR__ . '/../psr/clock',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'psr/clock-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
         ),
         'psr/http-client' => array(
             'pretty_version' => '1.0.3',

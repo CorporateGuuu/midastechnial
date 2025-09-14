@@ -1,13 +1,27 @@
 <?php
 /**
- * Configuration file for RepairDesk API Client - Test Version
- * 
- * This is a test configuration file with placeholder values for testing
- * the configuration loading and API client structure.
+ * Configuration file for RepairDesk API Client
+ *
+ * This configuration file uses environment variables for security.
+ * Create a .env file in the project root with your actual credentials.
  */
 
-// Your RepairDesk API Key
-define('REPAIRDESK_API_KEY', 'tnP2abr-GkQp-JT8z-Ptpn-UTAkjuB44');
+// Load environment variables from .env file if it exists
+if (file_exists(__DIR__ . '/../.env')) {
+    $envFile = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($envFile as $line) {
+        if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            $_ENV[$key] = $value;
+            putenv("$key=$value");
+        }
+    }
+}
+
+// Your RepairDesk API Key - loaded from environment variable
+define('REPAIRDESK_API_KEY', getenv('REPAIRDESK_API_KEY') ?: '');
 
 // API Base URL (usually doesn't need to be changed)
 define('REPAIRDESK_BASE_URL', 'https://api.repairdesk.co/api/web/v1');
@@ -15,14 +29,23 @@ define('REPAIRDESK_BASE_URL', 'https://api.repairdesk.co/api/web/v1');
 // Optional: Timeout for API requests in seconds
 define('REPAIRDESK_TIMEOUT', 30);
 
-// Optional: Enable/disable SSL verification
-// Set to false only for development/testing with self-signed certificates
+// SSL verification - ALWAYS enabled for security
 define('REPAIRDESK_SSL_VERIFY', true);
 
-// Optional: Debug mode (set to true to see raw requests/responses)
-define('REPAIRDESK_DEBUG', true);
+// Debug mode - disabled in production, can be enabled via environment variable
+define('REPAIRDESK_DEBUG', getenv('APP_DEBUG') === 'true' ? true : false);
 
-// Supabase Configuration
-define('SUPABASE_URL', 'phgbosbtwayzejfxyxao');
-define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ2Jvc2J0d2F5emVqZnh5eGFvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzUyMTM5MywiZXhwIjoyMDczMDk3MzkzfQ.1a05ZG4fGeWaHBjC60ItZpnS5pWZqMwV3UYjWMwHBgQ');
+// Supabase Configuration - loaded from environment variables
+define('SUPABASE_URL', getenv('SUPABASE_URL') ?: '');
+define('SUPABASE_KEY', getenv('SUPABASE_KEY') ?: '');
+
+// Validate required environment variables
+$required_vars = ['REPAIRDESK_API_KEY', 'SUPABASE_URL', 'SUPABASE_KEY'];
+foreach ($required_vars as $var) {
+    if (empty(constant($var))) {
+        error_log("ERROR: Required environment variable $var is not set");
+        // In production, you might want to exit here
+        // exit("Configuration error: Missing required environment variable $var");
+    }
+}
 ?>
