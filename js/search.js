@@ -8,13 +8,15 @@ const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const productsList = document.getElementById('products-list');
-const cartIcon = document.querySelector('.cart-icon');
+const cartIcon = document.querySelector('.cart-count');
 
 // Load cart from localStorage
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 updateCartDisplay();
 
 async function loadProducts() {
+  if (!productsList) return; // Skip if products list doesn't exist on this page
+
   try {
     const { data, error } = await supabase
       .from('parts')
@@ -62,8 +64,9 @@ function addToCart(e) {
 }
 
 function updateCartDisplay() {
+  if (!cartIcon) return;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartIcon.textContent = totalItems > 0 ? `🛒 (${totalItems})` : '🛒';
+  cartIcon.textContent = totalItems > 0 ? totalItems : '0';
 }
 
 searchForm.addEventListener('submit', async (e) => {

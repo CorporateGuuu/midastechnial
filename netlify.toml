@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "18"
 
+[[plugins]]
+  package = "netlify-plugin-cypress"
+  [plugins.inputs]
+    record = false
+    group = "Midas Technical Solutions"
+
 
 
 [[redirects]]

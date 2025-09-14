@@ -1,5 +1,5 @@
 const menuToggle = document.querySelector('.menu-toggle');
-const sideMenu = document.getElementById('side-menu');
+const sideMenu = document.getElementById('sidebar-menu');
 const menuOverlay = document.createElement('div');
 menuOverlay.classList.add('menu-overlay');
 document.body.appendChild(menuOverlay);
