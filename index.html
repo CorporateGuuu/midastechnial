@@ -38,10 +38,11 @@
         <div class="hero-text">
           <h1>Professional Repair Parts & Tools</h1>
           <p>Your trusted partner for high-quality phone, tablet, and laptop repair parts. Fast shipping, competitive prices, and expert support.</p>
-          <form class="search-form" action="#" method="GET">
-            <input type="search" name="q" placeholder="Search for parts, tools, and more..." />
-            <button type="submit">Search</button>
-          </form>
+  <form class="search-form" id="search-form" action="javascript:void(0);">
+    <input type="search" id="search-input" name="q" placeholder="Search for parts, tools, and more..." />
+    <button type="submit">Search</button>
+  </form>
+  <div id="search-results" class="search-results"></div>
           <div class="hero-buttons">
             <button class="btn primary-btn">Shop Now</button>
             <button class="btn secondary-btn">Contact Us</button>
@@ -65,5 +66,7 @@
       <p>© 2024 Midas Technical Solutions. All rights reserved.</p>
     </div>
   </footer>
+
+  <script src="search.js"></script>
 </body>
 </html>

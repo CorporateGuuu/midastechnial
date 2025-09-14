@@ -7,8 +7,8 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #000000; /* black background */
-  color: #ffffff; /* white text */
+  background-color: #ffffff; /* light background */
+  color: #222222; /* dark text */
   line-height: 1.6;
 }
 
@@ -20,9 +20,10 @@ body {
 
 /* Header styles */
 header {
-  background-color: #111111; /* very dark black */
+  background-color: #ffffff; /* white background */
   padding: 1rem 0;
-  border-bottom: 2px solid #bfa14a; /* gold border */
+  border-bottom: 1px solid #e0e0e0; /* light gray border */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .header-container {
@@ -38,8 +39,8 @@ header {
 }
 
 .logo-icon {
-  background-color: #bfa14a; /* gold */
-  color: #000000;
+  background-color: #d42a2a; /* red */
+  color: #ffffff;
   font-weight: 700;
   font-size: 1.8rem;
   width: 40px;
@@ -55,7 +56,7 @@ header {
 .logo-text {
   display: flex;
   flex-direction: column;
-  color: #ffffff;
+  color: #222222;
 }
 
 .logo-main {
@@ -65,7 +66,7 @@ header {
 
 .logo-sub {
   font-size: 0.8rem;
-  color: #bfa14a; /* gold */
+  color: #d42a2a; /* red */
 }
 
 /* Navigation */
@@ -76,7 +77,7 @@ nav ul {
 }
 
 nav ul li a {
-  color: #ffffff;
+  color: #222222;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -89,17 +90,18 @@ nav ul li a:hover {
 /* Cart icon */
 .cart-icon {
   font-size: 1.5rem;
-  color: #bfa14a; /* gold */
+  color: #d42a2a; /* red */
   cursor: pointer;
   user-select: none;
 }
 
 /* Hero section */
 .hero {
-  background-color: #111111; /* dark background */
+  background-color: #f9f9f9; /* very light gray background */
   padding: 4rem 0;
   border-radius: 12px;
   margin-top: 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
 .hero-container {
@@ -118,13 +120,13 @@ nav ul li a:hover {
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #bfa14a; /* gold */
+  color: #d42a2a; /* red */
 }
 
 .hero-text p {
   font-size: 1.1rem;
   margin-bottom: 2rem;
-  color: #ddd;
+  color: #555555;
 }
 
 .search-form {
@@ -135,7 +137,7 @@ nav ul li a:hover {
 .search-form input[type="search"] {
   flex: 1;
   padding: 0.75rem 1rem;
-  border: none;
+  border: 1px solid #d42a2a;
   border-radius: 6px 0 0 6px;
   font-size: 1rem;
   outline: none;
@@ -164,34 +166,37 @@ nav ul li a:hover {
 
 .btn {
   padding: 0.75rem 2rem;
-  border-radius: 6px;
+  border-radius: 24px;
   font-weight: 600;
   cursor: pointer;
   border: 2px solid transparent;
   transition: all 0.3s ease;
   font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(212, 42, 42, 0.3);
 }
 
 .primary-btn {
-  background-color: #bfa14a; /* gold */
-  color: #000;
-  border-color: #bfa14a;
+  background-color: #d42a2a; /* red */
+  color: #fff;
+  border-color: #d42a2a;
 }
 
 .primary-btn:hover {
-  background-color: #a68f3a;
-  border-color: #a68f3a;
+  background-color: #a02121;
+  border-color: #a02121;
+  box-shadow: 0 4px 12px rgba(160, 33, 33, 0.5);
 }
 
 .secondary-btn {
   background-color: transparent;
-  color: #bfa14a; /* gold */
-  border-color: #bfa14a;
+  color: #d42a2a; /* red */
+  border-color: #d42a2a;
 }
 
 .secondary-btn:hover {
-  background-color: #bfa14a;
-  color: #000;
+  background-color: #d42a2a;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(212, 42, 42, 0.5);
 }
 
 /* Hero stats */
@@ -200,7 +205,7 @@ nav ul li a:hover {
   gap: 3rem;
   font-weight: 700;
   font-size: 1.1rem;
-  color: #ddd;
+  color: #555555;
 }
 
 .hero-stats div {
@@ -210,27 +215,29 @@ nav ul li a:hover {
 /* Hero image placeholder */
 .hero-image {
   flex: 1 1 300px;
-  background-color: #222;
+  background-color: #ffffff;
   border-radius: 12px;
   height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #bfa14a;
+  color: #d42a2a;
   font-weight: 700;
   font-size: 1.5rem;
   user-select: none;
+  box-shadow: 0 2px 8px rgba(212, 42, 42, 0.2);
 }
 
 /* Footer */
 footer {
   margin-top: 4rem;
   padding: 1rem 0;
-  background-color: #111111;
+  background-color: #ffffff;
   text-align: center;
-  color: #bfa14a;
+  color: #d42a2a;
   font-weight: 600;
-  border-top: 2px solid #bfa14a;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
 }
 
 /* Responsive */

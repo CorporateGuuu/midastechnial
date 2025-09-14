@@ -8,7 +8,7 @@
 require_once 'RepairDeskAPI.php';
 
 // Replace with your actual API key
-$apiKey = 'your_repairdesk_api_key_here';
+$apiKey = 'tbpzKBH-6yxj-VB8Y-xYp0-jkO3HL8SB';
 
 try {
     // Initialize the API client

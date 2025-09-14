@@ -6,11 +6,11 @@
  * the configuration loading and API client structure.
  */
 
-// Your RepairDesk API Key (placeholder for testing)
-define('REPAIRDESK_API_KEY', 'test_api_key_placeholder_12345');
+// Your RepairDesk API Key
+define('REPAIRDESK_API_KEY', 'tbpzKBH-6yxj-VB8Y-xYp0-jkO3HL8SB');
 
 // API Base URL (usually doesn't need to be changed)
-define('REPAIRDESK_BASE_URL', 'https://api.repairdesk.co/api/v1');
+define('REPAIRDESK_BASE_URL', 'https://repairdesk.co/api/v1');
 
 // Optional: Timeout for API requests in seconds
 define('REPAIRDESK_TIMEOUT', 30);
