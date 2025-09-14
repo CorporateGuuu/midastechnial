@@ -10,7 +10,7 @@
 define('REPAIRDESK_API_KEY', 'tbpzKBH-6yxj-VB8Y-xYp0-jkO3HL8SB');
 
 // API Base URL (usually doesn't need to be changed)
-define('REPAIRDESK_BASE_URL', 'https://repairdesk.co/api/v1');
+define('REPAIRDESK_BASE_URL', 'https://api.repairdesk.co/api/web/v1');
 
 // Optional: Timeout for API requests in seconds
 define('REPAIRDESK_TIMEOUT', 30);
@@ -21,4 +21,8 @@ define('REPAIRDESK_SSL_VERIFY', true);
 
 // Optional: Debug mode (set to true to see raw requests/responses)
 define('REPAIRDESK_DEBUG', true);
+
+// Supabase Configuration
+define('SUPABASE_URL', 'phgbosbtwayzejfxyxao');
+define('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ2Jvc2J0d2F5emVqZnh5eGFvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzUyMTM5MywiZXhwIjoyMDczMDk3MzkzfQ.1a05ZG4fGeWaHBjC60ItZpnS5pWZqMwV3UYjWMwHBgQ');
 ?>

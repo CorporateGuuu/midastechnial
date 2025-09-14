@@ -10,6 +10,7 @@ A standalone PHP client for interacting with the RepairDesk Public API v1 (OAS 3
 - **Repair Tasks**: Create, update, and monitor repair tickets and their statuses
 - **Order Management**: Manage sales orders and track order/invoice status
 - **Appointments**: Handle appointments and create Leads in Repairdesk
+- **Supabase Integration**: Sync inventory data to Supabase database for enhanced data management
 
 ## Requirements
 
@@ -148,6 +149,35 @@ try {
     echo 'Error: ' . $e->getMessage();
     // Handle error appropriately
 }
+```
+
+## Supabase Integration
+
+The client includes scripts to sync RepairDesk data with Supabase:
+
+### Populate Supabase with Dummy Data
+
+```bash
+php populate_supabase.php
+```
+
+This script inserts sample parts data into the Supabase 'parts' table.
+
+### Sync Inventory from RepairDesk to Supabase
+
+```bash
+php sync_inventory.php
+```
+
+This script fetches inventory from RepairDesk and syncs it to Supabase, clearing existing data first.
+
+### Configuration
+
+Add your Supabase credentials to `config.php`:
+
+```php
+define('SUPABASE_URL', 'your_supabase_project_ref');
+define('SUPABASE_KEY', 'your_supabase_service_role_key');
 ```
 
 ## Testing

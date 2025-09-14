@@ -4,13 +4,11 @@
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config.php';
 
-use Supabase\SupabaseClient;
+use Supabase\CreateClient;
 
-$supabaseUrl = 'https://phgbosbtwayzejfxyxao.supabase.co';
-$supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ2Jvc2J0d2F5emVqZnh5eGFvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzUyMTM5MywiZXhwIjoyMDczMDk3MzkzfQ.1a05ZG4fGeWaHBjC60ItZpnS5pWZqMwV3UYjWMwHBgQ';
-
-$supabase = new \Supabase\SupabaseClient($supabaseUrl, $supabaseKey);
+$supabase = new CreateClient(SUPABASE_KEY, SUPABASE_URL);
 
 $dummyParts = [
     ['name' => 'iPhone Screen', 'description' => 'Replacement screen for iPhone', 'price' => 89.99],
