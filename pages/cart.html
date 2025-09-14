@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cart - Midas Technical Solutions</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -61,8 +61,18 @@
   <main>
     <section class="page-content">
       <div class="container">
-        <h1>Cart</h1>
-        <p>Review and manage your shopping cart.</p>
+        <h1>Shopping Cart</h1>
+        <p>Review and manage your shopping cart items.</p>
+
+        <div class="cart-container">
+          <div class="cart-items" id="cart-items">
+            <!-- Cart items will be loaded here -->
+          </div>
+
+          <div class="cart-summary" id="cart-summary">
+            <!-- Cart summary will be loaded here -->
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -73,7 +83,8 @@
     </div>
   </footer>
 
-  <script type="module" src="js/search.js"></script>
-  <script src="js/side-menu.js"></script>
+  <script type="module" src="../js/search.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/side-menu.js"></script>
 </body>
 </html>

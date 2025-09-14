@@ -78,9 +78,14 @@ const securityHeaders = {
 // Rate limiting (simple in-memory implementation)
 const rateLimitStore = new Map();
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX_REQUESTS = 100; // requests per window
+const RATE_LIMIT_MAX_REQUESTS = isProduction ? 100 : 1000; // Higher limit in development
 
 function checkRateLimit(ip) {
+  // Skip rate limiting in development
+  if (!isProduction) {
+    return true;
+  }
+
   const now = Date.now();
   const userRequests = rateLimitStore.get(ip) || [];
 
