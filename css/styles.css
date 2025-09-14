@@ -321,6 +321,23 @@ body::before {
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+/* Menu Toggle */
+.menu-toggle {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: #f5f5f5;
+}
+
 /* Header Actions */
 .header-actions {
   display: flex;
