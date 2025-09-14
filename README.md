@@ -53,7 +53,7 @@ A premium e-commerce website for professional repair parts and tools, built with
    php -S localhost:8080
 
    # For API backend (separate terminal)
-   cd repairdesk-api-client && php -S localhost:8000
+   cd api/repairdesk-api-client && php -S localhost:8000
    ```
 
 3. **Open in browser:**
@@ -83,23 +83,34 @@ The website is configured for automatic deployment on Netlify:
 ```
 midastechnial/
 ├── index.html                 # Homepage
-├── iphone-parts.html         # iPhone parts page
-├── samsung-parts.html        # Samsung parts page
-├── macbook-parts.html        # MacBook parts page
-├── ipad-parts.html          # iPad parts page
-├── products.html            # All products page
-├── categories.html          # Product categories
-├── styles.css               # Main stylesheet
-├── modern-scripts.js        # Modern JavaScript functionality
-├── iphone-filters.js        # iPhone parts filtering
-├── search.js                # Search functionality
-├── side-menu.js             # Sidebar navigation
+├── pages/                    # HTML pages
+│   ├── iphone-parts.html     # iPhone parts page
+│   ├── samsung-parts.html    # Samsung parts page
+│   ├── macbook-parts.html    # MacBook parts page
+│   ├── ipad-parts.html      # iPad parts page
+│   ├── products.html        # All products page
+│   ├── categories.html      # Product categories
+│   └── ...
+├── js/                       # JavaScript files
+│   ├── modern-scripts.js    # Modern JavaScript functionality
+│   ├── iphone-filters.js    # iPhone parts filtering
+│   ├── search.js            # Search functionality
+│   └── side-menu.js         # Sidebar navigation
+├── css/                      # Stylesheets
+│   ├── styles.css           # Main stylesheet
+│   └── style.css            # Additional styles
+├── api/                      # API backend
+│   └── repairdesk-api-client/
+│       ├── RepairDeskAPI.php
+│       ├── test.php
+│       └── ...
+├── assets/                   # Static assets
+│   └── favicon.ico
+├── db/                       # Database files
+│   └── supabase_parts_table.sql
 ├── package.json             # Node.js dependencies
 ├── netlify.toml            # Netlify configuration
-└── repairdesk-api-client/   # API backend
-    ├── RepairDeskAPI.php
-    ├── test.php
-    └── ...
+└── server.js                # Node.js server
 ```
 
 ## 🛠️ Technologies Used
@@ -144,7 +155,7 @@ npm install
 php -S localhost:8080
 
 # For API testing
-cd repairdesk-api-client
+cd api/repairdesk-api-client
 php test.php
 ```
 

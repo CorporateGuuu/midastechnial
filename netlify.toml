@@ -5,12 +5,7 @@
 [build.environment]
   NODE_VERSION = "18"
 
-[[plugins]]
-  package = "netlify-plugin-cypress"
 
-  [plugins.inputs]
-    # Disable Cypress if you don't want to run tests
-    enable = false
 
 [[redirects]]
   from = "/api/*"

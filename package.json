@@ -5,12 +5,7 @@
   "main": "index.html",
   "scripts": {
     "build": "echo 'Static site - no build required'",
-    "test": "echo 'No tests specified'",
-    "cypress:run": "cypress run",
-    "cypress:open": "cypress open"
-  },
-  "devDependencies": {
-    "cypress": "^13.6.0"
+    "test": "echo 'No tests specified'"
   },
   "keywords": [
     "repair-parts",
