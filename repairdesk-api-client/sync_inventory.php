@@ -22,15 +22,21 @@ try {
 
     $inserted = 0;
     foreach ($inventory as $item) {
+        // Map API response fields to database fields
         $data = [
-            'name' => $item['name'],
-            'description' => $item['item_type'] ?? '',
-            'price' => (float) $item['price']
+            'name' => $item['name'] ?? 'Unknown Item',
+            'description' => $item['description'] ?? '',
+            'price' => (float) ($item['retail_price'] ?? $item['cost_price'] ?? $item['price'] ?? 0)
         ];
 
-        $response = $supabase->from('parts')->insert($data);
-        if ($response) {
+        $response = $supabase->from('parts')->insert($data)->execute();
+        if ($response && $response->status === 200) {
             $inserted++;
+        } else {
+            echo "Failed to insert item: " . ($item['name'] ?? 'Unknown') . "\n";
+            if ($response && $response->error) {
+                echo "Error: " . json_encode($response->error) . "\n";
+            }
         }
     }
 

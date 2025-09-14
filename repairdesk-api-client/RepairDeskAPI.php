@@ -11,7 +11,7 @@ class RepairDeskAPI {
      * API Base URL
      * @var string
      */
-    private $baseUrl = 'https://api.repairdesk.co/api/v1';
+    private $baseUrl;
     
     /**
      * API Key for authentication
@@ -27,11 +27,23 @@ class RepairDeskAPI {
     
     /**
      * Constructor
-     * 
+     *
      * @param string $apiKey Your RepairDesk API key
+     * @param string $baseUrl API base URL (optional)
      */
-    public function __construct($apiKey) {
-        $this->apiKey = $apiKey;
+    public function __construct($apiKey, $baseUrl = null) {
+        // Load configuration if available
+        if (file_exists(__DIR__ . '/config.php')) {
+            require_once __DIR__ . '/config.php';
+        }
+
+        $this->apiKey = $apiKey ?: (defined('REPAIRDESK_API_KEY') ? REPAIRDESK_API_KEY : '');
+        $this->baseUrl = $baseUrl ?: (defined('REPAIRDESK_BASE_URL') ? REPAIRDESK_BASE_URL : 'https://api.repairdesk.co/api/web/v1');
+
+        if (empty($this->apiKey)) {
+            throw new Exception('API key is required. Please provide an API key or create a config.php file.');
+        }
+
         $this->initializeClient();
     }
     

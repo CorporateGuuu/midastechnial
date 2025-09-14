@@ -19,8 +19,15 @@ $dummyParts = [
 ];
 
 try {
-    $response = $supabase->from('parts')->insert($dummyParts);
-    echo "Inserted dummy data into Supabase\n";
+    $response = $supabase->from('parts')->insert($dummyParts)->execute();
+    echo "Response status: " . $response->status . "\n";
+    echo "Response statusText: " . $response->statusText . "\n";
+    if ($response->error) {
+        echo "Error: " . json_encode($response->error) . "\n";
+    } else {
+        echo "Inserted dummy data into Supabase\n";
+        echo "Data: " . json_encode($response->data) . "\n";
+    }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
 }

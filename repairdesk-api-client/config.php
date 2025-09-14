@@ -7,7 +7,7 @@
  */
 
 // Your RepairDesk API Key
-define('REPAIRDESK_API_KEY', 'tbpzKBH-6yxj-VB8Y-xYp0-jkO3HL8SB');
+define('REPAIRDESK_API_KEY', 'tnP2abr-GkQp-JT8z-Ptpn-UTAkjuB44');
 
 // API Base URL (usually doesn't need to be changed)
 define('REPAIRDESK_BASE_URL', 'https://api.repairdesk.co/api/web/v1');
