@@ -211,25 +211,72 @@ class RepairDeskAPI {
     }
     
     /**
-     * Get repair tickets
+     * Get repair tickets with comprehensive filtering and search
      * 
-     * @param array $params Query parameters
-     * @return array Repair tickets
+     * @param array $params Query parameters including:
+     *   - keyword (string): Search by customer name, email, phone, device, ticket number, IMEI/serial
+     *   - page (int): Page number for pagination (default: 0)
+     *   - pagesize (int): Items per page (max: 1000)
+     *   - status (string): Filter by ticket status
+     *   - assigned_to (string): Filter by assigned employee ID
+     *   - created_by (string): Filter by creator employee ID
+     *   - from_date (int): Filter from date (Unix timestamp)
+     *   - to_date (int): Filter to date (Unix timestamp)
+     * @return array Repair tickets with ticketData and pagination information
      */
     public function getRepairTickets($params = []) {
-        $query = !empty($params) ? '?' . http_build_query($params) : '';
+        // Validate and sanitize parameters
+        $validParams = [];
+        
+        if (isset($params['keyword']) && is_string($params['keyword'])) {
+            $validParams['keyword'] = trim($params['keyword']);
+        }
+        
+        if (isset($params['page']) && is_numeric($params['page'])) {
+            $validParams['page'] = (int)$params['page'];
+        }
+        
+        if (isset($params['pagesize']) && is_numeric($params['pagesize'])) {
+            $pagesize = (int)$params['pagesize'];
+            if ($pagesize > 1000) {
+                $pagesize = 1000; // Enforce maximum limit
+            }
+            $validParams['pagesize'] = $pagesize;
+        }
+        
+        if (isset($params['status']) && is_string($params['status'])) {
+            $validParams['status'] = trim($params['status']);
+        }
+        
+        if (isset($params['assigned_to']) && is_string($params['assigned_to'])) {
+            $validParams['assigned_to'] = trim($params['assigned_to']);
+        }
+        
+        if (isset($params['created_by']) && is_string($params['created_by'])) {
+            $validParams['created_by'] = trim($params['created_by']);
+        }
+        
+        if (isset($params['from_date']) && is_numeric($params['from_date'])) {
+            $validParams['from_date'] = (int)$params['from_date'];
+        }
+        
+        if (isset($params['to_date']) && is_numeric($params['to_date'])) {
+            $validParams['to_date'] = (int)$params['to_date'];
+        }
+        
+        $query = !empty($validParams) ? '?' . http_build_query($validParams) : '';
         return $this->request('GET', '/repairs' . $query);
     }
     
     /**
-     * Update repair ticket
+     * Update ticket status
      * 
      * @param int $ticketId Repair ticket ID
-     * @param array $ticketData Updated ticket data
+     * @param array $statusData Updated status data
      * @return array Updated ticket data
      */
-    public function updateRepairTicket($ticketId, $ticketData) {
-        return $this->request('PUT', "/repairs/$ticketId", $ticketData);
+    public function updateTicketStatus($ticketId, $statusData) {
+        return $this->request('PUT', "/ticket/updateticketstatus/$ticketId", $statusData);
     }
     
     /**
@@ -251,6 +298,37 @@ class RepairDeskAPI {
      */
     public function getOrder($orderId) {
         return $this->request('GET', "/orders/$orderId");
+    }
+    
+    /**
+     * Get purchase orders with detailed filtering options
+     * 
+     * @param array $params Query parameters:
+     *   - page * (integer): Page number for pagination
+     *   - pagesize * (integer): Number of records per page
+     *   - id (integer): Purchase order ID
+     *   - item_name (string): Product name
+     *   - manufacturer (integer): Manufacturer ID
+     *   - purchase_order_status (string): PO-Status
+     *   - po_order_id (string): PO Order number
+     *   - supplier (string): Supplier Name
+     *   - sku (string): Item SKU
+     *   - createdd_date (string): Exact date match [YYYY-MM-DD]
+     *   - created_date (string): Cases: today, 7days, 14days, 30days or date starting from the given date YYYY-MM-DD
+     * @return array Purchase order data with pagination
+     */
+    public function getPurchaseOrders($params = []) {
+        // Validate required parameters
+        if (!isset($params['page']) || !is_numeric($params['page'])) {
+            throw new Exception("Required parameter 'page' is missing or invalid");
+        }
+        
+        if (!isset($params['pagesize']) || !is_numeric($params['pagesize'])) {
+            throw new Exception("Required parameter 'pagesize' is missing or invalid");
+        }
+        
+        $query = !empty($params) ? '?' . http_build_query($params) : '';
+        return $this->request('GET', '/purchase-orders' . $query);
     }
     
     /**
@@ -285,12 +363,58 @@ class RepairDeskAPI {
     }
     
     /**
+     * Create ticket with comprehensive device and custom field data
+     * 
+     * @param array $ticketData Ticket data including devices, customFields, and summary
+     * @return array Created ticket data with success status
+     */
+    public function createTicket($ticketData) {
+        // Validate required fields in ticket data
+        $requiredSections = ['devices', 'summary'];
+        foreach ($requiredSections as $section) {
+            if (!isset($ticketData[$section])) {
+                throw new Exception("Required section '$section' is missing in ticket data");
+            }
+        }
+        
+        // Validate devices array
+        if (!is_array($ticketData['devices']) || empty($ticketData['devices'])) {
+            throw new Exception("Devices array must be a non-empty array");
+        }
+        
+        // Validate summary section
+        $requiredSummaryFields = ['customer_id', 'employee_id'];
+        foreach ($requiredSummaryFields as $field) {
+            if (!isset($ticketData['summary'][$field])) {
+                throw new Exception("Required summary field '$field' is missing");
+            }
+        }
+        
+        return $this->request('POST', '/tickets', $ticketData);
+    }
+    
+    /**
      * Get ticket statuses
      * 
      * @return array List of ticket statuses with name, color, and type
      */
     public function getStatuses() {
         return $this->request('GET', '/statuses');
+    }
+    
+    /**
+     * Get single ticket by ID
+     * 
+     * @param string $ticketId Ticket ID
+     * @return array Ticket data
+     */
+    public function getTicket($ticketId) {
+        // Validate ticket ID
+        if (empty($ticketId)) {
+            throw new Exception("Ticket ID is required");
+        }
+        
+        return $this->request('GET', "/tickets/$ticketId");
     }
     
     /**

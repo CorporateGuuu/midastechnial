@@ -62,6 +62,17 @@ class RepairDeskAPIClient {
         return $this->request('GET', '/statuses');
     }
     
+    /**
+     * Update ticket status
+     * 
+     * @param int $ticketId Repair ticket ID
+     * @param array $statusData Updated status data
+     * @return array Updated ticket data
+     */
+    public function updateTicketStatus($ticketId, $statusData) {
+        return $this->request('PUT', "/ticket/updateticketstatus/$ticketId", $statusData);
+    }
+    
     public function __destruct() {
         if ($this->ch) {
             curl_close($this->ch);

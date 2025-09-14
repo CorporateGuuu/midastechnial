@@ -1,0 +1,1982 @@
+openapi: 3.0.0
+info:
+  title: RepairDesk API Client
+  description: A comprehensive PHP client for interacting with the RepairDesk Public API v1
+  version: 1.0.0
+  contact:
+    name: RepairDesk API Support
+    url: https://repairdesk.co/support
+
+servers:
+  - url: https://api.repairdesk.co/api/v1
+    description: Production server
+
+tags:
+  - name: Devices
+    description: Device management endpoints
+  - name: Inventory
+    description: Inventory management endpoints
+  - name: Customers
+    description: Customer management endpoints
+  - name: Repair Tickets
+    description: Repair ticket management endpoints
+  - name: Orders
+    description: Order management endpoints
+  - name: Appointments
+    description: Appointment management endpoints
+  - name: Leads
+    description: Lead management endpoints
+  - name: Statuses
+    description: Status management endpoints
+  - name: Employees
+    description: Employee management endpoints
+
+paths:
+  /devices:
+    get:
+      tags: [Devices]
+      summary: Get devices associated with tickets
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to skip
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /devices/{id}:
+    get:
+      tags: [Devices]
+      summary: Get specific device by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Device ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /inventory:
+    get:
+      tags: [Inventory]
+      summary: Get inventory items
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to skip
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags: [Inventory]
+      summary: Add new inventory item
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItemInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /inventory/{id}:
+    put:
+      tags: [Inventory]
+      summary: Update inventory item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Inventory item ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItemInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /customers:
+    get:
+      tags: [Customers]
+      summary: Get customers list
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: Page number for pagination
+        - name: pagesize
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of records per page
+        - name: referredby
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Like Facebook/Friend
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search by customer firstname/lastname, phone/mobile, email, postcode, city, organization and driving licence
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /customers/{id}:
+    get:
+      tags: [Customers]
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the customer to retrieve
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API Key
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    $ref: '#/components/schemas/CustomerDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [Customers]
+      summary: Update customer information
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Customer ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /repairs:
+    get:
+      tags: [Repair Tickets]
+      summary: Get repair tickets with comprehensive filtering and search
+      description: |
+        Retrieve repair tickets with advanced filtering, search, and pagination capabilities.
+        Supports searching by customer information, device details, ticket numbers, and more.
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Search by customer firstname, lastname, email, phone/mobile, walk-in customer,
+            ticket number, device name, service problem title, IMEI, or serial number
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Page number for pagination (starts from 0)
+        - name: pagesize
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          description: Number of items per page, maximum limit is 1000 records
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by ticket status
+        - name: assigned_to
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by employee ID of assigned user (from Employees API)
+        - name: created_by
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by employee ID of user who created the ticket (from Employees API)
+        - name: from_date
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Filter from date in Unix timestamp format
+        - name: to_date
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Filter to date in Unix timestamp format
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    $ref: '#/components/schemas/TicketListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [Repair Tickets]
+      summary: Create repair ticket
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepairTicketInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /repairs/{id}:
+    put:
+      tags: [Repair Tickets]
+      summary: Update repair ticket
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Repair ticket ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepairTicketInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /tickets:
+    post:
+      tags: [Repair Tickets]
+      summary: Create ticket with comprehensive device and custom field data
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketInput'
+      responses:
+        '200':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Ticket was created successfully"
+                  data:
+                    $ref: '#/components/schemas/TicketResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /tickets/{id}:
+    get:
+      tags: [Repair Tickets]
+      summary: Get single ticket by ID
+      description: Retrieve detailed information about a specific ticket by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Ticket ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          description: Converted to invoice successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Converted to invoice successfully"
+                  data:
+                    type: object
+                    properties:
+                      invoice:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 3266947
+                          order_id:
+                            type: string
+                            example: "1775"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: "Unauthorized"
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "Unauthorized"
+                      message:
+                        type: string
+                        example: "Your request was made with invalid credentials."
+                      code:
+                        type: integer
+                        example: 0
+                      status:
+                        type: integer
+
+  /orders:
+    get:
+      tags: [Orders]
+      summary: Get orders
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /orders/{id}:
+    get:
+      tags: [Orders]
+      summary: Get specific order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Order ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /purchase-orders:
+    get:
+      tags: [Orders]
+      summary: Get purchase orders with detailed filtering options
+      description: |
+        Retrieves a list of purchase order details based on the provided parameters.
+        Supports advanced filtering by various criteria including supplier, status, date ranges, and more.
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Your API key for authentication
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: Page number for pagination
+        - name: pagesize
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 10
+          description: Number of records per page
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Purchase order ID
+        - name: item_name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Product name
+        - name: manufacturer
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Manufacturer ID
+        - name: purchase_order_status
+          in: query
+          required: false
+          schema:
+            type: string
+          description: PO-Status
+        - name: po_order_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: PO Order number
+        - name: supplier
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Supplier Name
+        - name: sku
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Item SKU
+        - name: createdd_date
+          in: query
+          required: false
+          schema:
+            type: string
+          description: It Will match the exact date [YYYY-MM-DD]
+        - name: created_date
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Cases: today, 7days, 14days, 30days or date starting from the given date YYYY-MM-DD
+      responses:
+        '200':
+          description: Purchase order detail list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    type: object
+                    properties:
+                      purchaseOrderListData:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PurchaseOrder'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid request parameters"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: "Unauthorized"
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "Unauthorized"
+                      message:
+                        type: string
+                        example: "Your request was made with invalid credentials."
+                      code:
+                        type: integer
+                        example: 0
+                      status:
+                        type: integer
+                        example: 401
+
+  /appointments:
+    get:
+      tags: [Appointments]
+      summary: Get appointments
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags: [Appointments]
+      summary: Create appointment
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /leads:
+    post:
+      tags: [Leads]
+      summary: Create lead from appointment
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /parts:
+    get:
+      tags: [Inventory]
+      summary: Retrieves a list of all parts
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /taxclasses:
+    get:
+      tags: [Inventory]
+      summary: Retrieves a list of tax classes against a store location
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /statuses:
+    get:
+      tags: [Statuses]
+      summary: Get ticket statuses
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /employees:
+    get:
+      tags: [Employees]
+      summary: Retrieves a list of employees
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          description: A list of employees
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+        name:
+          type: string
+          example: "iPhone 12"
+        model:
+          type: string
+          example: "A2172"
+        manufacturer:
+          type: string
+          example: "Apple"
+        type:
+          type: string
+          example: "smartphone"
+
+    InventoryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 456
+        name:
+          type: string
+          example: "iPhone Screen"
+        sku:
+          type: string
+          example: "IPH-SCREEN-001"
+        price:
+          type: number
+          format: float
+          example: 49.99
+        cost_price:
+          type: number
+          format: float
+          example: 25.00
+        in_stock:
+          type: integer
+          example: 10
+        item_type:
+          type: string
+          example: "part"
+        tax_class:
+          type: string
+          example: "standard"
+
+    InventoryItemInput:
+      type: object
+      required:
+        - name
+        - item_type
+        - manufacturer
+        - device
+        - in_stock
+        - cost_price
+        - price
+        - tax_class
+        - sku
+      properties:
+        name:
+          type: string
+          example: "iPhone Screen"
+        sku:
+          type: string
+          example: "IPH-SCREEN-001"
+        price:
+          type: number
+          format: float
+          example: 49.99
+        cost_price:
+          type: number
+          format: float
+          example: 25.00
+        in_stock:
+          type: integer
+          example: 10
+        item_type:
+          type: string
+          example: "part"
+        tax_class:
+          type: string
+          example: "standard"
+        manufacturer:
+          type: string
+          example: "Apple"
+        device:
+          type: string
+          example: "iPhone 12"
+
+    Customer:
+      type: object
+      properties:
+        cid:
+          type: integer
+          example: 4
+        code:
+          type: integer
+          example: 4
+        first_name:
+          type: string
+          example: "John Updated"
+        last_name:
+          type: string
+          example: "Wick"
+        title:
+          type: string
+          example: ""
+        phone:
+          type: string
+          example: ""
+        mobile:
+          type: string
+          example: "+45 51 94 20 72"
+        address1:
+          type: string
+          example: ""
+        address2:
+          type: string
+          example: ""
+        postcode:
+          type: string
+          example: ""
+        city:
+          type: string
+          example: ""
+        state:
+          type: string
+          example: ""
+        country:
+          type: string
+          example: ""
+        email:
+          type: string
+          example: ""
+        created_on:
+          type: string
+          format: date-time
+          example: "2024-07-03 17:12:48"
+        store_type:
+          type: integer
+          example: 28752
+        orgonization:
+          type: string
+          example: ""
+        image:
+          type: string
+          example: ""
+        is_delete:
+          type: integer
+          example: 0
+        refered_by:
+          type: string
+          example: "Search Engine"
+        referred_loyaltyid:
+          type: string
+          example: ""
+        license_image:
+          type: string
+          example: ""
+        driving_licence:
+          type: string
+          example: ""
+        xero_id:
+          type: string
+          example: ""
+        is_xero:
+          type: integer
+          example: 0
+        qbo_id:
+          type: string
+          example: ""
+        is_qbo:
+          type: integer
+          example: 0
+        contact_person:
+          type: string
+          example: ""
+        tax_number:
+          type: string
+          example: ""
+        comments:
+          type: string
+          example: ""
+        network:
+          type: string
+          example: ""
+        cus_group_id:
+          type: string
+          example: "1"
+        SynchwithMailChimp:
+          type: integer
+          example: 0
+        MailChimpStatus:
+          type: string
+          example: "unsubscribed"
+        email_opt_in:
+          type: integer
+          example: 0
+        sms_opt_in:
+          type: integer
+          example: 0
+        gdpr_complianced:
+          type: integer
+          example: 0
+        forgotten_as_gdpr:
+          type: integer
+          example: 0
+        source:
+          type: integer
+          example: 3
+        opt_out_reason:
+          type: string
+          example: ""
+        mc_list_key:
+          type: string
+          example: ""
+        offline_id:
+          type: string
+          example: ""
+        customer_custom_fields:
+          type: string
+          example: ""
+        tax_class:
+          type: string
+          example: ""
+        customer_id_type:
+          type: integer
+          example: 0
+        customer_id_number:
+          type: string
+          example: ""
+        contact_person_relation:
+          type: string
+          example: ""
+        customer_tags:
+          type: string
+          example: ""
+        customer_rsr_id:
+          type: string
+          example: ""
+        import_log_id:
+          type: string
+          example: ""
+        avalara_entity_use_code:
+          type: string
+          example: ""
+        avalara_custom_entity_use_code:
+          type: string
+          example: ""
+        phones:
+          type: string
+          example: ""
+        mobiles:
+          type: string
+          example: ""
+        emails:
+          type: string
+          example: ""
+
+    CustomerInput:
+      type: object
+      properties:
+        address1:
+          type: string
+          example: ""
+        address2:
+          type: string
+          example: ""
+        city:
+          type: string
+          example: ""
+        contact_person:
+          type: string
+          example: ""
+        country:
+          type: string
+          example: ""
+        customer_group_id:
+          type: string
+          example: "1"
+        email:
+          type: string
+          example: ""
+        email_opt_in:
+          type: integer
+          example: 0
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Wick"
+        mobile:
+          type: string
+          example: "+4551942072"
+        network:
+          type: string
+          example: ""
+        orgonization:
+          type: string
+          example: ""
+        phone:
+          type: string
+          example: ""
+        postcode:
+          type: string
+          example: ""
+        refered_by:
+          type: string
+          example: "Search Engine"
+        sms_opt_in:
+          type: integer
+          example: 0
+        state:
+          type: string
+          example: ""
+
+    RepairTicket:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        customer_id:
+          type: integer
+          example: 789
+        device_id:
+          type: integer
+          example: 123
+        issue:
+          type: string
+          example: "Screen replacement needed"
+        status:
+          type: string
+          example: "pending"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:00:00Z"
+
+    RepairTicketInput:
+      type: object
+      properties:
+        customer_id:
+          type: integer
+          example: 789
+        device_id:
+          type: integer
+          example: 123
+        issue:
+          type: string
+          example: "Screen replacement needed"
+        status:
+          type: string
+          example: "pending"
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 202
+        customer_id:
+          type: integer
+          example: 789
+        total_amount:
+          type: number
+          format: float
+          example: 149.97
+        status:
+          type: string
+          example: "completed"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-14T15:30:00Z"
+
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 303
+        customer_id:
+          type: integer
+          example: 789
+        date_time:
+          type: string
+          format: date-time
+          example: "2024-01-16T14:00:00Z"
+        service_type:
+          type: string
+          example: "Screen Repair"
+        status:
+          type: string
+          example: "scheduled"
+
+    AppointmentInput:
+      type: object
+      properties:
+        customer_id:
+          type: integer
+          example: 789
+        date_time:
+          type: string
+          format: date-time
+          example: "2024-01-16T14:00:00Z"
+        service_type:
+          type: string
+          example: "Screen Repair"
+        notes:
+          type: string
+          example: "Customer mentioned screen is cracked"
+
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 404
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          example: "+1234567890"
+        service_interest:
+          type: string
+          example: "iPhone Repair"
+        status:
+          type: string
+          example: "new"
+
+    LeadInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          example: "+1234567890"
+        service_interest:
+          type: string
+          example: "iPhone Repair"
+
+    Part:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "74099947"
+        name:
+          type: string
+          example: "Back Camera For Samsung Galaxy S8 / S8 Plus (US Models)"
+        sku:
+          type: string
+          example: "107082011514"
+        upc_code:
+          type: string
+          example: ""
+        item_no:
+          type: string
+          example: "6872"
+        price:
+          type: string
+          example: "26.99"
+        in_stock:
+          type: string
+          example: "10"
+        cost_price:
+          type: string
+          example: "20.00"
+        tax_inclusive:
+          type: string
+          example: "0"
+        tax_class:
+          type: object
+          properties:
+            tax_class:
+              type: string
+              example: "GST"
+            id:
+              type: string
+              example: "1"
+            tax_percent:
+              type: string
+              example: "5.000"
+        warranty:
+          type: string
+          example: "30"
+        warranty_timeframe:
+          type: string
+          example: "1"
+        supplier:
+          type: string
+          example: "Supplier Name"
+        image:
+          type: string
+          example: "https://example.com/images/parts/back_camera.jpg"
+        devices:
+          type: string
+          example: "7720894,7720896"
+        is_serialize:
+          type: integer
+          example: 0
+        original_price:
+          type: string
+          example: "26.99"
+        gst:
+          type: string
+          example: "1.35"
+        serials:
+          type: array
+          items:
+            type: string
+        skus:
+          type: array
+          items:
+            type: string
+
+    Status:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Pending"
+        type:
+          type: string
+          example: "default"
+        color:
+          type: string
+          example: "#ffc107"
+
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        statusCode:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: "OK"
+        data:
+          oneOf:
+            - type: array
+              items:
+                type: object
+            - type: object
+
+    PurchaseOrder:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "41854"
+        order_id:
+          type: string
+          example: "PO-247"
+        serials:
+          type: string
+          example: ""
+        created_date:
+          type: string
+          example: "2024-07-04 11:26:08"
+        created_by:
+          type: string
+          example: "Paul Smith"
+        payment:
+          type: string
+          example: "792.52"
+        supplier:
+          type: string
+          example: "Mobile Sentrix"
+        adminEmail:
+          type: string
+          example: "john@example.com"
+        vendorID:
+          type: string
+          example: "5678"
+        supplierEmail:
+          type: string
+          example: ""
+        ticket_id:
+          type: string
+          example: ""
+        amount_paid:
+          type: string
+          example: "792.52"
+        status:
+          type: string
+          example: "Received"
+        tracking:
+          type: string
+          example: ""
+        special_part_id:
+          type: string
+          example: "0"
+        name:
+          type: string
+          example: "Back Housing W/ Small Components Pre-Installed Compatible For iPhone XR (No Logo) (Aftermarket Plus) (Space Gray)"
+        sku:
+          type: string
+          example: "107082002341"
+        upc_code:
+          type: string
+          example: ""
+        manufacturer:
+          type: string
+          example: "1003"
+        imei:
+          type: string
+          example: ""
+        grn_id:
+          type: string
+          example: "14868"
+        grn_count:
+          type: string
+          example: "12"
+        paid_status:
+          type: string
+          example: "Paid"
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 10
+        total_records:
+          type: integer
+          example: 162
+        total_pages:
+          type: integer
+          example: 17
+        next_page_exist:
+          type: boolean
+          example: true
+        next_page:
+          type: integer
+          example: 2
+        previous_page_exist:
+          type: boolean
+          example: false
+        previous_page:
+          type: integer
+          example: 0
+
+    CustomerList:
+      type: object
+      properties:
+        store_name:
+          type: string
+          example: "John Mobile Repair Store"
+        fullName:
+          type: string
+          example: "John Doe"
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        cid:
+          type: string
+          example: "2"
+        phone:
+          type: string
+          example: ""
+        mobile:
+          type: string
+          example: ""
+        address1:
+          type: string
+          example: "Street # 1, House # 2, Sector 1, Phase 1"
+        created_on:
+          type: integer
+          example: 1715691613
+        address2:
+          type: string
+          example: ""
+        postcode:
+          type: string
+          example: ""
+        city:
+          type: string
+          example: "Washington DC"
+        state:
+          type: string
+          example: ""
+        country:
+          type: string
+          example: ""
+        email:
+          type: string
+          example: ""
+        orgonization:
+          type: string
+          example: ""
+        refered_by:
+          type: string
+          example: ""
+        driving_licence:
+          type: string
+          example: ""
+        contact_person:
+          type: string
+          example: ""
+        tax_number:
+          type: string
+          example: ""
+        network:
+          type: string
+          example: ""
+        forgotten_as_gdpr:
+          type: string
+          example: "0"
+        gdpr_complianced:
+          type: string
+          example: ""
+        referred_loyaltyid:
+          type: string
+          example: ""
+        tax_class:
+          type: string
+          example: ""
+        priority_tax_class:
+          type: string
+          example: ""
+        customer_id_type:
+          type: string
+          example: "0"
+        customer_id_number:
+          type: string
+          example: ""
+        contact_person_relation:
+          type: string
+          example: ""
+        customer_group:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "1"
+            name:
+              type: string
+              example: "Individual"
+            repair:
+              type: string
+              example: "0"
+            unlocking:
+              type: string
+              example: "0"
+            accessories:
+              type: string
+              example: "0"
+            trade_in:
+              type: string
+              example: "0"
+            casual:
+              type: string
+              example: "0"
+            third_party_enabled:
+              type: string
+              example: "0"
+        membership_plan:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "415"
+            name:
+              type: string
+              example: "Student Plan"
+            status:
+              type: string
+              example: "Active"
+            subscription_id:
+              type: string
+              example: "274"
+        loyalty:
+          type: string
+          example: "0"
+        loyaltyBalance:
+          type: string
+          example: "0"
+        loyaltyBalanceText:
+          type: string
+          example: "USD  0.00"
+        storeCredits:
+          type: string
+          example: "0"
+        mobiles:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "+45 51 94 20 72"
+              isPrimary:
+                type: integer
+                example: 1
+        phones:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                example: ""
+              isPrimary:
+                type: integer
+                example: 0
+        emails:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "john-doe@example.com"
+              isPrimary:
+                type: integer
+                example: 0
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        statusCode:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: "Unauthorized"
+        data:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "Unauthorized"
+            message:
+              type: string
+              example: "Your request was made with invalid credentials."
+            code:
+              type: integer
+              example: 0
+            status:
+              type: integer
+              example: 401
+
+    CustomerDetail:
+      type: object
+      properties:
+        fullname:
+          type: string
+          example: "John Doe"
+        sms_opt_in:
+          type: string
+          example: "1"
+        state:
+          type: string
+          example: ""
+        cid:
+          type: string
+          example: "2"
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: ""
+        mobile:
+          type: string
+          example: ""
+        address1:
+          type: string
+          example: "Hourse # 1, Street # 2, Sector # 1"
+        address2:
+          type: string
+          example: ""
+        postcode:
+          type: string
+          example: ""
+        city:
+          type: string
+          example: "Washington DC"
+        country:
+          type: string
+          example: ""
+        email:
+          type: string
+          example: ""
+        orgonization:
+          type: string
+          example: ""
+        refered_by:
+          type: string
+          example: ""
+        driving_licence:
+          type: string
+          example: ""
+        contact_person:
+          type: string
+          example: ""
+        tax_number:
+          type: string
+          example: ""
+        network:
+          type: string
+          example: ""
+        forgotten_as_gdpr:
+          type: string
+          example: "0"
+        gdpr_complianced:
+          type: string
+          example: ""
+        referred_loyaltyid:
+          type: string
+          example: ""
+        tax_class:
+          type: string
+          example: ""
+        priority_tax_class:
+          type: string
+          example: ""
+        customer_custom_fields:
+          type: string
+          example: ""
+        customer_id_type:
+          type: string
+          example: "0"
+        customer_id_number:
+          type: string
+          example: ""
+        contact_person_relation:
+          type: string
+          example: ""
+        created_at:
+          type: string
+          example: "2024-09-23 11:52:23"
+        customer_group:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "1"
+            name:
+              type: string
+              example: "Individual"
+            repair:
+              type: string
+              example: "0"
+            unlocking:
+              type: string
+              example: "0"
+            accessories:
+              type: string
+              example: "0"
+            trade_in:
+              type: string
+              example: "0"
+            casual:
+              type: string
+              example: "0"
+            third_party_enabled:
+              type: string
+              example: "0"
+        membership_plan:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "415"
+            name:
+              type: string
+              example: "Student Plan"
+            status:
+              type: string
+              example: "Active"
+            subscription_id:
+              type: string
+              example: "274"
+        StoreCredits:
+          type: string
+          example: ""
+        custom_fields:
+          type: array
+          items:
+            type: string
+        mobiles:
+          type: array
+          items:
+            type: string
+        phones:
+          type: array
+          items:
+            type: string
+        emails:
+          type: array
+          items:
+            type: string
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "57524"
+        fullname:
+          type: string
+          example: "John Doe"
+        accesspin:
+          type: string
+          example: ""
+        image:
+          type: string
+          example: ""
+        role:
+          type: string
+          example: "Admin"
+        stores_for_assignment:
+          type: string
+          example: ""
+        access_stores:
+          type: string
+          example: ""
+        super:
+          type: string
+          example: "1"
+        assignmentStores:
+          type: array
+          items:
+            type: string
+
+  responses:
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+security:
+  - ApiKeyAuth: []
+
+securitySchemes:
+  ApiKeyAuth:
+    type: apiKey
+    in: query
+    name: api_key

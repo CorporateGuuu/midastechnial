@@ -103,6 +103,101 @@ try {
         echo "Error getting statuses: " . $e->getMessage() . "\n";
     }
     
+    // Example: Update ticket status
+    echo "\nExample: Updating ticket status\n";
+    echo "===============================\n";
+    try {
+        $ticketId = 123; // Replace with a valid ticket ID
+        $statusData = [
+            'status' => 'In Progress' // Replace with the desired status
+        ];
+        $response = $client->updateTicketStatus($ticketId, $statusData);
+        echo "Ticket status updated successfully: " . json_encode($response) . "\n";
+    } catch (Exception $e) {
+        echo "Error updating ticket status: " . $e->getMessage() . "\n";
+    }
+
+    // Example: Create new repair ticket
+    echo "\nExample: Creating a new repair ticket\n";
+    echo "=====================================\n";
+    try {
+        $ticketData = [
+            'devices' => [
+                [
+                    'imei' => '114231112421231',
+                    'public_comments' => 'Our team is working on it',
+                    'public_comment_flag' => 1,
+                    'PreConditions' => [],
+                    'status' => 'In Progress',
+                    'PostPreCategory' => '34826',
+                    'task_type' => 1,
+                    'gst' => 14.894,
+                    'device' => '845618',
+                    'staff_comments' => '',
+                    'warranty' => '5',
+                    'lineItemId' => 0,
+                    'repairProdItems' => [
+                        [
+                            'id' => '7516047',
+                            'name' => 'Huawei Mate 9 Screen Replacement Blk'
+                        ]
+                    ],
+                    'line_discount' => 0,
+                    'taxclass' => 28632,
+                    'device_location' => '',
+                    'warranty_timeframe' => '3',
+                    'Parts' => [
+                        [
+                            'product_id' => '7516552',
+                            'name' => 'Huawei Mate 9 Screen Replacement Blk',
+                            'price' => '0.00',
+                            'quantity' => 1,
+                            'supplier' => '',
+                            'warranty_timeframe' => '',
+                            'warrenty' => '',
+                            'serials' => ['0' => ''],
+                            'sku' => ''
+                        ]
+                    ],
+                    'supplied' => [],
+                    'security_code' => '',
+                    'network' => '',
+                    'serial' => '',
+                    'price' => 184.105,
+                    'due_on' => 1588156799,
+                    'tax_inclusive' => '1',
+                    'assigned_to' => 10111,
+                    'repairCategId' => '34826',
+                    'images' => []
+                ]
+            ],
+            'customFields' => [
+                [
+                    'racknumber' => [
+                        'label' => 'Rack Number',
+                        'value' => '311'
+                    ],
+                    'shipmentnum' => [
+                        'label' => 'Shipment Number',
+                        'value' => '12344211'
+                    ]
+                ]
+            ],
+            'summary' => [
+                'signature' => '',
+                'how_did_u_find_us' => '',
+                'customer_id' => 388,
+                'estimate_id' => '',
+                'employee_id' => 10111
+            ]
+        ];
+
+        $response = $client->createTicket($ticketData);
+        echo "Ticket created successfully: " . json_encode($response) . "\n";
+    } catch (Exception $e) {
+        echo "Error creating ticket: " . $e->getMessage() . "\n";
+    }
+    
     echo "\nAPI Client Examples Completed Successfully!\n";
     echo "==========================================\n";
     echo "You can now use the client methods to interact with RepairDesk API:\n";
@@ -114,6 +209,7 @@ try {
     echo "- getAppointments(), createAppointment()\n";
     echo "- createLead()\n";
     echo "- getStatuses()\n";
+    echo "- updateTicketStatus()\n";
     
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";

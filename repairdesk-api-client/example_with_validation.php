@@ -70,9 +70,9 @@ try {
     echo "Customer data structure:\n";
     echo json_encode($customerData, JSON_PRETTY_PRINT) . "\n\n";
     
-    echo "\nExample: Creating a Repair Ticket\n";
-    echo "===============================\n";
-    
+    echo "\nExample: Creating a Repair Ticket (Simple)\n";
+    echo "=========================================\n";
+
     $repairTicket = [
         'customer_id' => 12345, // Existing customer ID
         'device_id' => 44221, // Existing device ID
@@ -82,9 +82,105 @@ try {
         'estimated_cost' => 89.99,
         'estimated_time' => '2 hours'
     ];
-    
-    echo "Repair ticket data structure:\n";
+
+    echo "Simple repair ticket data structure:\n";
     echo json_encode($repairTicket, JSON_PRETTY_PRINT) . "\n\n";
+
+    echo "\nExample: Creating a Comprehensive Repair Ticket with Validation\n";
+    echo "===========================================================\n";
+
+    $comprehensiveTicket = [
+        'devices' => [
+            [
+                'imei' => '114231112421231',
+                'public_comments' => 'Our team is working on it',
+                'public_comment_flag' => 1,
+                'PreConditions' => [],
+                'status' => 'In Progress',
+                'PostPreCategory' => '34826',
+                'task_type' => 1,
+                'gst' => 14.894,
+                'device' => '845618',
+                'staff_comments' => '',
+                'warranty' => '5',
+                'lineItemId' => 0,
+                'repairProdItems' => [
+                    [
+                        'id' => '7516047',
+                        'name' => 'Huawei Mate 9 Screen Replacement Blk'
+                    ]
+                ],
+                'line_discount' => 0,
+                'taxclass' => 28632,
+                'device_location' => '',
+                'warranty_timeframe' => '3',
+                'Parts' => [
+                    [
+                        'product_id' => '7516552',
+                        'name' => 'Huawei Mate 9 Screen Replacement Blk',
+                        'price' => '0.00',
+                        'quantity' => 1,
+                        'supplier' => '',
+                        'warranty_timeframe' => '',
+                        'warrenty' => '',
+                        'serials' => ['0' => ''],
+                        'sku' => ''
+                    ]
+                ],
+                'supplied' => [],
+                'security_code' => '',
+                'network' => '',
+                'serial' => '',
+                'price' => 184.105,
+                'due_on' => 1588156799,
+                'tax_inclusive' => '1',
+                'assigned_to' => 10111,
+                'repairCategId' => '34826',
+                'images' => []
+            ]
+        ],
+        'customFields' => [
+            [
+                'racknumber' => [
+                    'label' => 'Rack Number',
+                    'value' => '311'
+                ],
+                'shipmentnum' => [
+                    'label' => 'Shipment Number',
+                    'value' => '12344211'
+                ]
+            ]
+        ],
+        'summary' => [
+            'signature' => '',
+            'how_did_u_find_us' => '',
+            'customer_id' => 388,
+            'estimate_id' => '',
+            'employee_id' => 10111
+        ]
+    ];
+
+    echo "Comprehensive repair ticket data structure:\n";
+    echo json_encode($comprehensiveTicket, JSON_PRETTY_PRINT) . "\n\n";
+
+    echo "Required sections for comprehensive ticket:\n";
+    $requiredSections = ['devices', 'summary'];
+    foreach ($requiredSections as $section) {
+        echo "- $section: " . (isset($comprehensiveTicket[$section]) ? '✓ Present' : '✗ Missing') . "\n";
+    }
+
+    echo "\nRequired summary fields:\n";
+    $requiredSummaryFields = ['customer_id', 'employee_id'];
+    foreach ($requiredSummaryFields as $field) {
+        echo "- summary.$field: " . (isset($comprehensiveTicket['summary'][$field]) ? '✓ Present' : '✗ Missing') . "\n";
+    }
+
+    echo "\nValidating devices array:\n";
+    if (is_array($comprehensiveTicket['devices']) && !empty($comprehensiveTicket['devices'])) {
+        echo "- devices: ✓ Is a non-empty array\n";
+    } else {
+        echo "- devices: ✗ Must be a non-empty array\n";
+    }
     
     echo "\nError Handling Examples:\n";
     echo "=======================\n";

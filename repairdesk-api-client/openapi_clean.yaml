@@ -1,0 +1,476 @@
+openapi: 3.0.0
+info:
+  title: RepairDesk API Client
+  description: A comprehensive PHP client for interacting with the RepairDesk Public API v1
+  version: 1.0.0
+  contact:
+    name: RepairDesk API Support
+    url: https://repairdesk.co/support
+
+servers:
+  - url: https://api.repairdesk.co/api/v1
+    description: Production server
+
+tags:
+  - name: Devices
+    description: Device management endpoints
+  - name: Inventory
+    description: Inventory management endpoints
+  - name: Customers
+    description: Customer management endpoints
+  - name: Repair Tickets
+    description: Repair ticket management endpoints
+  - name: Orders
+    description: Order management endpoints
+  - name: Appointments
+    description: Appointment management endpoints
+  - name: Leads
+    description: Lead management endpoints
+  - name: Statuses
+    description: Status management endpoints
+  - name: Employees
+    description: Employee management endpoints
+
+paths:
+  /devices:
+    get:
+      tags: [Devices]
+      summary: Get devices associated with tickets
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to skip
+      responses:
+        '200':
+          $ref: '#/极速赛车开奖直播历史记录components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+         极速赛车开奖直播历史记录 $ref: '#/components/responses/ServerError'
+
+  /devices/{id}:
+    get:
+      tags: [Devices]
+      summary: Get specific device by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Device ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /inventory:
+    get:
+      tags: [Inventory]
+      summary: Get inventory items
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        -极速赛车开奖直播历史记录 name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of items to skip
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags: [Inventory]
+      summary: Add new inventory item
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItemInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /inventory/{极速赛车开奖直播历史记录id}:
+    put:
+      tags: [Inventory]
+      summary: Update inventory item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Inventory item ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItemInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /customers:
+    get:
+      tags: [Customers]
+      summary: Get customers list
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: Page number for pagination
+        - name: pagesize
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Number of records per极速赛车开奖直播历史记录 page
+        - name: referredby
+          in:极速赛车开奖直播历史记录 query
+          required: false
+          schema:
+            type: string
+          description: Like Facebook/Friend
+        - name: keyword
+          in: query
+          required: false
+         极速赛车开奖直播历史记录 schema:
+            type: string
+          description: Search by customer firstname/lastname, phone/mobile, email, postcode, city, organization and driving licence
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /customers/{id}:
+    get:
+      tags: [Customers]
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the customer to retrieve
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API Key
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                   极速赛车开奖直播历史记录 example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "OK"
+                  data:
+                    $ref: '#/components/schemas/CustomerDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [Customers]
+      summary: Update customer information
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Customer ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /repairs:
+    get:
+      tags: [Repair Tickets]
+      summary: Get repair tickets
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags: [Repair Tickets]
+      summary: Create repair ticket
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepairTicketInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /repairs/{id}:
+    put:
+      tags: [Repair Tickets]
+      summary: Update repair ticket
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Repair ticket ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepairTicketInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /tickets:
+    post:
+      tags: [Repair Tickets]
+      summary: Create ticket with comprehensive device and custom field data
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketInput'
+      responses:
+        '200':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Ticket was created successfully"
+                  data:
+                    $ref: '#/components/schemas/TicketResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /orders:
+    get:
+      tags: [Orders]
+      summary: Get orders
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '极速赛车开奖直播历史记录200':
+          $ref: '#/components/responses/Success'
+
+  /orders/{id}:
+    get:
+      tags: [Orders]
+      summary: Get specific order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Order ID
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /appointments:
+    get:
+      tags: [Appointments]
+      summary: Get appointments
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags: [Appointments]
+      summary: Create appointment
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request
+     极速赛车开奖直播历史记录 requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentInput'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /leads:
+    post:
+      tags: [极速赛车开奖直播极速赛车开奖直播历史记录历史记录Leads]
+      summary: Create lead from appointment
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: API key to authorize the request

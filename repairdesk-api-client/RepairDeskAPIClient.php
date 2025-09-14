@@ -300,6 +300,37 @@ class RepairDeskAPIClient {
     }
     
     /**
+     * Get purchase orders with detailed filtering options
+     * 
+     * @param array $params Query parameters
+     *   - page * (integer): Page number for pagination
+     *   - pagesize * (integer): Number of records per page
+     *   - id (integer): Purchase order ID
+     *   - item_name (string): Product name
+     *   - manufacturer (integer): Manufacturer ID
+     *   - purchase_order_status (string): PO-Status
+     *   - po_order_id (string): PO Order number
+     *   - supplier (string): Supplier Name
+     *   - sku (string): Item SKU
+     *   - createdd_date (string): Exact date match [YYYY-MM-DD]
+     *   - created_date (string): Cases: today, 7days, 14days, 30days or date starting from the given date YYYY-MM-DD
+     * @return array Purchase order data with pagination
+     */
+    public function getPurchaseOrders($params = []) {
+        // Validate required parameters
+        if (!isset($params['page']) || !is_numeric($params['page'])) {
+            throw new Exception("Required parameter 'page' is missing or invalid");
+        }
+        
+        if (!isset($params['pagesize']) || !is_numeric($params['pagesize'])) {
+            throw new Exception("Required parameter 'pagesize' is missing or invalid");
+        }
+        
+        $query = !empty($params) ? '?' . http_build_query($params) : '';
+        return $this->request('GET', '/purchase-orders' . $query);
+    }
+    
+    /**
      * Create appointment
      * 
      * @param array $appointmentData Appointment data
@@ -340,14 +371,110 @@ class RepairDeskAPIClient {
     }
     
     /**
-     * Test API connection
+     * Create ticket with comprehensive device and custom field data
      * 
+     * @param array $ticketData Ticket data including devices, customFields, and summary
+     * @return array Created ticket data with success status
+     */
+    public function createTicket($ticketData) {
+        // Validate required fields in ticket data
+        $requiredSections = ['devices', 'summary'];
+        foreach ($requiredSections as $section) {
+            if (!isset($ticketData[$section])) {
+                throw new Exception("Required section '$section' is missing in ticket data");
+            }
+        }
+        
+        // Validate devices array
+        if (!is_array($ticketData['devices']) || empty($ticketData['devices'])) {
+            throw new Exception("Devices array must be a non-empty array");
+        }
+        
+        // Validate summary section
+        $requiredSummaryFields = ['customer_id', 'employee_id'];
+        foreach ($requiredSummaryFields as $field) {
+            if (!isset($ticketData['summary'][$field])) {
+                throw new Exception("Required summary field '$field' is missing");
+            }
+        }
+        
+        return $this->request('POST', '/tickets', $ticketData);
+    }
+    
+    /**
+     * Update ticket status
+     *
+     * @param int $ticketId Repair ticket ID
+     * @param array $statusData Updated status data
+     * @return array Updated ticket data
+     */
+    public function updateTicketStatus($ticketId, $statusData) {
+        // Validate ticket ID
+        if (!is_numeric($ticketId) || $ticketId <= 0) {
+            throw new Exception("Invalid ticket ID. Ticket ID must be a positive integer.");
+        }
+
+        // Validate status data
+        if (!isset($statusData['status']) || empty($statusData['status'])) {
+            throw new Exception("Status is required in statusData.");
+        }
+
+        // Validate line item ID if provided
+        if (isset($statusData['lineItemId']) && (!is_numeric($statusData['lineItemId']) || $statusData['lineItemId'] < 0)) {
+            throw new Exception("Invalid line item ID. Line item ID must be a non-negative integer.");
+        }
+
+        return $this->request('PUT', "/ticket/updateticketstatus/$ticketId", $statusData);
+    }
+
+    /**
+     * Update multiple ticket statuses (batch operation)
+     *
+     * @param array $batchData Array of ticket updates, each containing 'ticketId' and 'statusData'
+     * @return array Array of update results
+     */
+    public function updateTicketStatuses($batchData) {
+        if (!is_array($batchData) || empty($batchData)) {
+            throw new Exception("Batch data must be a non-empty array.");
+        }
+
+        $results = [];
+        foreach ($batchData as $index => $update) {
+            try {
+                if (!isset($update['ticketId']) || !isset($update['statusData'])) {
+                    throw new Exception("Each batch item must contain 'ticketId' and 'statusData'.");
+                }
+
+                $result = $this->updateTicketStatus($update['ticketId'], $update['statusData']);
+                $results[] = [
+                    'index' => $index,
+                    'ticketId' => $update['ticketId'],
+                    'success' => true,
+                    'data' => $result
+                ];
+            } catch (Exception $e) {
+                $results[] = [
+                    'index' => $index,
+                    'ticketId' => $update['ticketId'] ?? null,
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Test API connection
+     *
      * @return bool True if connection is successful
      * @throws Exception If connection fails
      */
     public function testConnection() {
         try {
-            $this->request('GET', '/');
+            // Try to get repair tickets with minimal parameters to test connection
+            $this->request('GET', '/repairs?page=1&pagesize=1');
             return true;
         } catch (Exception $e) {
             throw new Exception('API Connection Test Failed: ' . $e->getMessage());
