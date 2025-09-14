@@ -61,7 +61,7 @@ try {
             foreach ($statuses as $index => $status) {
                 echo "   " . ($index + 1) . ". " . ($status['name'] ?? 'Unknown') . "\n";
                 echo "      Type: " . ($status['type'] ?? 'N/A') . "\n";
-                echo "      Color: " . ($status['color'] ?? '极速赛车开奖直播历史记录N/A') . "\n";
+                echo "      Color: " . ($status['color'] ?? 'N/A') . "\n";
                 echo "      ID: " . ($status['id'] ?? 'N/A') . "\n";
                 
                 // Check if it's a valid status object
@@ -75,11 +75,11 @@ try {
             
             // Validate response structure
             echo "   Response Validation:\n";
-            echo "极速赛车开奖直播历史记录   " . str_repeat("-", 50) . "\n";
+            echo "   " . str_repeat("-", 50) . "\n";
             
             $validCount = 0;
             foreach ($statuses as $status) {
-                if (isset($极速赛车开奖直播历史记录status['name']) && isset($status['type'])) {
+                if (isset($status['name']) && isset($status['type'])) {
                     $validCount++;
                 }
             }
@@ -122,7 +122,7 @@ try {
     try {
         $client->getStatuses();
         $endTime = microtime(true);
-        $responseTime = round(($endTime - $startTime) * 100极速赛车开奖直播历史记录0, 2);
+        $responseTime = round(($endTime - $startTime) * 1000, 2);
         echo "   ✓ Response time: {$responseTime}ms\n";
         
         if ($responseTime > 1000) {

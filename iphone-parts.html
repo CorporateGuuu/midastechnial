@@ -3,77 +3,704 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iPhone Parts - Midas Technical Solutions</title>
+  <title>iPhone Parts - Premium Repair Parts | Midas Technical Solutions</title>
+  <meta name="description" content="Shop premium iPhone repair parts at Midas Technical Solutions. Genuine screens, batteries, cameras, and components for all iPhone models. Fast shipping, warranty guaranteed." />
+  <meta name="keywords" content="iPhone parts, iPhone screen, iPhone battery, iPhone camera, iPhone repair parts, genuine Apple parts" />
   <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
-  <header>
-    <div class="container header-container">
-      <button class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
-      <div class="logo">
-        <div class="logo-icon">M</div>
-        <div class="logo-text">
-          <span class="logo-main">Midas</span>
-          <span class="logo-sub">Technical Solutions</span>
+  <!-- Loading Animation -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="loading-text">MIDAS</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="modern-header">
+    <div class="header-top">
+      <div class="container">
+        <div class="header-announcement">
+          <i class="fas fa-truck"></i>
+          <span>Free shipping on orders over $99 • 24/7 Expert Support</span>
+        </div>
+        <div class="header-actions">
+          <a href="sign-in.html" class="auth-link"><i class="fas fa-user"></i> Sign In</a>
+          <a href="register.html" class="auth-link"><i class="fas fa-user-plus"></i> Register</a>
         </div>
       </div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Solutions</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </nav>
-      <div class="cart-icon" title="Cart">
-        🛒
+    </div>
+
+    <div class="header-main">
+      <div class="container header-container">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div class="logo-text">
+            <span class="logo-main">MIDAS</span>
+            <span class="logo-sub">Technical Solutions</span>
+          </div>
+        </div>
+
+        <div class="search-container">
+          <form class="search-form" id="search-form" action="javascript:void(0);">
+            <div class="search-input-wrapper">
+              <i class="fas fa-search search-icon"></i>
+              <input type="search" id="search-input" name="q" placeholder="Search iPhone parts..." />
+              <button type="button" class="search-filter-btn">
+                <i class="fas fa-sliders-h"></i>
+              </button>
+            </div>
+            <button type="submit" class="search-submit-btn">
+              <i class="fas fa-search"></i>
+              <span>Search</span>
+            </button>
+          </form>
+          <div id="search-results" class="search-results"></div>
+        </div>
+
+        <div class="header-actions">
+          <a href="wishlist.html" class="header-action-btn" title="Wishlist">
+            <i class="fas fa-heart"></i>
+            <span class="action-label">Wishlist</span>
+          </a>
+          <a href="cart.html" class="header-action-btn cart-btn" title="Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+            <span class="action-label">Cart</span>
+          </a>
+        </div>
       </div>
     </div>
+
+    <nav class="main-navigation">
+      <div class="container">
+        <ul class="nav-links">
+          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="dropdown">
+            <a href="products.html"><i class="fas fa-box"></i> Products <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-section">
+                <h4><i class="fab fa-apple"></i> Apple Products</h4>
+                <a href="iphone-parts.html" class="active">iPhone Parts</a>
+                <a href="ipad-parts.html">iPad Parts</a>
+                <a href="macbook-parts.html">MacBook Parts</a>
+                <a href="apple-parts-program.html">Apple Parts Program</a>
+              </div>
+              <div class="dropdown-section">
+                <h4><i class="fas fa-mobile-alt"></i> Android & Others</h4>
+                <a href="samsung-parts.html">Samsung Parts</a>
+                <a href="categories.html">All Categories</a>
+                <a href="shop-by-category.html">Shop by Category</a>
+              </div>
+              <div class="dropdown-section">
+                <h4><i class="fas fa-tools"></i> Tools & Services</h4>
+                <a href="repair-tools.html">Repair Tools</a>
+                <a href="lcd-buyback.html">LCD Buyback</a>
+                <a href="trade-off.html">Trade-In Program</a>
+              </div>
+            </div>
+          </li>
+          <li><a href="financing.html"><i class="fas fa-credit-card"></i> Financing</a></li>
+          <li><a href="account.html"><i class="fas fa-user-circle"></i> Account</a></li>
+          <li><a href="my-orders.html"><i class="fas fa-shopping-bag"></i> Orders</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
-  <aside class="side-menu" id="side-menu" aria-label="Side menu navigation">
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="categories.html">Categories</a></li>
-      <li><a href="lcd-buyback.html">LCD Buyback</a></li>
-      <li><a href="trade-off.html">Trade-Off</a></li>
-      <li><a href="financing.html">Financing</a></li>
-      <li><a href="apple-parts-program.html">Apple Parts Program</a></li>
-      <li><a href="shop-by-category.html">Shop By Category</a></li>
-      <li><a href="iphone-parts.html" class="active">iPhone Parts</a></li>
-      <li><a href="samsung-parts.html">Samsung Parts</a></li>
-      <li><a href="ipad-parts.html">iPad Parts</a></li>
-      <li><a href="macbook-parts.html">MacBook Parts</a></li>
-      <li><a href="repair-tools.html">Repair Tools</a></li>
-      <li><a href="account.html">Account</a></li>
-      <li><a href="cart.html">Cart</a></li>
-      <li><a href="sign-in.html">Sign In</a></li>
-      <li><a href="register.html">Register</a></li>
-      <li><a href="my-orders.html">My Orders</a></li>
-      <li><a href="my-profile.html">My Profile</a></li>
-      <li><a href="wishlist.html">Wishlist</a></li>
-    </ul>
+  <!-- Sidebar Menu -->
+  <aside class="sidebar-menu" id="sidebar-menu">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-tools"></i>
+        <span>MIDAS</span>
+      </div>
+      <button class="sidebar-close" id="sidebar-close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <h3><i class="fas fa-home"></i> Main</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="products.html"><i class="fas fa-box"></i> All Products</a></li>
+          <li><a href="categories.html"><i class="fas fa-th-large"></i> Categories</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3><i class="fab fa-apple"></i> Apple Products</h3>
+        <ul>
+          <li><a href="iphone-parts.html" class="active"><i class="fas fa-mobile-alt"></i> iPhone Parts</a></li>
+          <li><a href="ipad-parts.html"><i class="fas fa-tablet-alt"></i> iPad Parts</a></li>
+          <li><a href="macbook-parts.html"><i class="fas fa-laptop"></i> MacBook Parts</a></li>
+          <li><a href="apple-parts-program.html"><i class="fas fa-star"></i> Premium Program</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3><i class="fas fa-tools"></i> Tools & Services</h3>
+        <ul>
+          <li><a href="repair-tools.html"><i class="fas fa-wrench"></i> Repair Tools</a></li>
+          <li><a href="lcd-buyback.html"><i class="fas fa-recycle"></i> LCD Buyback</a></li>
+          <li><a href="trade-off.html"><i class="fas fa-exchange-alt"></i> Trade-In</a></li>
+          <li><a href="financing.html"><i class="fas fa-credit-card"></i> Financing</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3><i class="fas fa-user"></i> Account</h3>
+        <ul>
+          <li><a href="sign-in.html"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+          <li><a href="register.html"><i class="fas fa-user-plus"></i> Register</a></li>
+          <li><a href="my-profile.html"><i class="fas fa-user-circle"></i> My Profile</a></li>
+          <li><a href="my-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+          <li><a href="wishlist.html"><i class="fas fa-heart"></i> Wishlist</a></li>
+          <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+        </ul>
+      </div>
+    </nav>
   </aside>
 
+  <!-- Main Content -->
   <main>
-    <section class="page-content">
+    <!-- Page Header -->
+    <section class="page-header-section">
+      <div class="page-header-background">
+        <div class="page-header-gradient"></div>
+        <div class="page-header-pattern"></div>
+      </div>
+
+      <div class="container page-header-container">
+        <div class="page-header-content">
+          <div class="page-breadcrumb">
+            <a href="index.html">Home</a> <i class="fas fa-chevron-right"></i>
+            <a href="products.html">Products</a> <i class="fas fa-chevron-right"></i>
+            <span>iPhone Parts</span>
+          </div>
+
+          <h1 class="page-title">
+            <i class="fab fa-apple"></i>
+            iPhone Parts
+          </h1>
+
+          <p class="page-description">
+            Premium quality iPhone repair parts for professional technicians.
+            Genuine components with warranty guarantee and fast delivery.
+          </p>
+
+          <div class="page-stats">
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">iPhone Parts</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">15+</div>
+              <div class="stat-label">Models Supported</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">1 Year</div>
+              <div class="stat-label">Warranty</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-header-visual">
+          <div class="iphone-showcase">
+            <div class="iphone-device">
+              <div class="iphone-screen">
+                <i class="fab fa-apple"></i>
+              </div>
+              <div class="iphone-parts">
+                <div class="part screen" data-part="Screen">Screen</div>
+                <div class="part battery" data-part="Battery">Battery</div>
+                <div class="part camera" data-part="Camera">Camera</div>
+                <div class="part speaker" data-part="Speaker">Speaker</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
       <div class="container">
-        <h1>iPhone Parts</h1>
-        <p>High-quality parts for iPhone repairs.</p>
+        <div class="filters-container">
+          <div class="filter-group">
+            <label><i class="fas fa-mobile-alt"></i> iPhone Model:</label>
+            <select id="model-filter">
+              <option value="">All Models</option>
+              <option value="iphone-15">iPhone 15 Series</option>
+              <option value="iphone-14">iPhone 14 Series</option>
+              <option value="iphone-13">iPhone 13 Series</option>
+              <option value="iphone-12">iPhone 12 Series</option>
+              <option value="iphone-11">iPhone 11 Series</option>
+              <option value="iphone-se">iPhone SE</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label><i class="fas fa-cogs"></i> Part Type:</label>
+            <select id="part-filter">
+              <option value="">All Parts</option>
+              <option value="screen">Screens</option>
+              <option value="battery">Batteries</option>
+              <option value="camera">Cameras</option>
+              <option value="charging">Charging Ports</option>
+              <option value="speaker">Speakers</option>
+              <option value="button">Buttons</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label><i class="fas fa-sort-amount-down"></i> Sort by:</label>
+            <select id="sort-filter">
+              <option value="popular">Most Popular</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
+          </div>
+
+          <button class="filter-reset-btn">
+            <i class="fas fa-undo"></i>
+            <span>Reset Filters</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+      <div class="container">
+        <div class="products-header">
+          <h2>iPhone Repair Parts</h2>
+          <p>Choose from our extensive collection of genuine iPhone parts</p>
+        </div>
+
+        <div class="products-grid">
+          <!-- iPhone 15 Pro Max Screen -->
+          <div class="product-card" data-model="iphone-15" data-part="screen">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop" alt="iPhone 15 Pro Max Screen" loading="lazy">
+              <div class="product-badge">New</div>
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone 15 Pro Max Screen</h3>
+              <div class="product-model">For iPhone 15 Pro Max</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="rating-count">(128 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$299.99</span>
+                <span class="original-price">$349.99</span>
+                <span class="discount-badge">-14%</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- iPhone 15 Battery -->
+          <div class="product-card" data-model="iphone-15" data-part="battery">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop" alt="iPhone 15 Battery" loading="lazy">
+              <div class="product-badge">Bestseller</div>
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone 15 Battery</h3>
+              <div class="product-model">For iPhone 15 Series</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="rating-count">(89 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$79.99</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- iPhone Camera Module -->
+          <div class="product-card" data-model="iphone-15" data-part="camera">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1516724562728-afc824a36e84?w=400&h=400&fit=crop" alt="iPhone Camera Module" loading="lazy">
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone 15 Camera Module</h3>
+              <div class="product-model">Triple Camera System</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="rating-count">(67 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$149.99</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status low-stock">
+                  <i class="fas fa-exclamation-triangle"></i> Low Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- iPhone Charging Port -->
+          <div class="product-card" data-model="iphone-15" data-part="charging">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=400&h=400&fit=crop" alt="iPhone Charging Port" loading="lazy">
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone Charging Port</h3>
+              <div class="product-model">Lightning Connector</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="rating-count">(156 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$24.99</span>
+                <span class="original-price">$34.99</span>
+                <span class="discount-badge">-29%</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- iPhone 14 Screen -->
+          <div class="product-card" data-model="iphone-14" data-part="screen">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=400&h=400&fit=crop" alt="iPhone 14 Screen" loading="lazy">
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone 14 Screen</h3>
+              <div class="product-model">Super Retina XDR Display</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="rating-count">(203 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$249.99</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- iPhone Speaker Assembly -->
+          <div class="product-card" data-model="iphone-14" data-part="speaker">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=400&fit=crop" alt="iPhone Speaker Assembly" loading="lazy">
+              <div class="product-badge">Kit</div>
+              <div class="product-actions">
+                <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="action-btn quick-view-btn" title="Quick View">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>iPhone Speaker Assembly</h3>
+              <div class="product-model">Ear Speaker & Mic</div>
+              <div class="product-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="rating-count">(94 reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">$39.99</span>
+              </div>
+              <div class="product-meta">
+                <span class="stock-status in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock
+                </span>
+                <span class="shipping-info">Free shipping</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="products-footer">
+          <button class="load-more-btn">
+            <i class="fas fa-plus"></i>
+            <span>Load More Parts</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Choose Our iPhone Parts?</h2>
+          <p>Experience the difference with our premium iPhone repair solutions</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Genuine Quality</h3>
+            <p>All iPhone parts are sourced directly from authorized manufacturers ensuring perfect compatibility and reliability.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h3>Professional Grade</h3>
+            <p>Designed specifically for professional repair technicians with easy installation and long-lasting performance.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3>Fast Delivery</h3>
+            <p>Lightning-fast shipping with real-time tracking. Most orders delivered within 2-3 business days.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-award"></i>
+            </div>
+            <h3>1-Year Warranty</h3>
+            <p>Complete peace of mind with our comprehensive 1-year warranty on all iPhone parts and repairs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+      <div class="container">
+        <div class="newsletter-content">
+          <div class="newsletter-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="newsletter-text">
+            <h3>Stay Updated on iPhone Parts</h3>
+            <p>Get notified about new iPhone models, part releases, and special offers</p>
+          </div>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit">
+              <i class="fas fa-paper-plane"></i>
+              <span>Subscribe</span>
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="container footer-container">
-      <p>© 2024 Midas Technical Solutions. All rights reserved.</p>
+  <!-- Footer -->
+  <footer class="modern-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <i class="fas fa-tools"></i>
+            <span>MIDAS</span>
+          </div>
+          <p>Your trusted partner for premium iPhone repair parts and professional tools. Quality guaranteed.</p>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>iPhone Parts</h4>
+          <ul>
+            <li><a href="#screens">Screens & Displays</a></li>
+            <li><a href="#batteries">Batteries</a></li>
+            <li><a href="#cameras">Cameras</a></li>
+            <li><a href="#charging">Charging Ports</a></li>
+            <li><a href="#speakers">Speakers</a></li>
+            <li><a href="#buttons">Buttons</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="my-orders.html">Installation Guide</a></li>
+            <li><a href="my-profile.html">Compatibility Check</a></li>
+            <li><a href="wishlist.html">Warranty Info</a></li>
+            <li><a href="cart.html">Technical Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <ul class="contact-info">
+            <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+            <li><i class="fas fa-envelope"></i> iphone@midastech.com</li>
+            <li><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley</li>
+            <li><i class="fas fa-clock"></i> Mon-Fri: 9AM-6PM PST</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="payment-methods">
+          <i class="fab fa-cc-visa"></i>
+          <i class="fab fa-cc-mastercard"></i>
+          <i class="fab fa-cc-amex"></i>
+          <i class="fab fa-cc-paypal"></i>
+          <i class="fab fa-cc-apple-pay"></i>
+        </div>
+        <p>&copy; 2024 Midas Technical Solutions. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Scripts -->
   <script type="module" src="search.js"></script>
   <script src="side-menu.js"></script>
+  <script src="modern-scripts.js"></script>
+  <script src="iphone-filters.js"></script>
 </body>
 </html>
