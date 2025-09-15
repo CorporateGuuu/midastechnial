@@ -264,9 +264,7 @@ const searchResults = document.getElementById('search-results');
 const productsList = document.getElementById('products-list');
 const cartIcon = document.querySelector('.cart-count');
 
-// Load cart from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-updateCartDisplay();
+// Cart is managed by cart.js - no need to declare it here
 
 function loadProducts() {
   if (!productsList) return; // Skip if products list doesn't exist on this page
@@ -313,16 +311,21 @@ function addToCart(e) {
   const name = e.target.dataset.name;
   const price = parseFloat(e.target.dataset.price);
 
-  const existingItem = cart.find(item => item.id === id);
-  if (existingItem) {
-    existingItem.quantity += 1;
+  // Use the global addToCart function from cart.js if available
+  if (window.addToCart) {
+    window.addToCart(id, name, price);
   } else {
-    cart.push({ id, name, price, quantity: 1 });
+    // Fallback to local implementation
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ id, name, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    alert(`${name} added to cart!`);
   }
-
-  localStorage.setItem('cart', JSON.stringify(cart));
-  updateCartDisplay();
-  alert(`${name} added to cart!`);
 }
 
 function updateCartDisplay() {

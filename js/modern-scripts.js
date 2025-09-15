@@ -445,7 +445,7 @@ window.addEventListener('load', fixResponsiveMenu);
 window.addEventListener('resize', fixResponsiveMenu);
 
 // ===== SECURE CART FUNCTIONALITY =====
-let cart = [];
+// Cart is managed by cart.js - using global functions instead
 let cartKey = 'midasCart_secure';
 let encryptionKey = 'midas_secure_key_' + Date.now().toString(36);
 
@@ -495,51 +495,15 @@ function decryptCartData(encryptedData) {
     }
 }
 
-// Secure cart storage with expiration
+// Secure cart storage functions - now using cart.js for cart management
 function saveCartSecurely() {
-    try {
-        const cartData = {
-            items: cart,
-            timestamp: Date.now(),
-            expires: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
-            sessionId: sessionStorage.getItem('sessionId') || generateSessionId()
-        };
-
-        const encrypted = encryptCartData(cartData);
-        if (encrypted) {
-            localStorage.setItem(cartKey, encrypted);
-        }
-    } catch (e) {
-        console.error('Failed to save cart securely:', e);
-    }
+    // Cart is now managed by cart.js - this function is kept for compatibility
+    console.log('Cart saving handled by cart.js');
 }
 
 function loadCartSecurely() {
-    try {
-        const encryptedData = localStorage.getItem(cartKey);
-        if (!encryptedData) {
-            cart = [];
-            return;
-        }
-
-        const cartData = decryptCartData(encryptedData);
-        if (!cartData || !Array.isArray(cartData.items)) {
-            cart = [];
-            return;
-        }
-
-        // Check expiration
-        if (cartData.expires && Date.now() > cartData.expires) {
-            localStorage.removeItem(cartKey);
-            cart = [];
-            return;
-        }
-
-        cart = cartData.items;
-    } catch (e) {
-        console.error('Failed to load cart securely:', e);
-        cart = [];
-    }
+    // Cart is now managed by cart.js - this function is kept for compatibility
+    console.log('Cart loading handled by cart.js');
 }
 
 function generateSessionId() {
@@ -548,12 +512,10 @@ function generateSessionId() {
     return sessionId;
 }
 
+// Cart display is now handled by cart.js
 function updateCartDisplay() {
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-        cartCount.textContent = Math.max(0, totalItems);
-    }
+    // This function is kept for compatibility but cart display is managed by cart.js
+    console.log('Cart display managed by cart.js');
 }
 
 function validateCartItem(productId, name, price, image) {
@@ -586,6 +548,13 @@ function validateCartItem(productId, name, price, image) {
 
 function addToCart(productId, name, price, image) {
     try {
+        // Use the global addToCart function from cart.js if available
+        if (window.addToCart) {
+            window.addToCart(productId, name, price, image);
+            return true;
+        }
+
+        // Fallback to local implementation
         const validatedItem = validateCartItem(productId, name, price, image);
         const existingItem = cart.find(item => item.id === validatedItem.id);
 

@@ -505,35 +505,32 @@ class ProductsManager {
     addToCart(product) {
         if (!product || product.stock_quantity === 0) return;
 
-        const quantity = 1; // Default quantity
-
-        // Get existing cart
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-
-        // Check if product already in cart
-        const existingItem = cart.find(item => item.id === product.id);
-
-        if (existingItem) {
-            existingItem.quantity += quantity;
+        // Use the global addToCart function from cart.js
+        const productImage = product.images ? product.images[0] : null;
+        if (window.addToCart) {
+            window.addToCart(product.id, product.name, product.price, productImage);
         } else {
-            cart.push({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.images ? product.images[0] : '',
-                quantity: quantity,
-                sku: product.sku
-            });
+            // Fallback if global function not available
+            const quantity = 1;
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id === product.id);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: productImage,
+                    quantity: quantity,
+                    sku: product.sku
+                });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            this.updateCartCount();
+            this.showNotification('Product added to cart!', 'success');
         }
-
-        // Save cart
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Update cart count
-        this.updateCartCount();
-
-        // Show success message
-        this.showNotification('Product added to cart!', 'success');
     }
 
     updateCartCount() {

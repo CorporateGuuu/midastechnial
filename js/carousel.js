@@ -162,7 +162,7 @@ class ProductCarousel {
 
         // Use the global addToCart function from cart.js
         if (window.addToCart) {
-          window.addToCart(productId, productName, productPrice);
+          window.addToCart(productId, productName, productPrice, product.images ? product.images[0] : null);
         }
       });
     }

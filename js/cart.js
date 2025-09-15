@@ -5,76 +5,6 @@ let users = JSON.parse(localStorage.getItem('users')) || [];
 let orders = JSON.parse(localStorage.getItem('orders')) || [];
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
-// Mock products data (same as in search.js and carousel.js)
-const mockProducts = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max Screen",
-    description: "Premium OLED display replacement for iPhone 15 Pro Max",
-    price: 299.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    inStock: 15,
-    rating: 4.8,
-    reviews: 128
-  },
-  {
-    id: 2,
-    name: "MacBook Pro 16\" Battery",
-    description: "High-capacity lithium-ion battery for MacBook Pro 16\"",
-    price: 149.99,
-    category: "macbook",
-    image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
-    inStock: 8,
-    rating: 4.9,
-    reviews: 89
-  },
-  {
-    id: 3,
-    name: "iPhone 15 Battery",
-    description: "Original Apple battery replacement for iPhone 15 series",
-    price: 79.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 25,
-    rating: 4.7,
-    reviews: 156
-  },
-  {
-    id: 4,
-    name: "Professional Repair Kit",
-    description: "Complete toolkit for professional phone and laptop repairs",
-    price: 89.99,
-    category: "tools",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
-    inStock: 12,
-    rating: 4.9,
-    reviews: 203
-  },
-  {
-    id: 5,
-    name: "Galaxy S24 Ultra Screen",
-    description: "AMOLED display replacement for Samsung Galaxy S24 Ultra",
-    price: 199.99,
-    category: "samsung",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
-    inStock: 7,
-    rating: 4.6,
-    reviews: 67
-  },
-  {
-    id: 6,
-    name: "iPhone Camera Module",
-    description: "Triple camera system replacement for iPhone 15 series",
-    price: 149.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1516724562728-afc824a36e84?w=400&h=400&fit=crop",
-    inStock: 10,
-    rating: 4.5,
-    reviews: 94
-  }
-];
-
 const cartItemsContainer = document.getElementById('cart-items');
 const cartSummaryContainer = document.getElementById('cart-summary');
 const cartIcon = document.querySelector('.cart-count');
@@ -187,7 +117,7 @@ function removeFromCart(index) {
 }
 
 // Add to cart (global function for use in other files)
-window.addToCart = function(productId, productName, productPrice) {
+window.addToCart = function(productId, productName, productPrice, productImage = null) {
   const existingItem = cart.find(item => item.id == productId);
   if (existingItem) {
     existingItem.quantity += 1;
@@ -196,12 +126,15 @@ window.addToCart = function(productId, productName, productPrice) {
       id: productId,
       name: productName,
       price: parseFloat(productPrice),
+      image: productImage,
       quantity: 1
     });
   }
   saveCart();
+  displayCartItems();
+  displayCartSummary();
   updateCartDisplay();
-  alert(`${productName} added to cart!`);
+  showNotification(`${productName} added to cart!`, 'success');
 };
 
 // Update cart display in header
@@ -218,8 +151,14 @@ function saveCart() {
 
 // Get product image by ID
 function getProductImage(productId) {
-  const product = mockProducts.find(p => p.id == productId);
-  return product ? product.image : 'https://via.placeholder.com/100x100?text=No+Image';
+  // Find the item in cart to get its image
+  const cartItem = cart.find(item => item.id == productId);
+  if (cartItem && cartItem.image) {
+    return cartItem.image;
+  }
+
+  // Fallback to placeholder if no image available
+  return 'https://via.placeholder.com/100x100?text=No+Image';
 }
 
 // User Management Functions
@@ -309,6 +248,29 @@ function proceedToCheckout() {
 
   // Redirect to checkout page
   window.location.href = 'checkout.html';
+}
+
+// Notification function
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+    <span>${message}</span>
+  `;
+
+  // Add to page
+  document.body.appendChild(notification);
+
+  // Show notification
+  setTimeout(() => notification.classList.add('show'), 100);
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }
 
 // Make functions global for HTML onclick handlers
