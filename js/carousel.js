@@ -1,73 +1,6 @@
 // Product Carousel Functionality
-// Mock product data for carousel (same as in search.js)
-const mockProducts = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max Screen",
-    description: "Premium OLED display replacement for iPhone 15 Pro Max",
-    price: 299.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    inStock: 15,
-    rating: 4.8,
-    reviews: 128
-  },
-  {
-    id: 2,
-    name: "MacBook Pro 16\" Battery",
-    description: "High-capacity lithium-ion battery for MacBook Pro 16\"",
-    price: 149.99,
-    category: "macbook",
-    image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
-    inStock: 8,
-    rating: 4.9,
-    reviews: 89
-  },
-  {
-    id: 3,
-    name: "iPhone 15 Battery",
-    description: "Original Apple battery replacement for iPhone 15 series",
-    price: 79.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 25,
-    rating: 4.7,
-    reviews: 156
-  },
-  {
-    id: 4,
-    name: "Professional Repair Kit",
-    description: "Complete toolkit for professional phone and laptop repairs",
-    price: 89.99,
-    category: "tools",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
-    inStock: 12,
-    rating: 4.9,
-    reviews: 203
-  },
-  {
-    id: 5,
-    name: "Galaxy S24 Ultra Screen",
-    description: "AMOLED display replacement for Samsung Galaxy S24 Ultra",
-    price: 199.99,
-    category: "samsung",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
-    inStock: 7,
-    rating: 4.6,
-    reviews: 67
-  },
-  {
-    id: 6,
-    name: "iPhone Camera Module",
-    description: "Triple camera system replacement for iPhone 15 series",
-    price: 149.99,
-    category: "iphone",
-    image: "https://images.unsplash.com/photo-1516724562728-afc824a36e84?w=400&h=400&fit=crop",
-    inStock: 10,
-    rating: 4.5,
-    reviews: 94
-  }
-];
+// Fetches real product data from API
+let carouselProducts = [];
 
 class ProductCarousel {
   constructor() {
@@ -80,12 +13,71 @@ class ProductCarousel {
     this.init();
   }
 
-  init() {
+  async init() {
+    await this.loadProducts();
     this.createSlides();
     this.createIndicators();
     this.setupEventListeners();
     this.startAutoPlay();
     this.updateCarousel();
+  }
+
+  async loadProducts() {
+    try {
+      // Fetch featured/popular products from API
+      const response = await fetch('api/get-products.php?limit=12');
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        carouselProducts = data.data;
+        console.log('Loaded', carouselProducts.length, 'products for carousel');
+      } else {
+        console.error('Failed to load carousel products:', data.message);
+        // Fallback to some default products
+        carouselProducts = this.getFallbackProducts();
+      }
+    } catch (error) {
+      console.error('Error loading carousel products:', error);
+      carouselProducts = this.getFallbackProducts();
+    }
+  }
+
+  getFallbackProducts() {
+    return [
+      {
+        id: 1,
+        name: "iPhone 15 Pro Max Screen",
+        description: "Premium OLED display replacement for iPhone 15 Pro Max",
+        price: 299.99,
+        category: "iphone",
+        images: ["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop"],
+        stock_quantity: 15,
+        rating: 4.8,
+        reviews: 128
+      },
+      {
+        id: 2,
+        name: "MacBook Pro 16\" Battery",
+        description: "High-capacity lithium-ion battery for MacBook Pro 16\"",
+        price: 149.99,
+        category: "macbook",
+        images: ["https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop"],
+        stock_quantity: 8,
+        rating: 4.9,
+        reviews: 89
+      },
+      {
+        id: 3,
+        name: "Professional Repair Kit",
+        description: "Complete toolkit for professional phone and laptop repairs",
+        price: 89.99,
+        category: "tools",
+        images: ["https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop"],
+        stock_quantity: 12,
+        rating: 4.9,
+        reviews: 203
+      }
+    ];
   }
 
   createSlides() {
@@ -97,17 +89,17 @@ class ProductCarousel {
 
     // Group products into slides (3 products per slide on desktop, 1 on mobile)
     const productsPerSlide = window.innerWidth <= 768 ? 1 : 3;
-    const totalSlides = Math.ceil(mockProducts.length / productsPerSlide);
+    const totalSlides = Math.ceil(carouselProducts.length / productsPerSlide);
 
     for (let i = 0; i < totalSlides; i++) {
       const slide = document.createElement('div');
       slide.className = 'carousel-slide';
 
       const startIndex = i * productsPerSlide;
-      const endIndex = Math.min(startIndex + productsPerSlide, mockProducts.length);
+      const endIndex = Math.min(startIndex + productsPerSlide, carouselProducts.length);
 
       for (let j = startIndex; j < endIndex; j++) {
-        const product = mockProducts[j];
+        const product = carouselProducts[j];
         const productCard = this.createProductCard(product);
         slide.appendChild(productCard);
       }
@@ -118,12 +110,15 @@ class ProductCarousel {
   }
 
   createProductCard(product) {
+    const inStock = product.stock_quantity > 0;
+    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop';
+
     const card = document.createElement('div');
     card.className = 'product-card';
     card.innerHTML = `
       <div class="product-image">
-        <img src="${product.image}" alt="${product.name}" loading="lazy">
-        <div class="product-badge">${product.inStock > 0 ? 'In Stock' : 'Out of Stock'}</div>
+        <img src="${imageUrl}" alt="${product.name}" loading="lazy">
+        <div class="product-badge">${inStock ? 'In Stock' : 'Out of Stock'}</div>
         <div class="product-actions">
           <button class="action-btn wishlist-btn" title="Add to Wishlist">
             <i class="fas fa-heart"></i>
@@ -138,20 +133,20 @@ class ProductCarousel {
         <p>${product.description}</p>
         <div class="product-rating">
           <div class="stars">
-            ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+            ${'★'.repeat(Math.floor(product.rating || 4.5))}${'☆'.repeat(5 - Math.floor(product.rating || 4.5))}
           </div>
-          <span class="rating-count">(${product.reviews} reviews)</span>
+          <span class="rating-count">(${product.reviews || 0} reviews)</span>
         </div>
         <div class="product-price">
           <span class="current-price">$${product.price.toFixed(2)}</span>
         </div>
         <div class="product-meta">
-          <span class="stock-status ${product.inStock > 0 ? 'in-stock' : 'out-of-stock'}">
-            ${product.inStock > 0 ? `✓ ${product.inStock} in stock` : 'Out of stock'}
+          <span class="stock-status ${inStock ? 'in-stock' : 'out-of-stock'}">
+            ${inStock ? `✓ ${product.stock_quantity} in stock` : 'Out of stock'}
           </span>
         </div>
-        <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" ${product.inStock === 0 ? 'disabled' : ''}>
-          ${product.inStock > 0 ? 'Add to Cart' : 'Out of Stock'}
+        <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.name.replace(/'/g, "\\'")}" data-price="${product.price}" ${!inStock ? 'disabled' : ''}>
+          ${inStock ? 'Add to Cart' : 'Out of Stock'}
         </button>
       </div>
     `;
