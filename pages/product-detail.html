@@ -191,17 +191,49 @@
     <section class="product-detail-section">
       <div class="container">
         <div class="product-detail-container">
-          <!-- Product Images -->
-          <div class="product-gallery">
+          <!-- Product Images - Instagram Style Gallery -->
+          <div class="product-gallery instagram-gallery">
+            <!-- Main Image Display -->
             <div class="main-image-container">
-              <img id="main-product-image" src="" alt="Product Image" class="main-product-image" />
+              <div class="image-slider" id="image-slider">
+                <!-- Images will be loaded dynamically -->
+              </div>
               <div class="image-zoom-overlay" id="image-zoom-overlay">
                 <i class="fas fa-search-plus"></i>
                 <span>Click to zoom</span>
               </div>
+              <div class="gallery-navigation">
+                <button class="nav-btn prev-btn" id="prev-image" type="button" title="Previous image" aria-label="Previous image">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn next-btn" id="next-image" type="button" title="Next image" aria-label="Next image">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="image-indicators" id="image-indicators">
+                <!-- Indicators will be loaded dynamically -->
+              </div>
             </div>
-            <div class="thumbnail-gallery" id="thumbnail-gallery">
+
+            <!-- Instagram Style Thumbnails -->
+            <div class="instagram-thumbnails" id="instagram-thumbnails">
               <!-- Thumbnails will be loaded dynamically -->
+            </div>
+
+            <!-- Gallery Actions -->
+            <div class="gallery-actions">
+              <button class="gallery-action-btn" id="fullscreen-btn" type="button">
+                <i class="fas fa-expand"></i>
+                <span>Fullscreen</span>
+              </button>
+              <button class="gallery-action-btn" id="share-btn" type="button">
+                <i class="fas fa-share"></i>
+                <span>Share</span>
+              </button>
+              <button class="gallery-action-btn" id="like-btn" type="button">
+                <i class="far fa-heart"></i>
+                <span>Like</span>
+              </button>
             </div>
           </div>
 

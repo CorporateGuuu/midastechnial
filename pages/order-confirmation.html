@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shopping Cart - Midas Technical Solutions</title>
-  <meta name="description" content="Review your shopping cart and proceed to checkout" />
-  <meta name="keywords" content="cart, shopping cart, checkout, order" />
+  <title>Order Confirmation - Midas Technical Solutions</title>
+  <meta name="description" content="Your order has been successfully placed" />
+  <meta name="keywords" content="order confirmation, purchase complete, order details" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
@@ -173,7 +173,7 @@
     </nav>
   </aside>
 
-  <!-- Cart Page Header -->
+  <!-- Order Confirmation Header -->
   <section class="page-header-section">
     <div class="container">
       <div class="page-header-container">
@@ -181,48 +181,136 @@
           <div class="page-breadcrumb">
             <a href="../index.html"><i class="fas fa-home"></i> Home</a>
             <i class="fas fa-chevron-right"></i>
-            <span>Shopping Cart</span>
+            <a href="cart.html">Cart</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="checkout.html">Checkout</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Order Confirmation</span>
           </div>
           <h1 class="page-title">
-            <i class="fas fa-shopping-cart"></i>
-            Shopping Cart
+            <i class="fas fa-check-circle"></i>
+            Order Confirmed!
           </h1>
-          <p class="page-description">Review your items and proceed to checkout</p>
+          <p class="page-description">Thank you for your purchase. Your order has been successfully placed.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Cart Content -->
+  <!-- Order Confirmation Content -->
   <main>
-    <section class="cart-section">
+    <section class="order-confirmation-section">
       <div class="container">
-        <div class="cart-layout">
-          <!-- Cart Items -->
-          <div class="cart-items-section">
-            <div class="cart-items-header">
-              <h2>Cart Items</h2>
-              <span class="cart-items-count" id="cart-items-count">0 items</span>
+        <div class="order-confirmation-layout">
+          <!-- Order Details -->
+          <div class="order-details-section">
+            <!-- Success Message -->
+            <div class="confirmation-message">
+              <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <h2>Thank You for Your Order!</h2>
+              <p>Your order has been successfully placed and is being processed. You will receive an email confirmation shortly.</p>
+              <div class="order-number">
+                <span class="label">Order Number:</span>
+                <span class="value" id="order-number">#ORD-000000</span>
+              </div>
             </div>
 
-            <div class="cart-items" id="cart-items">
-              <!-- Cart items will be loaded here -->
+            <!-- Order Status -->
+            <div class="order-status-card">
+              <h3><i class="fas fa-clock"></i> Order Status</h3>
+              <div class="status-timeline">
+                <div class="status-step completed">
+                  <div class="status-icon">
+                    <i class="fas fa-check"></i>
+                  </div>
+                  <div class="status-content">
+                    <h4>Order Placed</h4>
+                    <p id="order-date">Order placed on [Date]</p>
+                  </div>
+                </div>
+                <div class="status-step active">
+                  <div class="status-icon">
+                    <i class="fas fa-cog"></i>
+                  </div>
+                  <div class="status-content">
+                    <h4>Processing</h4>
+                    <p>We're preparing your order for shipment</p>
+                  </div>
+                </div>
+                <div class="status-step">
+                  <div class="status-icon">
+                    <i class="fas fa-truck"></i>
+                  </div>
+                  <div class="status-content">
+                    <h4>Shipped</h4>
+                    <p>Your order will be shipped soon</p>
+                  </div>
+                </div>
+                <div class="status-step">
+                  <div class="status-icon">
+                    <i class="fas fa-box-open"></i>
+                  </div>
+                  <div class="status-content">
+                    <h4>Delivered</h4>
+                    <p>Order delivered to your address</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="order-items-card">
+              <h3><i class="fas fa-shopping-bag"></i> Order Items</h3>
+              <div class="order-items-list" id="order-items-list">
+                <!-- Order items will be loaded here -->
+              </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="shipping-info-card">
+              <h3><i class="fas fa-truck"></i> Shipping Information</h3>
+              <div class="shipping-details" id="shipping-details">
+                <!-- Shipping details will be loaded here -->
+              </div>
             </div>
           </div>
 
-          <!-- Cart Summary -->
-          <div class="cart-summary-section">
-            <div class="cart-summary-sticky">
-              <div class="cart-summary" id="cart-summary">
-                <!-- Cart summary will be loaded here -->
+          <!-- Order Summary Sidebar -->
+          <div class="order-summary-sidebar">
+            <div class="order-summary-card">
+              <h3>Order Summary</h3>
+              <div class="order-summary-content" id="order-summary-content">
+                <!-- Order summary will be loaded here -->
               </div>
 
-              <!-- Continue Shopping -->
-              <div class="continue-shopping-section">
-                <a href="products.html" class="continue-shopping-btn">
-                  <i class="fas fa-arrow-left"></i>
+              <!-- Action Buttons -->
+              <div class="confirmation-actions">
+                <a href="my-orders.html" class="btn-primary">
+                  <i class="fas fa-list"></i>
+                  <span>View All Orders</span>
+                </a>
+                <a href="products.html" class="btn-secondary">
+                  <i class="fas fa-shopping-bag"></i>
                   <span>Continue Shopping</span>
                 </a>
+              </div>
+
+              <!-- Customer Support -->
+              <div class="customer-support">
+                <h4><i class="fas fa-headset"></i> Need Help?</h4>
+                <p>Our customer support team is here to help you with any questions about your order.</p>
+                <div class="support-options">
+                  <a href="mailto:support@midastech.com" class="support-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email Support</span>
+                  </a>
+                  <a href="tel:+12403510511" class="support-link">
+                    <i class="fas fa-phone"></i>
+                    <span>Call Us</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -275,7 +363,7 @@
             <li><i class="fas fa-phone"></i> +1 (240) 351-0511</li>
             <li><i class="fas fa-envelope"></i> support@midastech.com</li>
             <li><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley</li>
-            <li><i class="fas fa-clock"></i> Mon-Fri: 9PM-10PM EST</li>
+            <li class="fas fa-clock"></i> Mon-Fri: 9PM-10PM EST</li>
           </ul>
         </div>
       </div>
@@ -300,7 +388,7 @@
 
   <!-- Scripts -->
   <script type="module" src="../js/search.js"></script>
-  <script src="../js/cart.js"></script>
+  <script src="../js/order-confirmation.js"></script>
   <script src="../js/side-menu.js"></script>
   <script src="../js/modern-scripts.js"></script>
 </body>

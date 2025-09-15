@@ -307,23 +307,8 @@ function proceedToCheckout() {
     return;
   }
 
-  // Create order
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.08;
-  const shipping = subtotal > 99 ? 0 : 9.99;
-  const total = subtotal + tax + shipping;
-
-  const orderResult = createOrder(cart, total);
-  if (orderResult.success) {
-    alert(`Order placed successfully! Order ID: ${orderResult.order.id}`);
-    cart = [];
-    saveCart();
-    updateCartDisplay();
-    displayCartItems();
-    displayCartSummary();
-  } else {
-    alert('Failed to place order. Please try again.');
-  }
+  // Redirect to checkout page
+  window.location.href = 'checkout.html';
 }
 
 // Make functions global for HTML onclick handlers

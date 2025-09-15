@@ -26,6 +26,10 @@ class SearchResultsManager {
     init() {
         this.getSearchQueryFromUrl();
         this.setupEventListeners();
+        this.loadSearchPreferences();
+        this.trackSearchAnalytics();
+        this.displayPopularSearches();
+        this.setupAdvancedSearch();
         this.performSearch();
     }
 
@@ -418,6 +422,8 @@ class SearchResultsManager {
 
     createProductCard(product) {
         const isGridView = this.currentView === 'grid';
+        const highlightedName = this.highlightSearchTerms(product.name, this.searchQuery);
+        const highlightedDescription = this.highlightSearchTerms(product.description, this.searchQuery);
 
         if (isGridView) {
             return `
@@ -428,7 +434,7 @@ class SearchResultsManager {
                         <div class="product-badge">${product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}</div>
                     </div>
                     <div class="product-info">
-                        <h3><a href="product-detail.html?id=${product.id}">${product.name}</a></h3>
+                        <h3><a href="product-detail.html?id=${product.id}">${highlightedName}</a></h3>
                         <div class="product-rating">
                             <div class="stars">
                                 ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
@@ -460,10 +466,10 @@ class SearchResultsManager {
                     </div>
                     <div class="product-list-info">
                         <div class="product-list-header">
-                            <h3><a href="product-detail.html?id=${product.id}">${product.name}</a></h3>
+                            <h3><a href="product-detail.html?id=${product.id}">${highlightedName}</a></h3>
                             <div class="product-list-price">$${product.price.toFixed(2)}</div>
                         </div>
-                        <p class="product-list-description">${product.description}</p>
+                        <p class="product-list-description">${highlightedDescription}</p>
                         <div class="product-list-meta">
                             <div class="product-rating">
                                 <div class="stars">
@@ -490,6 +496,24 @@ class SearchResultsManager {
                 </div>
             `;
         }
+    }
+
+    highlightSearchTerms(text, query) {
+        if (!query || !text) return text;
+
+        const terms = query.toLowerCase().split(' ').filter(term => term.length > 2);
+        let highlightedText = text;
+
+        terms.forEach(term => {
+            const regex = new RegExp(`(${this.escapeRegex(term)})`, 'gi');
+            highlightedText = highlightedText.replace(regex, '<mark>$1</mark>');
+        });
+
+        return highlightedText;
+    }
+
+    escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     setupPagination() {
@@ -640,6 +664,353 @@ class SearchResultsManager {
         if (resultsGrid) resultsGrid.innerHTML = '';
         if (noResultsState) noResultsState.style.display = 'block';
         if (resultsCount) resultsCount.textContent = '0 results found';
+    }
+
+    // ===== ADVANCED SEARCH FEATURES =====
+
+    loadSearchPreferences() {
+        // Load user's search preferences from localStorage
+        const preferences = JSON.parse(localStorage.getItem('searchPreferences') || '{}');
+
+        if (preferences.view) {
+            this.currentView = preferences.view;
+        }
+        if (preferences.sort) {
+            this.currentSort = preferences.sort;
+        }
+        if (preferences.filters) {
+            this.currentFilters = { ...this.currentFilters, ...preferences.filters };
+        }
+
+        // Apply loaded preferences to UI
+        this.applySearchPreferences();
+    }
+
+    saveSearchPreferences() {
+        const preferences = {
+            view: this.currentView,
+            sort: this.currentSort,
+            filters: this.currentFilters,
+            timestamp: Date.now()
+        };
+
+        localStorage.setItem('searchPreferences', JSON.stringify(preferences));
+    }
+
+    applySearchPreferences() {
+        // Update UI elements based on preferences
+        const sortSelect = document.getElementById('sort-select');
+        const gridViewBtn = document.getElementById('grid-view-btn');
+        const listViewBtn = document.getElementById('list-view-btn');
+
+        if (sortSelect) sortSelect.value = this.currentSort;
+        if (gridViewBtn) gridViewBtn.classList.toggle('active', this.currentView === 'grid');
+        if (listViewBtn) listViewBtn.classList.toggle('active', this.currentView === 'list');
+
+        // Apply filter preferences to checkboxes
+        this.applyFilterPreferences();
+    }
+
+    applyFilterPreferences() {
+        // Apply saved filter preferences to UI
+        const categoryMap = {
+            'filter-iphone': 'iPhone',
+            'filter-samsung': 'Samsung',
+            'filter-macbook': 'MacBook',
+            'filter-ipad': 'iPad',
+            'filter-tools': 'Repair Tools'
+        };
+
+        // Apply category filters
+        Object.keys(categoryMap).forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox) {
+                checkbox.checked = this.currentFilters.categories.includes(categoryMap[id]);
+            }
+        });
+
+        // Apply brand filters
+        const brandMap = {
+            'filter-apple': 'Apple',
+            'filter-samsung-brand': 'Samsung',
+            'filter-midas': 'Midas Tools'
+        };
+
+        Object.keys(brandMap).forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox) {
+                checkbox.checked = this.currentFilters.brands.includes(brandMap[id]);
+            }
+        });
+
+        // Apply price filters
+        const minPriceInput = document.getElementById('min-price');
+        const maxPriceInput = document.getElementById('max-price');
+
+        if (minPriceInput && this.currentFilters.priceRange.min !== null) {
+            minPriceInput.value = this.currentFilters.priceRange.min;
+        }
+        if (maxPriceInput && this.currentFilters.priceRange.max !== null) {
+            maxPriceInput.value = this.currentFilters.priceRange.max;
+        }
+
+        // Apply rating filters
+        const ratingMap = {
+            'rating-4-plus': 4,
+            'rating-3-plus': 3,
+            'rating-2-plus': 2
+        };
+
+        Object.keys(ratingMap).forEach(id => {
+            const radio = document.getElementById(id);
+            if (radio) {
+                radio.checked = this.currentFilters.rating === ratingMap[id];
+            }
+        });
+    }
+
+    trackSearchAnalytics() {
+        // Track search analytics
+        const analytics = {
+            query: this.searchQuery,
+            timestamp: Date.now(),
+            userAgent: navigator.userAgent,
+            referrer: document.referrer,
+            sessionId: this.getSessionId()
+        };
+
+        // Store search analytics
+        this.saveSearchAnalytics(analytics);
+
+        // Update popular searches
+        this.updatePopularSearches(this.searchQuery);
+    }
+
+    getSessionId() {
+        let sessionId = localStorage.getItem('searchSessionId');
+        if (!sessionId) {
+            sessionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('searchSessionId', sessionId);
+        }
+        return sessionId;
+    }
+
+    saveSearchAnalytics(analytics) {
+        const analyticsData = JSON.parse(localStorage.getItem('searchAnalytics') || '[]');
+        analyticsData.push(analytics);
+
+        // Keep only last 1000 search events
+        if (analyticsData.length > 1000) {
+            analyticsData.splice(0, analyticsData.length - 1000);
+        }
+
+        localStorage.setItem('searchAnalytics', JSON.stringify(analyticsData));
+    }
+
+    updatePopularSearches(query) {
+        const popularSearches = JSON.parse(localStorage.getItem('popularSearches') || '{}');
+
+        if (!popularSearches[query]) {
+            popularSearches[query] = 0;
+        }
+        popularSearches[query]++;
+
+        localStorage.setItem('popularSearches', JSON.stringify(popularSearches));
+    }
+
+    displayPopularSearches() {
+        const popularContainer = document.getElementById('popular-searches');
+        if (!popularContainer) return;
+
+        const popularSearches = JSON.parse(localStorage.getItem('popularSearches') || '{}');
+
+        // Sort by popularity and get top 10
+        const sortedSearches = Object.entries(popularSearches)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 10)
+            .map(([query]) => query);
+
+        if (sortedSearches.length === 0) return;
+
+        const popularHtml = `
+            <div class="popular-searches-section">
+                <h4><i class="fas fa-fire"></i> Popular Searches</h4>
+                <div class="popular-search-tags">
+                    ${sortedSearches.map(term => `
+                        <a href="search-results.html?q=${encodeURIComponent(term)}" class="popular-search-tag">
+                            ${term}
+                        </a>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        popularContainer.innerHTML = popularHtml;
+    }
+
+    setupAdvancedSearch() {
+        // Add advanced search operators support
+        this.setupSearchOperators();
+
+        // Add search suggestions based on user behavior
+        this.setupSmartSuggestions();
+
+        // Add search result export functionality
+        this.setupExportFunctionality();
+    }
+
+    setupSearchOperators() {
+        // Add support for advanced search operators like "AND", "OR", "NOT"
+        // For now, just enhance the search input with placeholder text
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.placeholder = 'Search products... (try: "iPhone battery" or "screen repair")';
+        }
+    }
+
+    setupSmartSuggestions() {
+        // Setup smart suggestions based on user search history and popular searches
+        const searchInput = document.getElementById('search-input');
+        if (!searchInput) return;
+
+        let suggestionTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(suggestionTimeout);
+            suggestionTimeout = setTimeout(() => {
+                this.showSmartSuggestions(e.target.value);
+            }, 300);
+        });
+    }
+
+    showSmartSuggestions(query) {
+        if (!query || query.length < 2) return;
+
+        const suggestions = this.generateSmartSuggestions(query);
+        if (suggestions.length === 0) return;
+
+        // Display suggestions (you could enhance this with a dropdown)
+        console.log('Smart suggestions:', suggestions);
+    }
+
+    generateSmartSuggestions(query) {
+        const suggestions = [];
+        const lowerQuery = query.toLowerCase();
+
+        // Get popular searches that match
+        const popularSearches = JSON.parse(localStorage.getItem('popularSearches') || '{}');
+        const matchingPopular = Object.keys(popularSearches)
+            .filter(term => term.toLowerCase().includes(lowerQuery))
+            .sort((a, b) => popularSearches[b] - popularSearches[a])
+            .slice(0, 5);
+
+        suggestions.push(...matchingPopular);
+
+        // Add category-based suggestions
+        if (lowerQuery.includes('iphone')) {
+            suggestions.push('iPhone screen', 'iPhone battery', 'iPhone camera');
+        } else if (lowerQuery.includes('samsung')) {
+            suggestions.push('Galaxy screen', 'Galaxy battery', 'Samsung S24');
+        } else if (lowerQuery.includes('macbook')) {
+            suggestions.push('MacBook battery', 'MacBook screen', 'MacBook Pro');
+        }
+
+        return [...new Set(suggestions)].slice(0, 8);
+    }
+
+    setupExportFunctionality() {
+        // Add export functionality for search results
+        const exportBtn = document.createElement('button');
+        exportBtn.id = 'export-results-btn';
+        exportBtn.className = 'btn-secondary';
+        exportBtn.innerHTML = '<i class="fas fa-download"></i> Export Results';
+        exportBtn.onclick = () => this.exportSearchResults();
+
+        // Add to search controls
+        const searchControls = document.querySelector('.search-results-controls');
+        if (searchControls) {
+            searchControls.appendChild(exportBtn);
+        }
+    }
+
+    exportSearchResults() {
+        if (this.filteredResults.length === 0) {
+            alert('No results to export');
+            return;
+        }
+
+        // Create CSV content
+        const csvContent = this.generateCSVContent();
+
+        // Download CSV file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `search-results-${this.searchQuery}-${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    generateCSVContent() {
+        const headers = ['Name', 'SKU', 'Price', 'Category', 'Stock', 'Rating', 'Manufacturer'];
+        const rows = this.filteredResults.map(product => [
+            `"${product.name}"`,
+            `"${product.sku}"`,
+            product.price,
+            `"${product.category}"`,
+            product.stock_quantity,
+            product.rating,
+            `"${product.manufacturer}"`
+        ]);
+
+        const csvContent = [headers, ...rows]
+            .map(row => row.join(','))
+            .join('\n');
+
+        return csvContent;
+    }
+
+    // Override setView to save preferences
+    setView(view) {
+        this.currentView = view;
+        const gridViewBtn = document.getElementById('grid-view-btn');
+        const listViewBtn = document.getElementById('list-view-btn');
+
+        if (gridViewBtn) gridViewBtn.classList.toggle('active', view === 'grid');
+        if (listViewBtn) listViewBtn.classList.toggle('active', view === 'list');
+
+        this.saveSearchPreferences();
+        this.displayResults();
+    }
+
+    // Override clearAllFilters to save preferences
+    clearAllFilters() {
+        // Reset all filter inputs
+        const checkboxes = document.querySelectorAll('.search-filters-sidebar input[type="checkbox"]');
+        const radios = document.querySelectorAll('.search-filters-sidebar input[type="radio"]');
+        const numberInputs = document.querySelectorAll('.search-filters-sidebar input[type="number"]');
+
+        checkboxes.forEach(cb => cb.checked = cb.id === 'filter-in-stock'); // Keep in-stock checked
+        radios.forEach(radio => radio.checked = false);
+        numberInputs.forEach(input => input.value = '');
+
+        // Reset filter state
+        this.currentFilters = {
+            categories: [],
+            priceRange: { min: null, max: null },
+            availability: ['in-stock'],
+            rating: null,
+            brands: []
+        };
+
+        this.saveSearchPreferences();
+        this.applyFiltersAndSort();
+        this.displayResults();
     }
 
     getMockProducts() {
