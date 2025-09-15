@@ -1,0 +1,493 @@
+{
+  "passed": 72,
+  "failed": 9,
+  "total": 81,
+  "tests": [
+    {
+      "name": "File exists: index.html",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: css/styles.css",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: js/modern-scripts.js",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: js/search.js",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: js/cart.js",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: js/carousel.js",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "File exists: js/side-menu.js",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.843Z"
+    },
+    {
+      "name": "HTML: DOCTYPE declaration",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.844Z"
+    },
+    {
+      "name": "HTML: HTML lang attribute",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.844Z"
+    },
+    {
+      "name": "HTML: Meta viewport",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.844Z"
+    },
+    {
+      "name": "HTML: Title tag",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Hero section",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Video showcase section",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Product gallery section",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Comparison section",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Categories section",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Navigation menu",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Search form",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Video placeholder",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Gallery thumbnails",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Lightbox functionality",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Mobile menu toggle",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.845Z"
+    },
+    {
+      "name": "HTML: Image elements present",
+      "passed": true,
+      "message": "Found 15 images (expected at least 10)",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "HTML: Video embed placeholder",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Mobile breakpoint (768px)",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Small mobile breakpoint (480px)",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Tablet breakpoint (1024px)",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Touch device optimizations",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Hero section styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Video showcase styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Gallery styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.846Z"
+    },
+    {
+      "name": "CSS: Comparison styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Lightbox styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Mobile menu styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Button styles",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Gold color usage",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Black color usage",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Red accent usage",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Transition properties",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Transform animations",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Hover effects",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "CSS: Animation keyframes",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: DOMContentLoaded event listener",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: Video player functionality",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: Gallery image switching",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: Lightbox functions",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: Mobile menu toggle",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.847Z"
+    },
+    {
+      "name": "JS: Search functionality",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Smooth scrolling",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Back to top button",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Newsletter form handling",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Intersection Observer",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Try-catch blocks",
+      "passed": false,
+      "message": "Try-catch blocks not implemented",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Null checks",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "JS: Event listener checks",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.848Z"
+    },
+    {
+      "name": "Mobile: Mobile header optimization",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Mobile hero centering",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Mobile video optimization",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Mobile gallery horizontal scroll",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Touch-friendly button sizes",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: iOS safe area support",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Mobile font size optimization",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Mobile: Mobile menu sidebar",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.849Z"
+    },
+    {
+      "name": "Performance: Lazy loading images",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.851Z"
+    },
+    {
+      "name": "Performance: CSS font smoothing",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.851Z"
+    },
+    {
+      "name": "Performance: Efficient CSS selectors",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.852Z"
+    },
+    {
+      "name": "Performance: JavaScript error handling",
+      "passed": false,
+      "message": "JavaScript error handling optimization not found",
+      "timestamp": "2025-09-15T15:59:10.852Z"
+    },
+    {
+      "name": "Performance: Optimized animations",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.852Z"
+    },
+    {
+      "name": "Accessibility: Alt text on images",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.854Z"
+    },
+    {
+      "name": "Accessibility: ARIA labels on buttons",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.854Z"
+    },
+    {
+      "name": "Accessibility: Semantic HTML structure",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.854Z"
+    },
+    {
+      "name": "Accessibility: Focus management",
+      "passed": false,
+      "message": "Focus management not implemented",
+      "timestamp": "2025-09-15T15:59:10.854Z"
+    },
+    {
+      "name": "Accessibility: Color contrast considerations",
+      "passed": false,
+      "message": "Color contrast considerations not implemented",
+      "timestamp": "2025-09-15T15:59:10.854Z"
+    },
+    {
+      "name": "SEO: Meta description",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Meta keywords",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Open Graph tags",
+      "passed": false,
+      "message": "Open Graph tags not implemented",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Twitter Card tags",
+      "passed": false,
+      "message": "Twitter Card tags not implemented",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Canonical URL",
+      "passed": false,
+      "message": "Canonical URL not implemented",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Structured data",
+      "passed": false,
+      "message": "Structured data not implemented",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Heading hierarchy",
+      "passed": true,
+      "message": "",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    },
+    {
+      "name": "SEO: Image optimization",
+      "passed": false,
+      "message": "Image optimization not implemented",
+      "timestamp": "2025-09-15T15:59:10.855Z"
+    }
+  ]
+}

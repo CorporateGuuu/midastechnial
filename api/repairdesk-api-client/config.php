@@ -7,16 +7,24 @@
  */
 
 // Load environment variables from .env file if it exists
-if (file_exists(__DIR__ . '/../.env')) {
-    $envFile = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($envFile as $line) {
-        if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
-            list($key, $value) = explode('=', $line, 2);
-            $key = trim($key);
-            $value = trim($value);
-            $_ENV[$key] = $value;
-            putenv("$key=$value");
+// Check both parent directory and current directory
+$envPaths = [__DIR__ . '/../.env', __DIR__ . '/.env'];
+$envFileLoaded = false;
+
+foreach ($envPaths as $envPath) {
+    if (file_exists($envPath)) {
+        $envFile = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($envFile as $line) {
+            if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                $_ENV[$key] = $value;
+                putenv("$key=$value");
+            }
         }
+        $envFileLoaded = true;
+        break;
     }
 }
 
@@ -38,6 +46,7 @@ define('REPAIRDESK_DEBUG', getenv('APP_DEBUG') === 'true' ? true : false);
 // Supabase Configuration - loaded from environment variables
 define('SUPABASE_URL', getenv('SUPABASE_URL') ?: '');
 define('SUPABASE_KEY', getenv('SUPABASE_KEY') ?: '');
+define('SUPABASE_SERVICE_ROLE_KEY', getenv('SUPABASE_SERVICE_ROLE_KEY') ?: '');
 
 // Validate required environment variables
 $required_vars = ['REPAIRDESK_API_KEY', 'SUPABASE_URL', 'SUPABASE_KEY'];

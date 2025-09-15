@@ -59,7 +59,7 @@ class ProductDetailManager {
 
     async fetchProductFromSupabase(productId) {
         try {
-            // Fetch from real API endpoint
+            // First try to fetch from real API endpoint
             const response = await fetch(`../api/get-product.php?id=${encodeURIComponent(productId)}`);
             const data = await response.json();
 
@@ -67,11 +67,26 @@ class ProductDetailManager {
                 console.log('Fetched product from', data.source + ':', data.data.name);
                 return data.data;
             } else {
-                console.log('Product not found:', data.message);
-                return null;
+                console.log('Product not found in API, falling back to mock data:', data.message);
+                // Fall back to mock data
+                return this.getMockProductById(productId);
             }
         } catch (error) {
-            console.error('Error fetching product:', error);
+            console.error('Error fetching product from API, falling back to mock data:', error);
+            // Fall back to mock data
+            return this.getMockProductById(productId);
+        }
+    }
+
+    getMockProductById(productId) {
+        const products = this.getMockProducts();
+        const product = products.find(p => p.id === parseInt(productId));
+
+        if (product) {
+            console.log('Found mock product:', product.name);
+            return product;
+        } else {
+            console.log('Mock product not found for ID:', productId);
             return null;
         }
     }

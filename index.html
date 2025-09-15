@@ -68,10 +68,7 @@
         </div>
 
         <div class="header-actions">
-          <a href="pages/wishlist.html" class="header-action-btn" title="Wishlist">
-            <i class="fas fa-heart"></i>
-            <span class="action-label">Wishlist</span>
-          </a>
+
           <a href="pages/cart.html" class="header-action-btn cart-btn" title="Cart">
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-count">0</span>
@@ -166,7 +163,7 @@
           <li><a href="register.html"><i class="fas fa-user-plus"></i> Register</a></li>
           <li><a href="pages/my-profile.html"><i class="fas fa-user-circle"></i> My Profile</a></li>
           <li><a href="pages/my-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-          <li><a href="pages/wishlist.html"><i class="fas fa-heart"></i> Wishlist</a></li>
+
           <li><a href="pages/cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
         </ul>
       </div>
@@ -295,6 +292,114 @@
       </div>
     </section>
 
+    <!-- Product Showcase Video -->
+    <section class="video-showcase-section">
+      <div class="container">
+        <div class="video-showcase-container">
+          <div class="video-content">
+            <h2>Premium Quality Repair Parts</h2>
+            <p>Watch our expert technicians demonstrate the quality and precision of our repair parts</p>
+            <div class="video-stats">
+              <div class="stat">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">Support</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">1-Year</span>
+                <span class="stat-label">Warranty</span>
+              </div>
+            </div>
+          </div>
+          <div class="video-player">
+            <div class="video-placeholder">
+              <i class="fas fa-play-circle"></i>
+              <span>Watch Product Demo</span>
+            </div>
+            <!-- Replace with actual video embed -->
+            <div class="video-embed" style="display: none;">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Product Gallery -->
+    <section class="product-gallery-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Product Showcase</h2>
+          <p>Explore our premium repair parts collection</p>
+        </div>
+
+        <div class="gallery-container">
+          <div class="gallery-main">
+            <div class="main-image">
+              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=600&h=400&fit=crop" alt="iPhone Screen Repair" id="main-gallery-image">
+              <div class="image-overlay">
+                <button class="zoom-btn" onclick="openLightbox()">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-thumbnails">
+            <div class="thumbnail active" onclick="changeImage('https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=600&h=400&fit=crop', this)">
+              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=150&h=100&fit=crop" alt="iPhone Screen">
+            </div>
+            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=600&h=400&fit=crop', this)">
+              <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=150&h=100&fit=crop" alt="Samsung Parts">
+            </div>
+            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop', this)">
+              <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=150&h=100&fit=crop" alt="MacBook Parts">
+            </div>
+            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=600&h=400&fit=crop', this)">
+              <img src="https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=150&h=100&fit=crop" alt="Repair Tools">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Comparison -->
+    <section class="comparison-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Before & After Results</h2>
+          <p>See the transformation with our premium repair parts</p>
+        </div>
+
+        <div class="comparison-container">
+          <div class="comparison-item">
+            <div class="comparison-images">
+              <div class="before-image">
+                <img src="https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=400&h=300&fit=crop" alt="Before Repair">
+                <span class="label">BEFORE</span>
+              </div>
+              <div class="after-image">
+                <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=400&h=300&fit=crop" alt="After Repair">
+                <span class="label">AFTER</span>
+              </div>
+            </div>
+            <div class="comparison-content">
+              <h3>iPhone Screen Replacement</h3>
+              <p>Professional-grade OLED screen with perfect color accuracy and touch sensitivity</p>
+              <div class="comparison-features">
+                <span class="feature">✓ OEM Quality</span>
+                <span class="feature">✓ Perfect Fit</span>
+                <span class="feature">✓ 1-Year Warranty</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Categories -->
     <section class="categories-section">
       <div class="container">
@@ -306,7 +411,7 @@
         <div class="categories-grid">
           <a href="pages/iphone-parts.html" class="category-card">
             <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop" alt="iPhone Parts" loading="lazy">
+              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=400&h=300&fit=crop" alt="iPhone Parts" loading="lazy">
               <div class="category-overlay">
                 <div class="category-icon">
                   <i class="fab fa-apple"></i>
@@ -327,7 +432,7 @@
 
           <a href="pages/samsung-parts.html" class="category-card">
             <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1610792516307-ea5acd9c3b00?w=400&h=300&fit=crop" alt="Samsung Parts" loading="lazy">
+              <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=400&h=300&fit=crop" alt="Samsung Parts" loading="lazy">
               <div class="category-overlay">
                 <div class="category-icon">
                   <i class="fas fa-mobile-alt"></i>
@@ -348,7 +453,7 @@
 
           <a href="pages/macbook-parts.html" class="category-card">
             <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=300&fit=crop" alt="MacBook Parts" loading="lazy">
+              <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop" alt="MacBook Parts" loading="lazy">
               <div class="category-overlay">
                 <div class="category-icon">
                   <i class="fas fa-laptop"></i>
@@ -369,7 +474,7 @@
 
           <a href="pages/repair-tools.html" class="category-card">
             <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=400&h=300&fit=crop" alt="Repair Tools" loading="lazy">
+              <img src="https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=400&h=300&fit=crop" alt="Repair Tools" loading="lazy">
               <div class="category-overlay">
                 <div class="category-icon">
                   <i class="fas fa-tools"></i>
@@ -577,7 +682,7 @@
           <ul>
             <li><a href="pages/my-orders.html">My Orders</a></li>
             <li><a href="pages/my-profile.html">My Profile</a></li>
-            <li><a href="pages/wishlist.html">Wishlist</a></li>
+
             <li><a href="pages/cart.html">Shopping Cart</a></li>
           </ul>
         </div>

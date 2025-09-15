@@ -20,13 +20,23 @@ class CheckoutManager {
         this.setupFormValidation();
     }
 
-    loadCartData() {
-        this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    async loadCartData() {
+        try {
+            // Load cart from localStorage as fallback
+            this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-        if (this.cart.length === 0) {
-            alert('Your cart is empty. Redirecting to products page...');
-            window.location.href = 'products.html';
-            return;
+            if (this.cart.length === 0) {
+                alert('Your cart is empty. Redirecting to products page...');
+                window.location.href = 'products.html';
+                return;
+            }
+
+            // Validate cart items with server
+            await this.validateCartItems();
+        } catch (error) {
+            console.error('Error loading cart data:', error);
+            alert('Error loading cart. Please try again.');
+            window.location.href = 'cart.html';
         }
     }
 
@@ -235,6 +245,41 @@ class CheckoutManager {
         orderTotalsContainer.innerHTML = totalsHtml;
     }
 
+    async validateCartItems() {
+        // Validate that cart items are still available and prices are current
+        try {
+            const response = await fetch('/api/products');
+            const result = await response.json();
+
+            if (result.success) {
+                const availableProducts = result.data;
+                const productMap = new Map(availableProducts.map(p => [p.id, p]));
+
+                // Check each cart item
+                for (const item of this.cart) {
+                    const product = productMap.get(item.id);
+                    if (!product) {
+                        throw new Error(`Product ${item.name} is no longer available`);
+                    }
+                    if (product.stock_quantity < item.quantity) {
+                        throw new Error(`Insufficient stock for ${item.name}`);
+                    }
+                    // Update price if changed
+                    if (product.price !== item.price) {
+                        item.price = product.price;
+                        this.showNotification(`Price updated for ${item.name}`, 'info');
+                    }
+                }
+
+                // Save updated cart
+                localStorage.setItem('cart', JSON.stringify(this.cart));
+            }
+        } catch (error) {
+            console.error('Cart validation error:', error);
+            this.showNotification('Some items in your cart may have changed', 'warning');
+        }
+    }
+
     async processOrder() {
         if (!this.validateForm()) {
             this.showNotification('Please fill in all required fields', 'error');
@@ -245,26 +290,109 @@ class CheckoutManager {
         this.showLoading(true);
 
         try {
-            // Simulate payment processing
-            await this.processPayment();
+            // Calculate total amount
+            const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.08;
+            const shipping = subtotal > 99 ? 0 : 9.99;
+            const total = subtotal + tax + shipping;
 
-            // Create order
-            const orderData = this.createOrderData();
-            const orderResult = await this.saveOrder(orderData);
+            // Create Stripe Payment Intent
+            const paymentIntentResponse = await fetch('/api/create-payment-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: total,
+                    currency: 'usd',
+                    metadata: {
+                        order_type: 'ecommerce'
+                    }
+                })
+            });
 
-            if (orderResult.success) {
-                // Clear cart
-                localStorage.removeItem('cart');
+            const paymentIntentData = await paymentIntentResponse.json();
 
-                // Redirect to order confirmation
-                window.location.href = `order-confirmation.html?order=${orderResult.orderId}`;
+            if (!paymentIntentData.success) {
+                throw new Error('Failed to create payment intent');
+            }
+
+            // For testing, we'll simulate successful payment
+            // In production, uncomment the Stripe Elements code below
+
+            /*
+            // Initialize Stripe Elements
+            const stripe = Stripe('pk_test_51RTmYkRx3fwBLMJmgcMkHVlzxSyJmzpQKC1544i1x5w4PHumNalgnDABvo4vRKvU7dklT1Ad2sHmouUCUl1jTOsQ00XGMsFGtv');
+            const elements = stripe.elements();
+
+            // Create card element
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+
+            // Confirm payment
+            const { error, paymentIntent } = await stripe.confirmCardPayment(
+                paymentIntentData.clientSecret,
+                {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: `${document.getElementById('first-name').value} ${document.getElementById('last-name').value}`,
+                            email: document.getElementById('email').value,
+                        },
+                    },
+                }
+            );
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            if (paymentIntent.status !== 'succeeded') {
+                throw new Error('Payment was not successful');
+            }
+            */
+
+            // Simulate successful payment for testing
+            const paymentIntent = {
+                id: `pi_test_${Date.now()}`,
+                status: 'succeeded'
+            };
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            if (paymentIntent.status === 'succeeded') {
+                // Create order in database
+                const orderData = this.createOrderData();
+                orderData.stripe_payment_id = paymentIntent.id;
+
+                const orderResponse = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const orderResult = await orderResponse.json();
+
+                if (orderResult.success) {
+                    // Clear cart
+                    localStorage.removeItem('cart');
+
+                    // Redirect to order confirmation
+                    window.location.href = `order-confirmation.html?order=${orderResult.order_id}`;
+                } else {
+                    throw new Error('Failed to create order');
+                }
             } else {
-                throw new Error('Failed to create order');
+                throw new Error('Payment was not successful');
             }
 
         } catch (error) {
             console.error('Order processing error:', error);
-            this.showNotification('Payment failed. Please try again.', 'error');
+            this.showNotification(error.message || 'Payment failed. Please try again.', 'error');
         } finally {
             this.showLoading(false);
         }

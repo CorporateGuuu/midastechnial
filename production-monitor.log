@@ -1,0 +1,24 @@
+[2025-09-15T03:07:30.241Z] [INFO] 🚀 Production monitoring started
+[2025-09-15T03:07:30.247Z] [INFO] 🔍 Starting production monitoring checks...
+[2025-09-15T03:07:30.275Z] [INFO] ✅ SSL certificates found
+[2025-09-15T03:07:30.279Z] [INFO] ✅ Memory usage OK: 9MB / 16MB
+[2025-09-15T03:07:30.296Z] [ERROR] ❌ Server connection failed: write EPROTO 80CFC059F87F0000:error:0A0000C6:SSL routines:tls_get_more_records:packet length too long:ssl/record/methods/tls_common.c:663:
+
+[2025-09-15T03:07:30.299Z] [INFO] ✅ Disk space OK: 4% used
+[2025-09-15T03:07:30.302Z] [INFO] ✅ Database connection successful
+[2025-09-15T03:07:30.302Z] [ERROR] ❌ Some monitoring checks failed
+[2025-09-15T03:07:30.302Z] [WARN] 🚨 Sending 1 alerts
+[2025-09-15T03:07:30.302Z] [ERROR] ALERT: Server connection failed: write EPROTO 80CFC059F87F0000:error:0A0000C6:SSL routines:tls_get_more_records:packet length too long:ssl/record/methods/tls_common.c:663:
+
+[2025-09-15T03:08:15.272Z] [INFO] Received SIGTERM, shutting down gracefully...
+[2025-09-15T03:08:15.273Z] [INFO] 🛑 Production monitoring stopped
+[2025-09-15T03:08:25.390Z] [INFO] 🚀 Production monitoring started
+[2025-09-15T03:08:25.396Z] [INFO] 🔍 Starting production monitoring checks...
+[2025-09-15T03:08:25.425Z] [INFO] ✅ SSL certificates found
+[2025-09-15T03:08:25.429Z] [INFO] ✅ Memory usage OK: 9MB / 16MB
+[2025-09-15T03:08:25.451Z] [INFO] ✅ Server API responding correctly
+[2025-09-15T03:08:25.452Z] [INFO] ✅ Disk space OK: 4% used
+[2025-09-15T03:08:25.456Z] [INFO] ✅ Database connection successful
+[2025-09-15T03:08:25.456Z] [INFO] ✅ All monitoring checks passed
+[2025-09-15T03:08:30.292Z] [INFO] Received SIGTERM, shutting down gracefully...
+[2025-09-15T03:08:30.292Z] [INFO] 🛑 Production monitoring stopped
