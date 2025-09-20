@@ -1,226 +1,15 @@
-// Enhanced mock product data with more comprehensive search suggestions
-const mockProducts = [
-  // iPhone Parts
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max Screen",
-    description: "Premium OLED display replacement for iPhone 15 Pro Max",
-    price: 299.99,
-    category: "iPhone 15 Parts",
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    inStock: 15,
-    rating: 4.8,
-    reviews: 128,
-    tags: ["OLED", "Display", "Screen", "iPhone 15", "Pro Max"],
-    sku: "IPH15PM-OLED-001"
-  },
-  {
-    id: 2,
-    name: "iPhone 15 Pro Max Battery",
-    description: "High-capacity lithium-ion battery for iPhone 15 Pro Max",
-    price: 89.99,
-    category: "iPhone 15 Parts",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 25,
-    rating: 4.7,
-    reviews: 156,
-    tags: ["Battery", "Lithium-ion", "iPhone 15", "Pro Max"],
-    sku: "IPH15PM-BATT-001"
-  },
-  {
-    id: 3,
-    name: "iPhone 15 Pro Screen",
-    description: "Super Retina XDR display for iPhone 15 Pro",
-    price: 249.99,
-    category: "iPhone 15 Parts",
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    inStock: 20,
-    rating: 4.9,
-    reviews: 203,
-    tags: ["Display", "Screen", "Retina XDR", "iPhone 15", "Pro"],
-    sku: "IPH15P-DISP-001"
-  },
-  {
-    id: 4,
-    name: "iPhone 14 Pro Max OLED Display",
-    description: "Premium OLED display replacement for iPhone 14 Pro Max",
-    price: 279.99,
-    category: "iPhone 14 Parts",
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    inStock: 18,
-    rating: 4.8,
-    reviews: 145,
-    tags: ["OLED", "Display", "iPhone 14", "Pro Max"],
-    sku: "IPH14PM-OLED-001"
-  },
-  {
-    id: 5,
-    name: "iPhone 14 Battery Replacement",
-    description: "Original Apple battery for iPhone 14 series",
-    price: 69.99,
-    category: "iPhone 14 Parts",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 30,
-    rating: 4.6,
-    reviews: 178,
-    tags: ["Battery", "iPhone 14", "Original"],
-    sku: "IPH14-BATT-001"
-  },
+/**
+ * Enhanced Search with Real-time Supabase Integration
+ * Loads live product data for search suggestions and results
+ */
 
-  // Samsung Parts
-  {
-    id: 6,
-    name: "Galaxy S24 Ultra AMOLED Screen",
-    description: "6.8-inch Dynamic AMOLED 2X display for Galaxy S24 Ultra",
-    price: 199.99,
-    category: "Samsung Galaxy Parts",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
-    inStock: 12,
-    rating: 4.7,
-    reviews: 92,
-    tags: ["AMOLED", "Display", "Galaxy S24", "Ultra"],
-    sku: "SGS24U-DISP-001"
-  },
-  {
-    id: 7,
-    name: "Galaxy S24 Ultra Battery",
-    description: "5000mAh battery with fast charging for Galaxy S24 Ultra",
-    price: 89.99,
-    category: "Samsung Galaxy Parts",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 15,
-    rating: 4.8,
-    reviews: 156,
-    tags: ["Battery", "5000mAh", "Fast Charging", "Galaxy S24", "Ultra"],
-    sku: "SGS24U-BATT-001"
-  },
-  {
-    id: 8,
-    name: "Galaxy S23 Ultra Screen Protector",
-    description: "Tempered glass screen protector for Galaxy S23 Ultra",
-    price: 24.99,
-    category: "Samsung Galaxy Parts",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
-    inStock: 40,
-    rating: 4.5,
-    reviews: 234,
-    tags: ["Screen Protector", "Tempered Glass", "Galaxy S23", "Ultra"],
-    sku: "SGS23U-PROTECT-001"
-  },
+import supabase from './supabase-client.js';
 
-  // MacBook Parts
-  {
-    id: 9,
-    name: "MacBook Pro 16\" Retina Display",
-    description: "16-inch Liquid Retina XDR display for MacBook Pro",
-    price: 599.99,
-    category: "MacBook Parts",
-    image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
-    inStock: 5,
-    rating: 4.9,
-    reviews: 34,
-    tags: ["Display", "Retina", "Liquid XDR", "MacBook Pro", "16-inch"],
-    sku: "MBP16-DISP-001"
-  },
-  {
-    id: 10,
-    name: "MacBook Pro 16\" Battery",
-    description: "High-capacity lithium-polymer battery for MacBook Pro 16\"",
-    price: 149.99,
-    category: "MacBook Parts",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 8,
-    rating: 4.6,
-    reviews: 67,
-    tags: ["Battery", "Lithium-polymer", "MacBook Pro", "16-inch"],
-    sku: "MBP16-BATT-001"
-  },
-  {
-    id: 11,
-    name: "MacBook Air M2 SSD 512GB",
-    description: "512GB SSD upgrade for MacBook Air M2",
-    price: 199.99,
-    category: "MacBook Parts",
-    image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
-    inStock: 10,
-    rating: 4.8,
-    reviews: 89,
-    tags: ["SSD", "512GB", "MacBook Air", "M2", "Storage"],
-    sku: "MBAIR-M2-SSD-512"
-  },
+// Live products cache for search suggestions
+let liveProducts = [];
 
-  // Repair Tools
-  {
-    id: 12,
-    name: "Professional Repair Toolkit",
-    description: "Complete toolkit for professional phone and laptop repairs",
-    price: 89.99,
-    category: "Repair Tools",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
-    inStock: 15,
-    rating: 4.9,
-    reviews: 203,
-    tags: ["Toolkit", "Professional", "Repair", "Tools"],
-    sku: "TOOLKIT-PRO-001"
-  },
-  {
-    id: 13,
-    name: "Precision Screwdriver Set 32-Piece",
-    description: "Professional precision screwdriver set with 32 different bits",
-    price: 39.99,
-    category: "Repair Tools",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
-    inStock: 25,
-    rating: 4.8,
-    reviews: 145,
-    tags: ["Screwdriver", "Precision", "32-Piece", "Tools"],
-    sku: "SCREWDRIVER-32PC"
-  },
-  {
-    id: 14,
-    name: "iPhone Opening Tool Kit",
-    description: "Specialized tools for opening and repairing iPhone devices",
-    price: 29.99,
-    category: "Repair Tools",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
-    inStock: 20,
-    rating: 4.7,
-    reviews: 178,
-    tags: ["iPhone", "Opening Tools", "Repair", "Specialized"],
-    sku: "IPHONE-TOOLS-001"
-  },
-
-  // iPad Parts
-  {
-    id: 15,
-    name: "iPad Pro 12.9\" LCD Display",
-    description: "Ultra Retina XDR display for iPad Pro 12.9-inch",
-    price: 399.99,
-    category: "iPad Parts",
-    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop",
-    inStock: 6,
-    rating: 4.7,
-    reviews: 56,
-    tags: ["LCD", "Display", "iPad Pro", "12.9-inch", "Ultra Retina"],
-    sku: "IPADPRO12-DISP-001"
-  },
-  {
-    id: 16,
-    name: "iPad Air Battery Replacement",
-    description: "High-capacity battery for iPad Air models",
-    price: 79.99,
-    category: "iPad Parts",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop",
-    inStock: 12,
-    rating: 4.6,
-    reviews: 89,
-    tags: ["Battery", "iPad Air", "High-capacity"],
-    sku: "IPADAIR-BATT-001"
-  }
-];
-
-// Search suggestions data
-const searchSuggestions = [
+// Search suggestions data - will be enhanced with live product data
+let searchSuggestions = [
   "iPhone 15",
   "iPhone 14",
   "iPhone 13",
@@ -253,6 +42,57 @@ const searchSuggestions = [
   "Cellular"
 ];
 
+/**
+ * Load live products from Supabase for enhanced search suggestions
+ */
+async function loadLiveProductsForSearch() {
+  try {
+    console.log('Loading live products for search suggestions...');
+
+    const { data, error } = await supabase
+      .from('parts')
+      .select('name, category, tags')
+      .eq('is_active', true)
+      .limit(100);
+
+    if (error) {
+      console.error('Error loading live products for search:', error);
+      return;
+    }
+
+    liveProducts = data || [];
+
+    // Enhance search suggestions with live product data
+    const liveSuggestions = new Set();
+
+    liveProducts.forEach(product => {
+      // Add product names
+      if (product.name) {
+        liveSuggestions.add(product.name);
+      }
+
+      // Add category-based suggestions
+      if (product.category) {
+        liveSuggestions.add(product.category);
+      }
+
+      // Add tag-based suggestions
+      if (product.tags && Array.isArray(product.tags)) {
+        product.tags.forEach(tag => liveSuggestions.add(tag));
+      }
+    });
+
+    // Merge with default suggestions
+    searchSuggestions = [...new Set([...searchSuggestions, ...Array.from(liveSuggestions)])];
+
+    console.log(`Loaded ${liveProducts.length} live products for search (${searchSuggestions.length} total suggestions)`);
+
+  } catch (error) {
+    console.error('Failed to load live products for search:', error);
+    // Continue with default suggestions
+  }
+}
+
 // User management
 let currentUser = null;
 let users = JSON.parse(localStorage.getItem('users')) || [];
@@ -266,44 +106,72 @@ const cartIcon = document.querySelector('.cart-count');
 
 // Cart is managed by cart.js - no need to declare it here
 
-function loadProducts() {
+/**
+ * Load products for display (if products list exists on page)
+ * This is mainly for pages that display products directly
+ */
+async function loadProducts() {
   if (!productsList) return; // Skip if products list doesn't exist on this page
 
-  const productsHtml = mockProducts.map(product => `
-    <div class="product-card">
-      <div class="product-image">
-        <img src="${product.image}" alt="${product.name}" loading="lazy">
-        <div class="product-badge">${product.inStock > 0 ? 'In Stock' : 'Out of Stock'}</div>
-      </div>
-      <div class="product-info">
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <div class="product-rating">
-          <div class="stars">
-            ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
-          </div>
-          <span class="rating-count">(${product.reviews} reviews)</span>
-        </div>
-        <div class="product-price">
-          <span class="current-price">$${product.price.toFixed(2)}</span>
-        </div>
-        <div class="product-meta">
-          <span class="stock-status ${product.inStock > 0 ? 'in-stock' : 'out-of-stock'}">
-            ${product.inStock > 0 ? `✓ ${product.inStock} in stock` : 'Out of stock'}
-          </span>
-        </div>
-        <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" ${product.inStock === 0 ? 'disabled' : ''}>
-          ${product.inStock > 0 ? 'Add to Cart' : 'Out of Stock'}
-        </button>
-      </div>
-    </div>
-  `).join('');
-  productsList.innerHTML = productsHtml;
+  try {
+    // Try to load from Supabase first
+    const { data, error } = await supabase
+      .from('parts')
+      .select('*')
+      .eq('is_active', true)
+      .limit(12)
+      .order('created_at', { ascending: false });
 
-  // Add event listeners to buttons
-  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', addToCart);
-  });
+    if (error) {
+      console.error('Error loading products:', error);
+      // Fallback to showing a message
+      productsList.innerHTML = '<div class="no-products">Unable to load products. Please try again later.</div>';
+      return;
+    }
+
+    const products = data || [];
+
+    const productsHtml = products.map(product => `
+      <div class="product-card">
+        <div class="product-image">
+          <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop'}" alt="${product.name}" loading="lazy">
+          <div class="product-badge">${product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}</div>
+        </div>
+        <div class="product-info">
+          <h3>${product.name}</h3>
+          <p>${product.description || ''}</p>
+          <div class="product-rating">
+            <div class="stars">
+              ${'★'.repeat(Math.floor(product.rating || 4.5))}${'☆'.repeat(5 - Math.floor(product.rating || 4.5))}
+            </div>
+            <span class="rating-count">(${product.reviews || 0} reviews)</span>
+          </div>
+          <div class="product-price">
+            <span class="current-price">$${parseFloat(product.price || 0).toFixed(2)}</span>
+          </div>
+          <div class="product-meta">
+            <span class="stock-status ${product.stock_quantity > 0 ? 'in-stock' : 'out-of-stock'}">
+              ${product.stock_quantity > 0 ? `✓ ${product.stock_quantity} in stock` : 'Out of stock'}
+            </span>
+          </div>
+          <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price || 0}" ${product.stock_quantity === 0 ? 'disabled' : ''}>
+            ${product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    productsList.innerHTML = productsHtml;
+
+    // Add event listeners to buttons
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', addToCart);
+    });
+
+  } catch (error) {
+    console.error('Failed to load products:', error);
+    productsList.innerHTML = '<div class="no-products">Unable to load products. Please try again later.</div>';
+  }
 }
 
 function addToCart(e) {
@@ -600,6 +468,9 @@ async function performSearch() {
   hideSearchSuggestions();
 }
 
+// Make performSearch globally available for URL parameter handling
+window.performSearch = performSearch;
+
 function sortSearchResults(results, sortBy, query) {
   switch (sortBy) {
     case 'price-low':
@@ -668,9 +539,20 @@ searchForm.addEventListener('submit', (e) => {
     // Redirect to dedicated search results page
     const currentPath = window.location.pathname;
     const isInPages = currentPath.includes('/pages/');
-    const searchUrl = isInPages ?
-      `search-results.html?q=${encodeURIComponent(query)}` :
-      `pages/search-results.html?q=${encodeURIComponent(query)}`;
+    const isAtRoot = currentPath === '/' || currentPath === '/index.html';
+
+    let searchUrl;
+    if (isAtRoot) {
+      // From root index.html, go to root search.html
+      searchUrl = `search.html?q=${encodeURIComponent(query)}`;
+    } else if (isInPages) {
+      // From pages directory, go to pages/search-results.html
+      searchUrl = `search-results.html?q=${encodeURIComponent(query)}`;
+    } else {
+      // From other root pages, go to root search.html
+      searchUrl = `search.html?q=${encodeURIComponent(query)}`;
+    }
+
     window.location.href = searchUrl;
   }
 });
@@ -749,5 +631,8 @@ function getUserOrders() {
 // Initialize user session
 getCurrentUser();
 
-// Load products on page load
-loadProducts();
+// Load live products for search suggestions and products on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLiveProductsForSearch();
+  await loadProducts();
+});

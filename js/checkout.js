@@ -1,13 +1,16 @@
 /**
- * Checkout Page JavaScript
+ * Real-time Checkout Page JavaScript with Supabase Integration
  * Handles checkout form validation, payment processing, and order completion
  */
+
+import supabase from './supabase-client.js';
 
 class CheckoutManager {
     constructor() {
         this.cart = [];
         this.currentUser = null;
         this.paymentMethod = 'card';
+        this.realtimeSubscription = null;
 
         this.init();
     }
@@ -248,35 +251,67 @@ class CheckoutManager {
     async validateCartItems() {
         // Validate that cart items are still available and prices are current
         try {
-            const response = await fetch('/api/products');
-            const result = await response.json();
+            console.log('Validating cart items against live Supabase data...');
 
-            if (result.success) {
-                const availableProducts = result.data;
-                const productMap = new Map(availableProducts.map(p => [p.id, p]));
+            // Get all product IDs in cart
+            const productIds = this.cart.map(item => item.id);
 
-                // Check each cart item
-                for (const item of this.cart) {
-                    const product = productMap.get(item.id);
-                    if (!product) {
-                        throw new Error(`Product ${item.name} is no longer available`);
-                    }
-                    if (product.stock_quantity < item.quantity) {
-                        throw new Error(`Insufficient stock for ${item.name}`);
-                    }
-                    // Update price if changed
-                    if (product.price !== item.price) {
-                        item.price = product.price;
-                        this.showNotification(`Price updated for ${item.name}`, 'info');
-                    }
+            // Fetch current product data from Supabase
+            const { data, error } = await supabase
+                .from('parts')
+                .select('id, name, price, stock_quantity, images, is_active')
+                .in('id', productIds);
+
+            if (error) {
+                console.error('Error validating cart items:', error);
+                throw error;
+            }
+
+            const liveProducts = data || [];
+            const productMap = new Map(liveProducts.map(p => [p.id, p]));
+
+            let cartUpdated = false;
+
+            // Check each cart item
+            for (let i = this.cart.length - 1; i >= 0; i--) {
+                const item = this.cart[i];
+                const product = productMap.get(item.id);
+
+                if (!product || !product.is_active) {
+                    throw new Error(`Product ${item.name} is no longer available`);
                 }
 
+                if (product.stock_quantity < item.quantity) {
+                    throw new Error(`Insufficient stock for ${item.name}. Only ${product.stock_quantity} left in stock.`);
+                }
+
+                // Update price if changed
+                if (product.price !== item.price) {
+                    item.price = product.price;
+                    cartUpdated = true;
+                    this.showNotification(`Price updated for ${item.name} to $${product.price}`, 'info');
+                }
+
+                // Update image if available
+                if (product.images && product.images.length > 0 && product.images[0] !== item.image) {
+                    item.image = product.images[0];
+                    cartUpdated = true;
+                }
+            }
+
+            if (cartUpdated) {
                 // Save updated cart
                 localStorage.setItem('cart', JSON.stringify(this.cart));
+                // Refresh order summary
+                this.displayOrderSummary();
             }
+
+            console.log('Cart validation completed successfully');
+
         } catch (error) {
             console.error('Cart validation error:', error);
-            this.showNotification('Some items in your cart may have changed', 'warning');
+            this.showNotification(error.message || 'Some items in your cart may have changed', 'error');
+            throw error; // Re-throw to prevent checkout
         }
     }
 
@@ -363,28 +398,37 @@ class CheckoutManager {
             }
 
             if (paymentIntent.status === 'succeeded') {
-                // Create order in database
+                // Create order in Supabase database
                 const orderData = this.createOrderData();
                 orderData.stripe_payment_id = paymentIntent.id;
 
-                const orderResponse = await fetch('/api/orders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
+                try {
+                    // Save order to Supabase
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .insert([orderData])
+                        .select()
+                        .single();
 
-                const orderResult = await orderResponse.json();
+                    if (error) {
+                        console.error('Error saving order to Supabase:', error);
+                        throw new Error('Failed to save order');
+                    }
 
-                if (orderResult.success) {
+                    console.log('Order saved to Supabase:', data);
+
+                    // Update inventory for purchased items
+                    await this.updateInventoryAfterOrder(orderData.items);
+
                     // Clear cart
                     localStorage.removeItem('cart');
 
                     // Redirect to order confirmation
-                    window.location.href = `order-confirmation.html?order=${orderResult.order_id}`;
-                } else {
-                    throw new Error('Failed to create order');
+                    window.location.href = `order-confirmation.html?order=${data.id}`;
+
+                } catch (orderError) {
+                    console.error('Order creation error:', orderError);
+                    throw new Error('Order created but failed to save. Please contact support.');
                 }
             } else {
                 throw new Error('Payment was not successful');
@@ -519,6 +563,44 @@ class CheckoutManager {
         };
 
         return orderData;
+    }
+
+    /**
+     * Update inventory after successful order
+     */
+    async updateInventoryAfterOrder(orderItems) {
+        try {
+            console.log('Updating inventory after order...');
+
+            for (const item of orderItems) {
+                const { error } = await supabase.rpc('decrement_stock', {
+                    product_id: item.id,
+                    quantity_to_decrement: item.quantity
+                });
+
+                if (error) {
+                    console.error(`Error updating inventory for product ${item.id}:`, error);
+                    // Try direct update as fallback
+                    const { error: updateError } = await supabase
+                        .from('parts')
+                        .update({
+                            stock_quantity: supabase.raw('stock_quantity - ?', item.quantity),
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', item.id);
+
+                    if (updateError) {
+                        console.error(`Fallback inventory update failed for product ${item.id}:`, updateError);
+                    }
+                }
+            }
+
+            console.log('Inventory updated successfully');
+
+        } catch (error) {
+            console.error('Error updating inventory:', error);
+            // Don't throw here as order is already saved
+        }
     }
 
     async saveOrder(orderData) {

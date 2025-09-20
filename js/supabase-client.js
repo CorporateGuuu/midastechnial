@@ -5,13 +5,14 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase configuration
-const supabaseUrl = 'https://phgbosbtwayzejfxyxao.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ2Jvc2J0d2F5emVqZnh5eGFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjEzOTMsImV4cCI6MjA3MzA5NzM5M30.QIa24PO_VhBNZ-Bf47Mi3PoRi_6MtGvhBSnzUouutPo'
+// Supabase configuration - Load from environment variables with fallbacks
+const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL ||
+                   import.meta.env?.NEXT_PUBLIC_SUPABASE_URL ||
+                   'https://phgbosbtwayzejfxyxao.supabase.co'
 
-// For production, load from environment variables:
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
-// const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+const supabaseKey = import.meta.env?.VITE_SUPABASE_ANON_KEY ||
+                   import.meta.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+                   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ2Jvc2J0d2F5emVqZnh5eGFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MjEzOTMsImV4cCI6MjA3MzA5NzM5M30.QIa24PO_VhBNZ-Bf47Mi3PoRi_6MtGvhBSnzUouutPo'
 
 // Create Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey)

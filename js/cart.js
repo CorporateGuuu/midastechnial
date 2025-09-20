@@ -1,16 +1,26 @@
-// Cart functionality with proper error handling and user feedback
+/**
+ * Real-time Cart functionality with Supabase integration
+ * Handles cart management, product validation, and real-time updates
+ */
+
+import supabase from './supabase-client.js';
+
 let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let orders = JSON.parse(localStorage.getItem('orders')) || [];
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+let realtimeSubscription = null;
 
 const cartItemsContainer = document.getElementById('cart-items');
 const cartSummaryContainer = document.getElementById('cart-summary');
 const cartIcon = document.querySelector('.cart-count');
 
 // Initialize cart display
-function initCart() {
+async function initCart() {
+  // Validate cart items against live data
+  await validateCartItems();
+
   if (cartItemsContainer) {
     displayCartItems();
   }
@@ -18,6 +28,174 @@ function initCart() {
     displayCartSummary();
   }
   updateCartDisplay();
+
+  // Set up real-time inventory monitoring
+  setupRealtimeInventoryMonitoring();
+}
+
+/**
+ * Validate cart items against live Supabase data
+ */
+async function validateCartItems() {
+  if (cart.length === 0) return;
+
+  try {
+    console.log('Validating cart items against live data...');
+
+    // Get all product IDs in cart
+    const productIds = cart.map(item => item.id);
+
+    // Fetch current product data from Supabase
+    const { data, error } = await supabase
+      .from('parts')
+      .select('id, name, price, stock_quantity, images, is_active')
+      .in('id', productIds);
+
+    if (error) {
+      console.error('Error validating cart items:', error);
+      return;
+    }
+
+    const liveProducts = data || [];
+    const productMap = new Map(liveProducts.map(p => [p.id, p]));
+
+    let cartUpdated = false;
+
+    // Validate each cart item
+    for (let i = cart.length - 1; i >= 0; i--) {
+      const item = cart[i];
+      const liveProduct = productMap.get(item.id);
+
+      if (!liveProduct || !liveProduct.is_active) {
+        // Product no longer exists or is inactive
+        console.log(`Removing ${item.name} from cart - product no longer available`);
+        cart.splice(i, 1);
+        cartUpdated = true;
+        showNotification(`${item.name} is no longer available and has been removed from your cart`, 'warning');
+        continue;
+      }
+
+      // Check stock availability
+      if (liveProduct.stock_quantity < item.quantity) {
+        if (liveProduct.stock_quantity === 0) {
+          console.log(`Removing ${item.name} from cart - out of stock`);
+          cart.splice(i, 1);
+          cartUpdated = true;
+          showNotification(`${item.name} is out of stock and has been removed from your cart`, 'warning');
+        } else {
+          console.log(`Reducing quantity of ${item.name} from ${item.quantity} to ${liveProduct.stock_quantity}`);
+          item.quantity = liveProduct.stock_quantity;
+          cartUpdated = true;
+          showNotification(`Quantity of ${item.name} reduced to ${liveProduct.stock_quantity} due to limited stock`, 'info');
+        }
+      }
+
+      // Update price if changed
+      if (liveProduct.price !== item.price) {
+        console.log(`Updating price of ${item.name} from $${item.price} to $${liveProduct.price}`);
+        item.price = liveProduct.price;
+        cartUpdated = true;
+        showNotification(`Price of ${item.name} updated to $${liveProduct.price}`, 'info');
+      }
+
+      // Update image if available
+      if (liveProduct.images && liveProduct.images.length > 0 && liveProduct.images[0] !== item.image) {
+        item.image = liveProduct.images[0];
+        cartUpdated = true;
+      }
+    }
+
+    if (cartUpdated) {
+      saveCart();
+      console.log('Cart updated based on live data validation');
+    }
+
+  } catch (error) {
+    console.error('Cart validation error:', error);
+    showNotification('Unable to validate cart items. Some information may be outdated.', 'warning');
+  }
+}
+
+/**
+ * Set up real-time inventory monitoring for cart items
+ */
+function setupRealtimeInventoryMonitoring() {
+  if (cart.length === 0) return;
+
+  const productIds = cart.map(item => item.id);
+
+  // Subscribe to inventory changes for cart items
+  realtimeSubscription = supabase
+    .channel('cart_inventory_monitoring')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'parts',
+        filter: `id=in.(${productIds.join(',')})`
+      },
+      (payload) => {
+        console.log('Real-time inventory change for cart item:', payload);
+        handleRealtimeInventoryUpdate(payload);
+      }
+    )
+    .subscribe((status) => {
+      console.log('Cart inventory monitoring subscription status:', status);
+    });
+}
+
+/**
+ * Handle real-time inventory updates for cart items
+ */
+function handleRealtimeInventoryUpdate(payload) {
+  const { new: updatedProduct, old: oldProduct } = payload;
+
+  // Find cart item
+  const cartItemIndex = cart.findIndex(item => item.id === updatedProduct.id);
+  if (cartItemIndex === -1) return;
+
+  const cartItem = cart[cartItemIndex];
+
+  // Check if stock quantity changed
+  if (updatedProduct.stock_quantity !== oldProduct.stock_quantity) {
+    if (updatedProduct.stock_quantity === 0) {
+      // Product is now out of stock
+      cart.splice(cartItemIndex, 1);
+      saveCart();
+      displayCartItems();
+      displayCartSummary();
+      updateCartDisplay();
+      showNotification(`${cartItem.name} is now out of stock and has been removed from your cart`, 'warning');
+    } else if (updatedProduct.stock_quantity < cartItem.quantity) {
+      // Insufficient stock
+      cartItem.quantity = updatedProduct.stock_quantity;
+      saveCart();
+      displayCartItems();
+      displayCartSummary();
+      updateCartDisplay();
+      showNotification(`Quantity of ${cartItem.name} reduced to ${updatedProduct.stock_quantity} due to limited stock`, 'warning');
+    }
+  }
+
+  // Check if price changed
+  if (updatedProduct.price !== oldProduct.price) {
+    cartItem.price = updatedProduct.price;
+    saveCart();
+    displayCartItems();
+    displayCartSummary();
+    showNotification(`Price of ${cartItem.name} updated to $${updatedProduct.price}`, 'info');
+  }
+
+  // Check if product became inactive
+  if (!updatedProduct.is_active && oldProduct.is_active) {
+    cart.splice(cartItemIndex, 1);
+    saveCart();
+    displayCartItems();
+    displayCartSummary();
+    updateCartDisplay();
+    showNotification(`${cartItem.name} is no longer available and has been removed from your cart`, 'warning');
+  }
 }
 
 // Display cart items
