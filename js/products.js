@@ -25,6 +25,7 @@ class ProductsManager {
         this.loadProducts();
         this.setupEventListeners();
         this.setupRealtimeUpdates();
+        this.setupScrollGradient();
     }
 
     async loadProducts() {
@@ -370,41 +371,87 @@ class ProductsManager {
     }
 
     createProductCard(product) {
+        // Calculate discounted price if discount_percentage exists
+        const discountPercentage = product.discount_percentage || 0;
+        const discountedPrice = discountPercentage > 0 ? product.price * (1 - discountPercentage / 100) : product.price;
+
+        // Determine product badges
+        const isFeatured = product.is_featured || Math.random() > 0.8; // Mock featured status
+        const isNew = product.is_new || Math.random() > 0.9; // Mock new status
+
         const card = document.createElement('div');
         card.className = 'product-card animate-on-scroll';
         card.innerHTML = `
-            <div class="product-image">
-                <img src="${product.images ? product.images[0] : 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=300&fit=crop'}"
-                     alt="${product.name}" loading="lazy">
-                <div class="product-overlay">
-                    <button class="quick-view-btn" data-product-id="${product.id}">
-                        <i class="fas fa-eye"></i>
-                    </button>
+            <div class="product-image-container">
+                <div class="product-image">
+                    <a href="product-detail.html?id=${product.id}" class="product-image-link">
+                        <img src="${product.images ? product.images[0] : 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop'}"
+                             alt="${product.name}" loading="lazy"
+                             onerror="this.src='/images/products/placeholder.svg'">
+                    </a>
+
+                    <!-- Product Badges -->
+                    <div class="product-badges">
+                        ${isFeatured ? '<span class="featured-badge">Featured</span>' : ''}
+                        ${isNew ? '<span class="new-badge">New</span>' : ''}
+                        ${discountPercentage > 0 ? `<span class="discount-badge">-${discountPercentage}%</span>` : ''}
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="quick-view-btn" data-product-id="${product.id}" title="Quick View">
+                            👁️
+                        </button>
+                        <button class="quick-add-to-cart-btn" data-product-id="${product.id}" title="Add to Cart" ${product.stock_quantity === 0 ? 'disabled' : ''}>
+                            🛒
+                        </button>
+                    </div>
                 </div>
-                ${product.stock_quantity > 0 ? '<div class="product-badge">In Stock</div>' : '<div class="product-badge out-of-stock">Out of Stock</div>'}
             </div>
+
             <div class="product-info">
+                <div class="product-category">
+                    ${product.category || 'General'}
+                </div>
+
                 <h3 class="product-title">
                     <a href="product-detail.html?id=${product.id}">${product.name}</a>
                 </h3>
+
+                ${product.manufacturer ? `<div class="product-brand">by ${product.manufacturer}</div>` : ''}
+
                 <div class="product-rating">
                     <div class="stars">
-                        ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                        ${'⭐'.repeat(Math.floor(product.rating || 4.5))}${'☆'.repeat(5 - Math.floor(product.rating || 4.5))}
                     </div>
-                    <span class="rating-count">(${product.reviews} reviews)</span>
+                    <span class="rating-count">(${product.reviews || Math.floor(Math.random() * 100) + 10})</span>
                 </div>
+
                 <div class="product-price">
-                    <span class="current-price">$${product.price.toFixed(2)}</span>
+                    ${discountPercentage > 0 ? `
+                        <span class="original-price">$${product.price.toFixed(2)}</span>
+                        <span class="current-price">$${discountedPrice.toFixed(2)}</span>
+                    ` : `
+                        <span class="current-price">$${product.price.toFixed(2)}</span>
+                    `}
                 </div>
+
                 <div class="product-stock">
-                    <span class="stock-status ${product.stock_quantity > 0 ? 'in-stock' : 'out-of-stock'}">
-                        ${product.stock_quantity > 0 ? `✓ ${product.stock_quantity} in stock` : 'Out of stock'}
-                    </span>
+                    ${product.stock_quantity > 0 ? `
+                        <span class="in-stock">✓ In Stock (${product.stock_quantity})</span>
+                    ` : `
+                        <span class="out-of-stock">✗ Out of Stock</span>
+                    `}
                 </div>
+
                 <div class="product-meta">
                     <span class="product-sku">SKU: ${product.sku}</span>
                 </div>
+
                 <div class="product-actions">
+                    <a href="product-detail.html?id=${product.id}" class="view-details-btn">
+                        View Details
+                    </a>
                     <button class="btn-primary add-to-cart-btn" data-product-id="${product.id}" data-name="${product.name}" data-price="${product.price}" ${product.stock_quantity === 0 ? 'disabled' : ''}>
                         <i class="fas fa-shopping-cart"></i>
                         <span>${product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}</span>
@@ -415,17 +462,23 @@ class ProductsManager {
 
         // Add event listeners
         const addToCartBtn = card.querySelector('.add-to-cart-btn');
+        const quickAddToCartBtn = card.querySelector('.quick-add-to-cart-btn');
         const quickViewBtn = card.querySelector('.quick-view-btn');
 
-        addToCartBtn.addEventListener('click', (e) => {
+        const addToCartHandler = (e) => {
             e.preventDefault();
             this.addToCart(product);
-        });
+        };
+
+        addToCartBtn.addEventListener('click', addToCartHandler);
+        if (quickAddToCartBtn) {
+            quickAddToCartBtn.addEventListener('click', addToCartHandler);
+        }
 
         if (quickViewBtn) {
             quickViewBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                window.location.href = `product-detail.html?id=${product.id}`;
+                this.showQuickView(product);
             });
         }
 
@@ -547,6 +600,148 @@ class ProductsManager {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
+    }
+
+    /**
+     * Show quick view modal for product
+     */
+    showQuickView(product) {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.className = 'quick-view-modal';
+        modal.innerHTML = `
+            <div class="quick-view-overlay" id="quick-view-overlay"></div>
+            <div class="quick-view-content">
+                <button class="quick-view-close" id="quick-view-close">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="quick-view-body">
+                    <div class="quick-view-image">
+                        <img src="${product.images ? product.images[0] : '/images/products/placeholder.svg'}"
+                             alt="${product.name}"
+                             onerror="this.src='/images/products/placeholder.svg'">
+                    </div>
+
+                    <div class="quick-view-details">
+                        <div class="product-category">${product.category || 'General'}</div>
+                        <h2 class="product-title">${product.name}</h2>
+
+                        ${product.manufacturer ? `<div class="product-brand">by ${product.manufacturer}</div>` : ''}
+
+                        <div class="product-rating">
+                            <div class="stars">
+                                ${'⭐'.repeat(Math.floor(product.rating || 4.5))}${'☆'.repeat(5 - Math.floor(product.rating || 4.5))}
+                            </div>
+                            <span class="rating-count">(${product.reviews || Math.floor(Math.random() * 100) + 10} reviews)</span>
+                        </div>
+
+                        <div class="product-price">
+                            ${product.discount_percentage > 0 ? `
+                                <span class="original-price">$${product.price.toFixed(2)}</span>
+                                <span class="current-price">$${((product.price * (1 - product.discount_percentage / 100))).toFixed(2)}</span>
+                            ` : `
+                                <span class="current-price">$${product.price.toFixed(2)}</span>
+                            `}
+                        </div>
+
+                        <div class="product-stock">
+                            ${product.stock_quantity > 0 ? `
+                                <span class="in-stock">✓ In Stock (${product.stock_quantity})</span>
+                            ` : `
+                                <span class="out-of-stock">✗ Out of Stock</span>
+                            `}
+                        </div>
+
+                        <div class="product-description">
+                            <p>${product.description || 'No description available.'}</p>
+                        </div>
+
+                        <div class="product-meta">
+                            <span class="product-sku">SKU: ${product.sku}</span>
+                        </div>
+
+                        <div class="quick-view-actions">
+                            <button class="btn-primary add-to-cart-btn" data-product-id="${product.id}" ${product.stock_quantity === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>${product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}</span>
+                            </button>
+                            <a href="product-detail.html?id=${product.id}" class="view-details-btn">
+                                View Full Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add to page
+        document.body.appendChild(modal);
+
+        // Add event listeners
+        const overlay = modal.querySelector('#quick-view-overlay');
+        const closeBtn = modal.querySelector('#quick-view-close');
+        const addToCartBtn = modal.querySelector('.add-to-cart-btn');
+
+        const closeModal = () => {
+            modal.classList.add('closing');
+            setTimeout(() => modal.remove(), 300);
+        };
+
+        overlay.addEventListener('click', closeModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        addToCartBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.addToCart(product);
+            closeModal();
+        });
+
+        // Show modal with animation
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        // Close on escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    /**
+     * Setup scroll gradient effects
+     */
+    setupScrollGradient() {
+        const productsGrid = document.getElementById('products-list');
+        if (!productsGrid) return;
+
+        const handleScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = productsGrid;
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 300;
+            const hasScrollableContent = scrollHeight > clientHeight;
+
+            if (hasScrollableContent) {
+                if (isNearBottom) {
+                    productsGrid.classList.add('scroll-gradient');
+                } else {
+                    productsGrid.classList.remove('scroll-gradient');
+                }
+            } else {
+                // If no scrollable content, show gradient after delay
+                setTimeout(() => {
+                    productsGrid.classList.add('scroll-gradient');
+                }, 2000);
+            }
+        };
+
+        productsGrid.addEventListener('scroll', handleScroll);
+
+        // Check initial state
+        setTimeout(() => {
+            handleScroll();
+        }, 100);
     }
 }
 

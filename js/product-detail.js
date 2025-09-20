@@ -119,7 +119,7 @@ class ProductDetailManager {
                     "Advanced OLED Technology",
                     "Crystal Clear Display",
                     "Perfect Fit Guarantee",
-                    "1 Year Warranty"
+                    "30 Day Warranty"
                 ],
                 rating: 4.8,
                 reviews: 128

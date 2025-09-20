@@ -1,11 +1,27 @@
+const express = require('express');
+const { Pool } = require('pg');
+const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
+const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const fs = require('fs');
+const compression = require('compression');
 const http = require('http');
 const https = require('https');
-const fs = require('fs');
-const path = require('path');
 const crypto = require('crypto');
 const mysql = require('mysql2/promise');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_your_stripe_key_here');
-const nodemailer = require('nodemailer');
+const {
+  csrfProtection,
+  apiLimiter,
+  loginLimiter,
+  registerLimiter,
+  securityHeaders,
+  handleCsrfError
+} = require('./middleware/security');
+const { sendOrderConfirmationEmail } = require('./utils/email-service');
 
 // Database configuration
 const dbConfig = {
@@ -18,14 +34,7 @@ const dbConfig = {
   queueLimit: 0
 };
 
-// Email configuration
-const emailTransporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-app-password'
-  }
-});
+
 
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
@@ -512,63 +521,7 @@ async function handlePaymentFailure(paymentIntent) {
   }
 }
 
-// Send order confirmation email
-async function sendOrderConfirmationEmail(orderId) {
-  try {
-    const connection = await getDatabaseConnection();
 
-    // Get order details
-    const [orderRows] = await connection.execute(
-      'SELECT * FROM orders WHERE id = ?',
-      [orderId]
-    );
-
-    if (orderRows.length === 0) {
-      throw new Error('Order not found');
-    }
-
-    const order = orderRows[0];
-
-    // Get order items
-    const [itemRows] = await connection.execute(
-      'SELECT * FROM order_items WHERE order_id = ?',
-      [orderId]
-    );
-
-    connection.release();
-
-    // Prepare email content
-    const emailHtml = `
-      <h1>Order Confirmation - Order #${orderId}</h1>
-      <p>Thank you for your order! Here are the details:</p>
-
-      <h2>Order Items:</h2>
-      <ul>
-        ${itemRows.map(item => `
-          <li>${item.product_name} (x${item.quantity}) - $${item.price * item.quantity}</li>
-        `).join('')}
-      </ul>
-
-      <h2>Total: $${order.total_amount}</h2>
-
-      <p>Shipping Address: ${JSON.parse(order.shipping_address).address}</p>
-
-      <p>We'll send you another email when your order ships!</p>
-    `;
-
-    // Send email
-    await emailTransporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: JSON.parse(order.billing_address).email,
-      subject: `Order Confirmation - Order #${orderId}`,
-      html: emailHtml
-    });
-
-    console.log(`📧 Order confirmation email sent for order ${orderId}`);
-  } catch (error) {
-    console.error('Email sending error:', error);
-  }
-}
 
 // Parse request body
 function parseRequestBody(req) {
@@ -607,240 +560,342 @@ const sslOptions = {
   cert: fs.readFileSync('cert.pem')
 };
 
-// Create both HTTP and HTTPS servers
-const httpServer = http.createServer(async (req, res) => {
-  // Redirect HTTP to HTTPS in production
-  if (isProduction && req.headers.host) {
-    res.writeHead(301, { 'Location': `https://${req.headers.host}${req.url}` });
-    res.end();
-    return;
+// Create Express app
+const app = express();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/mdtstech_store',
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
+
+// Middleware
+app.use(compression()); // Compress all responses
+app.use(securityHeaders); // Apply security headers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Apply rate limiting to API routes
+app.use('/api/', apiLimiter);
+
+// Session configuration
+app.use(session({
+  store: new pgSession({
+    pool: pool,
+    tableName: 'session'
+  }),
+  secret: process.env.SESSION_SECRET || 'your_session_secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+    httpOnly: true, // Prevent JavaScript access to cookies
+    sameSite: 'strict' // Prevent CSRF attacks
   }
-  const startTime = Date.now();
-  const clientIP = getClientIP(req);
+}));
 
-  // Rate limiting check
-  if (!checkRateLimit(clientIP)) {
-    res.writeHead(429, { 'Content-Type': 'text/plain' });
-    res.end('Too Many Requests - Rate limit exceeded');
-    logRequest(req, 429, Date.now() - startTime);
-    return;
-  }
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-  // Apply security headers
-  applySecurityHeaders(res);
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.set('layout', 'layout');
 
-  let filePath = '.' + req.url;
-  if (filePath === './') {
-    filePath = './index.html';
-  }
+// Make user data available to all templates
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  res.locals.isAuthenticated = !!req.session.userId;
+  res.locals.isAdmin = !!req.session.isAdmin;
+  next();
+});
 
-  // Fix for URLs with query strings or hashes
-  filePath = filePath.split('?')[0].split('#')[0];
+// Import utilities
+const { getCachedData, cacheData } = require('./utils/cache');
+const { getRelatedProducts } = require('./utils/related-products');
 
-  // Check if it's an API route
-  const queryParams = parseQueryParams(req.url);
-  const apiRoute = Object.keys(apiRoutes).find(route => {
-    return req.url.startsWith(route) || req.url.split('?')[0] === route;
-  });
+// Home page
+app.get('/', async (req, res) => {
+  try {
+    // Try to get data from cache
+    const cacheKey = 'home_page_data';
+    const cachedData = await getCachedData(cacheKey);
 
-  if (apiRoute && apiRoutes[apiRoute] && apiRoutes[apiRoute][req.method]) {
-    try {
-      const body = req.method === 'POST' || req.method === 'PUT' ? await parseRequestBody(req) : null;
-      await apiRoutes[apiRoute][req.method](req, res, queryParams, body);
-    } catch (error) {
-      console.error('API route error:', error);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, message: 'Internal server error' }));
+    if (cachedData) {
+      return res.render('index', {
+        featuredProducts: cachedData.featuredProducts,
+        categories: cachedData.categories
+      });
     }
-    logRequest(req, 200, Date.now() - startTime);
-    return;
+
+    // Get featured products
+    const featuredProductsQuery = `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.is_featured = true
+      ORDER BY p.created_at DESC
+      LIMIT 8
+    `;
+    const featuredProductsResult = await pool.query(featuredProductsQuery);
+
+    // Get categories
+    const categoriesQuery = `
+      SELECT c.*,
+             (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count
+      FROM categories c
+      ORDER BY c.name
+    `;
+    const categoriesResult = await pool.query(categoriesQuery);
+
+    // Cache the data for 10 minutes
+    const data = {
+      featuredProducts: featuredProductsResult.rows,
+      categories: categoriesResult.rows
+    };
+
+    await cacheData(cacheKey, data, 600); // 10 minutes
+
+    res.render('index', data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Server error');
   }
+});
 
-  // Validate and sanitize the file path
-  const sanitizedPath = validateAndSanitizePath(filePath);
-  if (!sanitizedPath) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    res.end('403 Forbidden\n');
-    logRequest(req, 403, Date.now() - startTime);
-    return;
-  }
+// Products page
+app.get('/products', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const offset = (page - 1) * limit;
 
-  filePath = sanitizedPath;
+    // Try to get data from cache
+    const cacheKey = `products_page_${page}`;
+    const cachedData = await getCachedData(cacheKey);
 
-  const extname = String(path.extname(filePath)).toLowerCase();
-  const contentType = mimeTypes[extname] || 'application/octet-stream';
-
-  fs.readFile(filePath, (error, content) => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('404 Not Found\n');
-        logRequest(req, 404, Date.now() - startTime);
-      } else {
-        console.error('File read error:', error);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('500 Internal Server Error\n');
-        logRequest(req, 500, Date.now() - startTime);
-      }
-    } else {
-      // Additional security for HTML files
-      if (contentType === 'text/html') {
-        // Add CSP nonce for inline scripts/styles if needed
-        const nonce = crypto.randomBytes(16).toString('base64');
-        res.setHeader('Content-Security-Policy',
-          securityHeaders['Content-Security-Policy'].replace("'unsafe-inline'", `'nonce-${nonce}'`)
-        );
-      }
-
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(content, 'utf-8');
-      logRequest(req, 200, Date.now() - startTime);
+    if (cachedData) {
+      return res.render('products', {
+        products: cachedData.products,
+        currentPage: cachedData.currentPage,
+        totalPages: cachedData.totalPages,
+        totalProducts: cachedData.totalProducts
+      });
     }
-  });
+
+    // Get products with pagination
+    const productsQuery = `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      ORDER BY p.created_at DESC
+      LIMIT $1 OFFSET $2
+    `;
+    const productsResult = await pool.query(productsQuery, [limit, offset]);
+
+    // Get total count for pagination
+    const countQuery = `SELECT COUNT(*) FROM products`;
+    const countResult = await pool.query(countQuery);
+    const totalProducts = parseInt(countResult.rows[0].count);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Cache the data for 5 minutes
+    const data = {
+      products: productsResult.rows,
+      currentPage: page,
+      totalPages: totalPages,
+      totalProducts: totalProducts
+    };
+
+    await cacheData(cacheKey, data, 300); // 5 minutes
+
+    res.render('products', data);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).send('Server error');
+  }
 });
 
-// Create HTTPS server for SSL
-const httpsServer = https.createServer(sslOptions, async (req, res) => {
-  const startTime = Date.now();
-  const clientIP = getClientIP(req);
+// Product detail page
+app.get('/products/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
 
-  // Rate limiting check
-  if (!checkRateLimit(clientIP)) {
-    res.writeHead(429, { 'Content-Type': 'text/plain' });
-    res.end('Too Many Requests - Rate limit exceeded');
-    logRequest(req, 429, Date.now() - startTime);
-    return;
-  }
+    // Try to get data from cache
+    const cacheKey = `product_detail_${slug}`;
+    const cachedData = await getCachedData(cacheKey);
 
-  // Apply security headers
-  applySecurityHeaders(res);
-
-  let filePath = '.' + req.url;
-  if (filePath === './') {
-    filePath = './index.html';
-  }
-
-  // Fix for URLs with query strings or hashes
-  filePath = filePath.split('?')[0].split('#')[0];
-
-  // Check if it's an API route
-  const queryParams = parseQueryParams(req.url);
-  const apiRoute = Object.keys(apiRoutes).find(route => {
-    return req.url.startsWith(route) || req.url.split('?')[0] === route;
-  });
-
-  if (apiRoute && apiRoutes[apiRoute] && apiRoutes[apiRoute][req.method]) {
-    try {
-      const body = req.method === 'POST' || req.method === 'PUT' ? await parseRequestBody(req) : null;
-      await apiRoutes[apiRoute][req.method](req, res, queryParams, body);
-    } catch (error) {
-      console.error('API route error:', error);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, message: 'Internal server error' }));
+    if (cachedData) {
+      return res.render('product-detail', {
+        product: cachedData.product,
+        specifications: cachedData.specifications
+      });
     }
-    logRequest(req, 200, Date.now() - startTime);
-    return;
-  }
 
-  // Validate and sanitize the file path
-  const sanitizedPath = validateAndSanitizePath(filePath);
-  if (!sanitizedPath) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    res.end('403 Forbidden\n');
-    logRequest(req, 403, Date.now() - startTime);
-    return;
-  }
+    // Get product details
+    const productQuery = `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.slug = $1
+    `;
+    const productResult = await pool.query(productQuery, [slug]);
 
-  filePath = sanitizedPath;
-
-  const extname = String(path.extname(filePath)).toLowerCase();
-  const contentType = mimeTypes[extname] || 'application/octet-stream';
-
-  fs.readFile(filePath, (error, content) => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('404 Not Found\n');
-        logRequest(req, 404, Date.now() - startTime);
-      } else {
-        console.error('File read error:', error);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('500 Internal Server Error\n');
-        logRequest(req, 500, Date.now() - startTime);
-      }
-    } else {
-      // Additional security for HTML files
-      if (contentType === 'text/html') {
-        // Add CSP nonce for inline scripts/styles if needed
-        const nonce = crypto.randomBytes(16).toString('base64');
-        res.setHeader('Content-Security-Policy',
-          securityHeaders['Content-Security-Policy'].replace("'unsafe-inline'", `'nonce-${nonce}'`)
-        );
-      }
-
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(content, 'utf-8');
-      logRequest(req, 200, Date.now() - startTime);
+    if (productResult.rows.length === 0) {
+      return res.status(404).render('404', { message: 'Product not found' });
     }
-  });
+
+    const product = productResult.rows[0];
+
+    // Get product specifications
+    const specsQuery = `
+      SELECT * FROM product_specifications
+      WHERE product_id = $1
+    `;
+    const specsResult = await pool.query(specsQuery, [product.id]);
+
+    // Get related products
+    const relatedProducts = await getRelatedProducts(product.id, 4);
+
+    // Cache the data for 1 hour
+    const data = {
+      product: product,
+      specifications: specsResult.rows[0] || {},
+      relatedProducts: relatedProducts,
+      // SEO metadata
+      title: product.name,
+      metaDescription: product.description ? product.description.substring(0, 160) : `Buy ${product.name} at the best price. Free shipping available.`,
+      metaKeywords: `${product.name}, ${product.brand}, ${product.category_name}, electronics, phones`,
+      canonicalUrl: `http://localhost:3000/products/${product.slug}`,
+      ogImage: product.image_url || 'http://localhost:3000/images/logo.png'
+    };
+
+    await cacheData(cacheKey, data, 3600); // 1 hour
+
+    res.render('product-detail', data);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).send('Server error');
+  }
 });
 
-// Error handling for both servers
-httpServer.on('error', (error) => {
-  console.error('HTTP Server error:', error);
-});
+// Categories page
+app.get('/categories', async (req, res) => {
+  try {
+    // Get categories
+    const categoriesQuery = `
+      SELECT c.*,
+             (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count
+      FROM categories c
+      ORDER BY c.name
+    `;
+    const categoriesResult = await pool.query(categoriesQuery);
 
-httpsServer.on('error', (error) => {
-  console.error('HTTPS Server error:', error);
-});
-
-httpServer.on('clientError', (err, socket) => {
-  console.error('HTTP Client error:', err);
-  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-});
-
-httpsServer.on('clientError', (err, socket) => {
-  console.error('HTTPS Client error:', err);
-  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-});
-
-// Graceful shutdown for both servers
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  httpServer.close(() => {
-    httpsServer.close(() => {
-      console.log('Servers closed');
-      process.exit(0);
+    res.render('categories', {
+      categories: categoriesResult.rows
     });
-  });
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).send('Server error');
+  }
 });
 
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
-  httpServer.close(() => {
-    httpsServer.close(() => {
-      console.log('Servers closed');
-      process.exit(0);
+// Category detail page
+app.get('/categories/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    // Get category details
+    const categoryQuery = `
+      SELECT c.*,
+             (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as product_count
+      FROM categories c
+      WHERE c.slug = $1
+    `;
+    const categoryResult = await pool.query(categoryQuery, [slug]);
+
+    if (categoryResult.rows.length === 0) {
+      return res.status(404).render('404', { message: 'Category not found' });
+    }
+
+    const category = categoryResult.rows[0];
+
+    // Get products in this category
+    const productsQuery = `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE c.slug = $1
+      ORDER BY p.created_at DESC
+      LIMIT 20
+    `;
+    const productsResult = await pool.query(productsQuery, [slug]);
+
+    res.render('category-detail', {
+      category: category,
+      products: productsResult.rows
     });
+  } catch (error) {
+    console.error('Error fetching category:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Register routes
+app.use('/', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/user', userRoutes);
+app.use('/cart', cartRoutes);
+app.use('/search', searchRoutes);
+app.use('/api/cart', apiCartRoutes);
+app.use('/api/checkout', apiCheckoutRoutes);
+app.use('/api/reviews', apiReviewsRoutes);
+app.use('/api/wishlist', apiWishlistRoutes);
+
+// CSRF error handler
+app.use(handleCsrfError);
+
+// 403 page
+app.use('/403', (req, res) => {
+  res.status(403).render('403', {
+    title: 'Access Denied',
+    message: 'You do not have permission to access this page.'
   });
 });
 
-// Initialize database and start servers
-async function startServer() {
-  await initializeDatabase();
-
-  // Start HTTP server
-  httpServer.listen(port, () => {
-    console.log(`🚀 Midas Technical Solutions HTTP Server running at http://localhost:${port}/`);
+// 404 page
+app.use((req, res) => {
+  res.status(404).render('404', {
+    title: 'Page Not Found',
+    message: 'The page you are looking for does not exist.'
   });
+});
 
-  // Start HTTPS server on port 443 (standard SSL port)
-  const httpsPort = 443;
-  httpsServer.listen(httpsPort, () => {
-    console.log(`🔒 Midas Technical Solutions HTTPS Server running at https://localhost:${httpsPort}/`);
-    console.log(`🔒 SSL Certificate: Self-signed (replace with Let's Encrypt for production)`);
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('500', {
+    title: 'Server Error',
+    message: 'Something went wrong on our end. Please try again later.'
   });
+});
 
+// Create session table if it doesn't exist
+pool.query(`
+  CREATE TABLE IF NOT EXISTS "session" (
+    "sid" varchar NOT NULL COLLATE "default",
+    "sess" json NOT NULL,
+    "expire" timestamp(6) NOT NULL,
+    CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+  )
+`).catch(err => {
+  console.error('Error creating session table:', err);
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`🚀 Midas Technical Solutions Server running at http://localhost:${port}/`);
   console.log(`🔒 Security features enabled: CSP, HSTS, Rate Limiting, Input Validation`);
   console.log(`💳 Stripe payment processing integrated`);
   console.log(`📧 Email notifications configured`);
@@ -848,11 +903,5 @@ async function startServer() {
   console.log(`📊 Request logging and monitoring active`);
   if (isProduction) {
     console.log(`🔐 Production mode: Enhanced security measures active`);
-    console.log(`🔄 HTTP traffic automatically redirected to HTTPS`);
   }
-}
-
-startServer().catch(error => {
-  console.error('Failed to start server:', error);
-  process.exit(1);
 });
