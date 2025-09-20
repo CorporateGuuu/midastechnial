@@ -1,7 +1,9 @@
 /**
  * Products Page JavaScript
- * Handles product loading, filtering, and display
+ * Handles product loading, filtering, and display with real-time updates
  */
+
+import supabase, { realtimeProductsManager } from './supabase-client.js';
 
 class ProductsManager {
     constructor() {
@@ -14,6 +16,7 @@ class ProductsManager {
             priceRange: '',
             sortBy: 'featured'
         };
+        this.realtimeSubscription = null;
 
         this.init();
     }
@@ -21,6 +24,7 @@ class ProductsManager {
     init() {
         this.loadProducts();
         this.setupEventListeners();
+        this.setupRealtimeUpdates();
     }
 
     async loadProducts() {
@@ -28,7 +32,7 @@ class ProductsManager {
             // Show loading state
             this.showLoading();
 
-            // Load products from Supabase (mock data for now)
+            // Load products from Supabase with real-time data
             const products = await this.fetchProductsFromSupabase();
             this.allProducts = products;
             this.filteredProducts = [...products];
@@ -44,8 +48,131 @@ class ProductsManager {
         }
     }
 
+    /**
+     * Set up real-time subscriptions for product changes
+     */
+    setupRealtimeUpdates() {
+        // Subscribe to product changes
+        this.realtimeSubscription = realtimeProductsManager.subscribeToProducts((payload) => {
+            this.handleRealtimeProductUpdate(payload);
+        });
+    }
+
+    /**
+     * Handle real-time product updates
+     */
+    handleRealtimeProductUpdate(payload) {
+        const { eventType, new: newRecord, old: oldRecord } = payload;
+
+        switch (eventType) {
+            case 'INSERT':
+                this.handleProductInsert(newRecord);
+                break;
+            case 'UPDATE':
+                this.handleProductUpdate(newRecord);
+                break;
+            case 'DELETE':
+                this.handleProductDelete(oldRecord);
+                break;
+        }
+    }
+
+    handleProductInsert(newProduct) {
+        // Format the new product
+        const formattedProduct = this.formatProductFromDatabase(newProduct);
+
+        // Add to all products if not already present
+        const existingIndex = this.allProducts.findIndex(p => p.id === formattedProduct.id);
+        if (existingIndex === -1) {
+            this.allProducts.unshift(formattedProduct);
+            this.applyFilters();
+            this.displayProducts();
+            this.showNotification('New product added!', 'success');
+        }
+    }
+
+    handleProductUpdate(updatedProduct) {
+        const formattedProduct = this.formatProductFromDatabase(updatedProduct);
+
+        // Update in all products
+        const index = this.allProducts.findIndex(p => p.id === formattedProduct.id);
+        if (index !== -1) {
+            this.allProducts[index] = formattedProduct;
+            this.applyFilters();
+            this.displayProducts();
+            this.showNotification('Product updated!', 'info');
+        }
+    }
+
+    handleProductDelete(deletedProduct) {
+        // Remove from all products
+        this.allProducts = this.allProducts.filter(p => p.id !== deletedProduct.id);
+        this.applyFilters();
+        this.displayProducts();
+        this.showNotification('Product removed!', 'warning');
+    }
+
     async fetchProductsFromSupabase() {
-        // Mock comprehensive product data
+        try {
+            console.log('Fetching products from Supabase...');
+
+            const { data, error } = await supabase
+                .from('parts')
+                .select('*')
+                .eq('is_active', true)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching products from Supabase:', error);
+                throw error;
+            }
+
+            console.log(`Fetched ${data.length} products from Supabase`);
+
+            // Format products for frontend
+            return data.map(product => this.formatProductFromDatabase(product));
+
+        } catch (error) {
+            console.error('Failed to fetch products from Supabase:', error);
+            // Fallback to mock data if Supabase fails
+            console.log('Falling back to mock data...');
+            return this.getMockProducts();
+        }
+    }
+
+    /**
+     * Format a product from database to frontend format
+     */
+    formatProductFromDatabase(product) {
+        return {
+            id: product.id,
+            name: product.name || '',
+            description: product.description || '',
+            price: parseFloat(product.price) || 0,
+            category: product.category || '',
+            stock_quantity: parseInt(product.stock_quantity) || 0,
+            sku: product.sku || '',
+            manufacturer: product.manufacturer || '',
+            model: product.model || '',
+            compatibility: Array.isArray(product.compatibility) ? product.compatibility : [],
+            warranty_period: parseInt(product.warranty_period) || 12,
+            weight_grams: parseInt(product.weight_grams) || 0,
+            dimensions_cm: product.dimensions_cm || '',
+            rating: parseFloat(product.rating) || 4.5,
+            reviews: parseInt(product.reviews) || 0,
+            images: Array.isArray(product.images) ? product.images : ['https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop'],
+            features: Array.isArray(product.features) ? product.features : [],
+            tags: Array.isArray(product.tags) ? product.tags : [],
+            is_active: product.is_active !== false,
+            created_at: product.created_at,
+            updated_at: product.updated_at
+        };
+    }
+
+    /**
+     * Get mock products as fallback
+     */
+    getMockProducts() {
         return [
             // iPhone Parts
             {
@@ -110,203 +237,6 @@ class ProductsManager {
                 rating: 4.5,
                 reviews: 67,
                 tags: ["Camera", "TrueDepth", "Face ID"]
-            },
-            {
-                id: 4,
-                name: "OLED Assembly For iPhone 14 (Genuine OEM)",
-                description: "Quality Apple Genuine OLED Assembly For iPhone 14 - Genuine OEM Part. Premium quality display assembly with advanced OLED technology.",
-                price: 277.25,
-                category: "iPhone 14 Parts",
-                stock_quantity: 12,
-                sku: "IPA14-OLED-GEN",
-                manufacturer: "Apple Inc.",
-                model: "iPhone 14",
-                compatibility: ["iPhone 14"],
-                warranty_period: 12,
-                weight_grams: 45,
-                dimensions_cm: "15x8x0.5",
-                images: [
-                    "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop"
-                ],
-                rating: 4.9,
-                reviews: 45,
-                tags: ["OLED", "Genuine", "Premium"]
-            },
-            {
-                id: 5,
-                name: "Replacement Battery For iPhone 14 (Genuine OEM)",
-                description: "Quality Apple Genuine Replacement Battery For iPhone 14 - Genuine OEM Part. High-capacity lithium-ion battery.",
-                price: 55.86,
-                category: "iPhone 14 Parts",
-                stock_quantity: 20,
-                sku: "IPA14-BATT-GEN",
-                manufacturer: "Apple Inc.",
-                model: "iPhone 14",
-                compatibility: ["iPhone 14", "iPhone 14 Plus"],
-                warranty_period: 12,
-                weight_grams: 18,
-                dimensions_cm: "8x5x0.3",
-                images: [
-                    "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop"
-                ],
-                rating: 4.6,
-                reviews: 78,
-                tags: ["Battery", "Genuine", "Lithium-ion"]
-            },
-
-            // Samsung Parts
-            {
-                id: 6,
-                name: "Galaxy S24 Ultra AMOLED Screen (Premium)",
-                description: "Premium AMOLED display replacement for Samsung Galaxy S24 Ultra. Crystal clear 6.8-inch Dynamic AMOLED 2X display.",
-                price: 199.99,
-                category: "Samsung Galaxy Parts",
-                stock_quantity: 8,
-                sku: "SGS24U-AMOLED-PREM",
-                manufacturer: "Samsung Electronics",
-                model: "Galaxy S24 Ultra",
-                compatibility: ["Galaxy S24 Ultra"],
-                warranty_period: 12,
-                weight_grams: 55,
-                dimensions_cm: "16x8x0.5",
-                images: [
-                    "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop"
-                ],
-                rating: 4.7,
-                reviews: 92,
-                tags: ["AMOLED", "Premium", "Dynamic"]
-            },
-            {
-                id: 7,
-                name: "Galaxy S24 Ultra Battery (Original OEM)",
-                description: "Original Samsung battery replacement for Galaxy S24 Ultra. High-capacity 5000mAh battery with fast charging support.",
-                price: 89.99,
-                category: "Samsung Galaxy Parts",
-                stock_quantity: 15,
-                sku: "SGS24U-BATT-OEM",
-                manufacturer: "Samsung Electronics",
-                model: "Galaxy S24 Ultra",
-                compatibility: ["Galaxy S24 Ultra"],
-                warranty_period: 12,
-                weight_grams: 25,
-                dimensions_cm: "10x6x0.4",
-                images: [
-                    "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop"
-                ],
-                rating: 4.8,
-                reviews: 156,
-                tags: ["Battery", "OEM", "5000mAh"]
-            },
-
-            // MacBook Parts
-            {
-                id: 8,
-                name: "MacBook Pro 16\" Retina Display (Premium)",
-                description: "Premium LCD display replacement for MacBook Pro 16-inch Retina models. Crystal clear 16-inch Liquid Retina XDR display.",
-                price: 599.99,
-                category: "MacBook Parts",
-                stock_quantity: 5,
-                sku: "MBP16-DISP-PREM",
-                manufacturer: "Apple Inc.",
-                model: "MacBook Pro 16\"",
-                compatibility: ["MacBook Pro 16-inch (2019-2023)"],
-                warranty_period: 12,
-                weight_grams: 120,
-                dimensions_cm: "35x22x0.8",
-                images: [
-                    "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop"
-                ],
-                rating: 4.9,
-                reviews: 34,
-                tags: ["Retina", "Premium", "Liquid XDR"]
-            },
-            {
-                id: 9,
-                name: "MacBook Pro Battery (Genuine OEM)",
-                description: "Genuine Apple battery replacement for MacBook Pro 16-inch models. High-capacity lithium-polymer battery.",
-                price: 149.99,
-                category: "MacBook Parts",
-                stock_quantity: 8,
-                sku: "MBP16-BATT-GEN",
-                manufacturer: "Apple Inc.",
-                model: "MacBook Pro 16\"",
-                compatibility: ["MacBook Pro 16-inch"],
-                warranty_period: 12,
-                weight_grams: 80,
-                dimensions_cm: "25x15x0.5",
-                images: [
-                    "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=400&fit=crop"
-                ],
-                rating: 4.6,
-                reviews: 67,
-                tags: ["Battery", "Genuine", "Lithium-polymer"]
-            },
-
-            // Repair Tools
-            {
-                id: 10,
-                name: "Professional Repair Toolkit (Complete Set)",
-                description: "Complete professional repair toolkit for phone and laptop repairs. Includes screwdrivers, suction cups, opening tools, and more.",
-                price: 89.99,
-                category: "Repair Tools",
-                stock_quantity: 15,
-                sku: "TOOLKIT-PROF-001",
-                manufacturer: "Midas Tools",
-                model: "Professional Toolkit",
-                compatibility: ["All devices"],
-                warranty_period: 24,
-                weight_grams: 500,
-                dimensions_cm: "30x20x5",
-                images: [
-                    "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop"
-                ],
-                rating: 4.9,
-                reviews: 203,
-                tags: ["Toolkit", "Professional", "Complete"]
-            },
-            {
-                id: 11,
-                name: "Precision Screwdriver Set (32-Piece)",
-                description: "Professional precision screwdriver set with 32 different bits for all types of electronic repairs.",
-                price: 39.99,
-                category: "Repair Tools",
-                stock_quantity: 25,
-                sku: "SCREWDRIVER-32PC",
-                manufacturer: "Midas Tools",
-                model: "Precision Set",
-                compatibility: ["All devices"],
-                warranty_period: 24,
-                weight_grams: 200,
-                dimensions_cm: "15x10x3",
-                images: [
-                    "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop"
-                ],
-                rating: 4.8,
-                reviews: 145,
-                tags: ["Screwdriver", "Precision", "32-Piece"]
-            },
-
-            // iPad Parts
-            {
-                id: 12,
-                name: "iPad Pro 12.9\" LCD Display (Genuine OEM)",
-                description: "Genuine Apple LCD display replacement for iPad Pro 12.9-inch models. Ultra Retina XDR display technology.",
-                price: 399.99,
-                category: "iPad Parts",
-                stock_quantity: 6,
-                sku: "IPADPRO12-DISP-GEN",
-                manufacturer: "Apple Inc.",
-                model: "iPad Pro 12.9\"",
-                compatibility: ["iPad Pro 12.9-inch (2020-2022)"],
-                warranty_period: 12,
-                weight_grams: 85,
-                dimensions_cm: "28x20x0.6",
-                images: [
-                    "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop"
-                ],
-                rating: 4.7,
-                reviews: 56,
-                tags: ["LCD", "Genuine", "Ultra Retina"]
             }
         ];
     }
