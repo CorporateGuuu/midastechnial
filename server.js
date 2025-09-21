@@ -55,50 +55,7 @@ const mimeTypes = {
   '.eot': 'application/vnd.ms-fontobject'
 };
 
-// Security headers configuration
-const securityHeaders = {
-  // Prevent clickjacking
-  'X-Frame-Options': 'DENY',
-  // Prevent MIME type sniffing
-  'X-Content-Type-Options': 'nosniff',
-  // Enable XSS protection
-  'X-XSS-Protection': '1; mode=block',
-  // Referrer policy
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  // Content Security Policy
-  'Content-Security-Policy': [
-    "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://js.stripe.com https://cdnjs.cloudflare.com https://fonts.googleapis.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
-    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
-    "img-src 'self' data: https: http:",
-    "connect-src 'self' https://api.stripe.com",
-    "frame-ancestors 'none'",
-    "base-uri 'self'",
-    "form-action 'self'"
-  ].join('; '),
-  // HSTS (HTTP Strict Transport Security) - only in production
-  ...(isProduction && { 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload' }),
-  // Feature policy to disable potentially dangerous features
-  'Permissions-Policy': [
-    'camera=()',
-    'microphone=()',
-    'geolocation=()',
-    'payment=(self)',
-    'usb=()',
-    'magnetometer=()',
-    'accelerometer=()',
-    'gyroscope=()',
-    'speaker=()',
-    'fullscreen=(self)',
-    'ambient-light-sensor=()',
-    'autoplay=()',
-    'encrypted-media=()',
-    'picture-in-picture=()'
-  ].join(', '),
-  // Remove server information
-  'Server': 'Midas-Server/1.0'
-};
+
 
 // Rate limiting (simple in-memory implementation)
 const rateLimitStore = new Map();
@@ -200,20 +157,58 @@ async function initializeDatabase() {
       )
     `);
 
+    // Create categories table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        slug VARCHAR(100) UNIQUE NOT NULL,
+        description TEXT,
+        image_url VARCHAR(500),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
     // Create products table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS products (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        slug VARCHAR(255),
+        sku VARCHAR(100) UNIQUE,
         description TEXT,
         price DECIMAL(10,2) NOT NULL,
-        category VARCHAR(100),
-        sku VARCHAR(100) UNIQUE,
+        discount_percentage DECIMAL(5,2) DEFAULT 0,
         stock_quantity INT DEFAULT 0,
+        is_featured BOOLEAN DEFAULT FALSE,
+        is_new BOOLEAN DEFAULT FALSE,
         image_url VARCHAR(500),
+        brand VARCHAR(100),
+        category_id INT,
         repairdesk_id INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
+      )
+    `);
+
+    // Create product_specifications table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS product_specifications (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        product_id INT NOT NULL,
+        display TEXT,
+        processor TEXT,
+        memory TEXT,
+        storage TEXT,
+        camera TEXT,
+        battery TEXT,
+        connectivity TEXT,
+        operating_system TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
       )
     `);
 
@@ -615,6 +610,9 @@ app.use((req, res, next) => {
 const { getCachedData, cacheData } = require('./utils/cache');
 const { getRelatedProducts } = require('./utils/related-products');
 
+// Import routes
+const adminRoutes = require('./routes/admin');
+
 // Home page
 app.get('/', async (req, res) => {
   try {
@@ -843,15 +841,15 @@ app.get('/categories/:slug', async (req, res) => {
 });
 
 // Register routes
-app.use('/', authRoutes);
+// app.use('/', authRoutes);
 app.use('/admin', adminRoutes);
-app.use('/user', userRoutes);
-app.use('/cart', cartRoutes);
-app.use('/search', searchRoutes);
-app.use('/api/cart', apiCartRoutes);
-app.use('/api/checkout', apiCheckoutRoutes);
-app.use('/api/reviews', apiReviewsRoutes);
-app.use('/api/wishlist', apiWishlistRoutes);
+// app.use('/user', userRoutes);
+// app.use('/cart', cartRoutes);
+// app.use('/search', searchRoutes);
+// app.use('/api/cart', apiCartRoutes);
+// app.use('/api/checkout', apiCheckoutRoutes);
+// app.use('/api/reviews', apiReviewsRoutes);
+// app.use('/api/wishlist', apiWishlistRoutes);
 
 // CSRF error handler
 app.use(handleCsrfError);
