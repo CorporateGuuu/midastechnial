@@ -656,7 +656,10 @@ app.get('/', async (req, res) => {
 
     await cacheData(cacheKey, data, 600); // 10 minutes
 
-    res.render('index', data);
+    res.render('index', {
+      ...data,
+      title: 'Home - Midas Technical Solutions'
+    });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Server error');
@@ -709,7 +712,10 @@ app.get('/products', async (req, res) => {
 
     await cacheData(cacheKey, data, 300); // 5 minutes
 
-    res.render('products', data);
+    res.render('products', {
+      ...data,
+      title: 'All Products - Midas Technical Solutions'
+    });
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).send('Server error');
@@ -792,7 +798,8 @@ app.get('/categories', async (req, res) => {
     const categoriesResult = await pool.query(categoriesQuery);
 
     res.render('categories', {
-      categories: categoriesResult.rows
+      categories: categoriesResult.rows,
+      title: 'Product Categories - Midas Technical Solutions'
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -833,7 +840,8 @@ app.get('/categories/:slug', async (req, res) => {
 
     res.render('category-detail', {
       category: category,
-      products: productsResult.rows
+      products: productsResult.rows,
+      title: `${category.name} - Midas Technical Solutions`
     });
   } catch (error) {
     console.error('Error fetching category:', error);
