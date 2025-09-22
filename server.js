@@ -603,6 +603,7 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user;
   res.locals.isAuthenticated = !!req.session.userId;
   res.locals.isAdmin = !!req.session.isAdmin;
+  res.locals.path = req.path;
   next();
 });
 

@@ -100,33 +100,28 @@ export default function LCDBuyback() {
       </header>
 
       {/* Hero Section */}
-      <section style={{
-        background: 'linear-gradient(to right, #003087, #000)',
-        color: 'white',
-        textAlign: 'center',
-        padding: '40px 20px'
-      }}>
+      <section className="lcd-hero-section">
         <div className="container">
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '20px', fontWeight: 'bold' }}>
+          <h1 className="lcd-hero-title">
             LCD Screen Buyback Program
           </h1>
-          <p style={{ fontSize: '1.2rem', marginBottom: '30px', maxWidth: '600px', margin: '0 auto 30px' }}>
+          <p className="lcd-hero-description">
             Get the best value for your old LCD screens, tablets, and mobile devices.
             We offer competitive prices and fast, secure processing.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-            <div style={{ textAlign: 'center' }}>
-              <i className="fas fa-dollar-sign" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+          <div className="lcd-hero-features">
+            <div className="lcd-feature-item">
+              <i className="fas fa-dollar-sign lcd-feature-icon"></i>
               <h3>Best Prices</h3>
               <p>Competitive rates for all devices</p>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <i className="fas fa-shipping-fast" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+            <div className="lcd-feature-item">
+              <i className="fas fa-shipping-fast lcd-feature-icon"></i>
               <h3>Fast Processing</h3>
               <p>Quick evaluation and payment</p>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <i className="fas fa-shield-alt" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+            <div className="lcd-feature-item">
+              <i className="fas fa-shield-alt lcd-feature-icon"></i>
               <h3>Secure & Safe</h3>
               <p>Data securely wiped before recycling</p>
             </div>
@@ -135,33 +130,22 @@ export default function LCDBuyback() {
       </section>
 
       {/* Form Section */}
-      <section style={{
-        backgroundColor: '#f8f9fa',
-        padding: '40px 20px',
-        minHeight: 'calc(100vh - 300px)'
-      }}>
-        <div style={{
-          backgroundColor: '#fff',
-          padding: '20px',
-          maxWidth: '600px',
-          margin: '20px auto',
-          borderRadius: '8px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-        }}>
-          <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#333' }}>
+      <section className="lcd-form-section">
+        <div className="lcd-form-container">
+          <h2 className="lcd-form-title">
             Device Information Form
           </h2>
 
           <form onSubmit={handleSubmit}>
             {/* Device Information */}
-            <div style={{ marginBottom: '30px' }}>
-              <h3 style={{ marginBottom: '15px', color: '#003087', borderBottom: '2px solid #003087', paddingBottom: '5px' }}>
-                <i className="fas fa-mobile-alt" style={{ marginRight: '10px' }}></i>
+            <div className="form-section-spacing">
+              <h3 className="lcd-section-header">
+                <i className="fas fa-mobile-alt lcd-section-icon"></i>
                 Device Information
               </h3>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Device Type *
                 </label>
                 <select
@@ -169,13 +153,8 @@ export default function LCDBuyback() {
                   value={formData.deviceType}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-select"
+                  title="Select the type of device"
                 >
                   <option value="">Select device type</option>
                   <option value="smartphone">Smartphone</option>
@@ -187,8 +166,8 @@ export default function LCDBuyback() {
                 </select>
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Brand *
                 </label>
                 <input
@@ -198,18 +177,13 @@ export default function LCDBuyback() {
                   onChange={handleInputChange}
                   placeholder="e.g., Apple, Samsung, LG"
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="Enter the device brand"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Model *
                 </label>
                 <input
@@ -219,31 +193,21 @@ export default function LCDBuyback() {
                   onChange={handleInputChange}
                   placeholder="e.g., iPhone 12, Galaxy S21"
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="Enter the device model"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Screen Size
                 </label>
                 <select
                   name="screenSize"
                   value={formData.screenSize}
                   onChange={handleInputChange}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-select"
+                  title="Select the screen size of your device"
                 >
                   <option value="">Select screen size</option>
                   <option value="small">Small (under 5")</option>
@@ -255,14 +219,14 @@ export default function LCDBuyback() {
             </div>
 
             {/* Condition Information */}
-            <div style={{ marginBottom: '30px' }}>
-              <h3 style={{ marginBottom: '15px', color: '#003087', borderBottom: '2px solid #003087', paddingBottom: '5px' }}>
-                <i className="fas fa-clipboard-check" style={{ marginRight: '10px' }}></i>
+            <div className="form-section-spacing">
+              <h3 className="lcd-section-header">
+                <i className="fas fa-clipboard-check lcd-section-icon"></i>
                 Condition Information
               </h3>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Overall Condition *
                 </label>
                 <select
@@ -270,13 +234,8 @@ export default function LCDBuyback() {
                   value={formData.condition}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-select"
+                  title="Select the overall condition of your device"
                 >
                   <option value="">Select condition</option>
                   <option value="excellent">Excellent - Like new</option>
@@ -287,12 +246,12 @@ export default function LCDBuyback() {
                 </select>
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Screen Condition
                 </label>
-                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div className="lcd-radio-group">
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasCracks"
@@ -302,7 +261,7 @@ export default function LCDBuyback() {
                     />
                     No cracks
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasCracks"
@@ -312,7 +271,7 @@ export default function LCDBuyback() {
                     />
                     Minor cracks
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasCracks"
@@ -325,12 +284,12 @@ export default function LCDBuyback() {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Dead/Stuck Pixels
                 </label>
-                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div className="lcd-radio-group">
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasDeadPixels"
@@ -340,7 +299,7 @@ export default function LCDBuyback() {
                     />
                     None
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasDeadPixels"
@@ -350,7 +309,7 @@ export default function LCDBuyback() {
                     />
                     Few (1-5)
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="hasDeadPixels"
@@ -365,14 +324,14 @@ export default function LCDBuyback() {
             </div>
 
             {/* Contact Information */}
-            <div style={{ marginBottom: '30px' }}>
-              <h3 style={{ marginBottom: '15px', color: '#003087', borderBottom: '2px solid #003087', paddingBottom: '5px' }}>
-                <i className="fas fa-user" style={{ marginRight: '10px' }}></i>
+            <div className="form-section-spacing">
+              <h3 className="lcd-section-header">
+                <i className="fas fa-user lcd-section-icon"></i>
                 Contact Information
               </h3>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Full Name *
                 </label>
                 <input
@@ -381,18 +340,14 @@ export default function LCDBuyback() {
                   value={formData.contactName}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="Enter your full name"
+                  placeholder="Enter your full name"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Email Address *
                 </label>
                 <input
@@ -401,18 +356,14 @@ export default function LCDBuyback() {
                   value={formData.contactEmail}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="Enter your email address"
+                  placeholder="Enter your email address"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Phone Number
                 </label>
                 <input
@@ -420,31 +371,22 @@ export default function LCDBuyback() {
                   name="contactPhone"
                   value={formData.contactPhone}
                   onChange={handleInputChange}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="Enter your phone number"
+                  placeholder="Enter your phone number"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Preferred Contact Method
                 </label>
                 <select
                   name="preferredContact"
                   value={formData.preferredContact}
                   onChange={handleInputChange}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-select"
+                  title="Select your preferred contact method"
                 >
                   <option value="">Select preferred method</option>
                   <option value="email">Email</option>
@@ -455,18 +397,18 @@ export default function LCDBuyback() {
             </div>
 
             {/* Additional Information */}
-            <div style={{ marginBottom: '30px' }}>
-              <h3 style={{ marginBottom: '15px', color: '#003087', borderBottom: '2px solid #003087', paddingBottom: '5px' }}>
-                <i className="fas fa-info-circle" style={{ marginRight: '10px' }}></i>
+            <div className="form-section-spacing">
+              <h3 className="lcd-section-header">
+                <i className="fas fa-info-circle lcd-section-icon"></i>
                 Additional Information
               </h3>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Original Box & Accessories
                 </label>
-                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div className="lcd-radio-group">
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="originalBox"
@@ -476,7 +418,7 @@ export default function LCDBuyback() {
                     />
                     Yes
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <label className="lcd-radio-label">
                     <input
                       type="radio"
                       name="originalBox"
@@ -489,8 +431,8 @@ export default function LCDBuyback() {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Included Accessories
                 </label>
                 <input
@@ -499,18 +441,13 @@ export default function LCDBuyback() {
                   value={formData.accessories}
                   onChange={handleInputChange}
                   placeholder="e.g., charger, case, stylus"
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px'
-                  }}
+                  className="form-input"
+                  title="List any included accessories"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              <div className="form-field-spacing">
+                <label className="lcd-form-label">
                   Additional Notes
                 </label>
                 <textarea
@@ -519,34 +456,19 @@ export default function LCDBuyback() {
                   onChange={handleInputChange}
                   placeholder="Any additional information about your device..."
                   rows={4}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    resize: 'vertical'
-                  }}
+                  className="form-textarea"
+                  title="Enter any additional notes about your device"
                 />
               </div>
             </div>
 
             {/* Submit Button */}
-            <div style={{ textAlign: 'center' }}>
+            <div className="center-align">
               <button
                 type="submit"
-                style={{
-                  backgroundColor: '#ff0000',
-                  color: 'white',
-                  padding: '10px 20px',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  fontWeight: 'bold'
-                }}
+                className="lcd-submit-btn"
               >
-                <i className="fas fa-paper-plane" style={{ marginRight: '8px' }}></i>
+                <i className="fas fa-paper-plane icon-spacing"></i>
                 Submit for Quote
               </button>
             </div>
@@ -562,13 +484,13 @@ export default function LCDBuyback() {
               <h4>LCD Buyback Program</h4>
               <p>Get the best value for your old LCD screens and devices. Fast, secure, and reliable service.</p>
               <div className="social-links">
-                <a href="#" className="social-link">
+                <a href="#" className="social-link" title="Facebook">
                   <i className="fab fa-facebook"></i>
                 </a>
-                <a href="#" className="social-link">
+                <a href="#" className="social-link" title="Twitter">
                   <i className="fab fa-twitter"></i>
                 </a>
-                <a href="#" className="social-link">
+                <a href="#" className="social-link" title="Instagram">
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>

@@ -211,7 +211,7 @@
         <aside class="search-filters-sidebar">
           <div class="filters-header">
             <h3><i class="fas fa-filter"></i> Filters</h3>
-            <button class="clear-filters-btn" id="clear-filters-btn">
+            <button type="button" class="clear-filters-btn" id="clear-filters-btn" title="Clear All Filters">
               <i class="fas fa-undo"></i>
               Clear All
             </button>
@@ -367,10 +367,10 @@
             </div>
 
             <div class="view-options">
-              <button class="view-btn active" data-view="grid" id="grid-view-btn">
+              <button type="button" class="view-btn active" data-view="grid" id="grid-view-btn" title="Grid view">
                 <i class="fas fa-th"></i>
               </button>
-              <button class="view-btn" data-view="list" id="list-view-btn">
+              <button type="button" class="view-btn" data-view="list" id="list-view-btn" title="List view">
                 <i class="fas fa-list"></i>
               </button>
             </div>
@@ -383,7 +383,7 @@
             </div>
 
             <!-- No Results State -->
-            <div class="no-results-state" id="no-results-state" style="display: none;">
+            <div class="no-results-state" id="no-results-state">
               <div class="no-results-content">
                 <i class="fas fa-search"></i>
                 <h3>No products found</h3>
