@@ -1,0 +1,90 @@
+<div class="page-header">
+  <div class="container">
+    <h1>Product Categories</h1>
+    <p>Browse our complete range of repair parts and tools by category</p>
+  </div>
+</div>
+
+<section class="categories-section">
+  <div class="container">
+    <div class="categories-grid">
+      <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+        <% categories.forEach(category => { %>
+          <div class="category-card">
+            <div class="category-image">
+              <% if (category.image_url) { %>
+                <img src="<%= category.image_url %>" alt="<%= category.name %>" loading="lazy">
+              <% } else { %>
+                <div class="no-image">
+                  <i class="fas fa-th-large"></i>
+                </div>
+              <% } %>
+            </div>
+            <div class="category-info">
+              <h3 class="category-name">
+                <a href="/categories/<%= category.slug %>"><%= category.name %></a>
+              </h3>
+              <% if (category.product_count !== undefined) { %>
+                <span class="product-count"><%= category.product_count %> products</span>
+              <% } %>
+              <% if (category.description) { %>
+                <p class="category-description"><%= category.description %></p>
+              <% } %>
+              <div class="category-actions">
+                <a href="/categories/<%= category.slug %>" class="btn btn-primary">Browse Category</a>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="no-categories">
+          <i class="fas fa-th-large"></i>
+          <h3>No categories available</h3>
+          <p>Categories will be added soon!</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="category-features">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fab fa-apple"></i>
+        </div>
+        <h3>Apple Products</h3>
+        <p>Genuine Apple parts and accessories for iPhone, iPad, and MacBook repairs.</p>
+        <a href="/categories/apple" class="btn btn-secondary">View Apple Parts</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Android & Others</h3>
+        <p>High-quality parts for Samsung, Google, and other Android devices.</p>
+        <a href="/categories/android" class="btn btn-secondary">View Android Parts</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-tools"></i>
+        </div>
+        <h3>Repair Tools</h3>
+        <p>Professional-grade tools and equipment for device repair technicians.</p>
+        <a href="/categories/tools" class="btn btn-secondary">View Tools</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-battery-half"></i>
+        </div>
+        <h3>Batteries & Screens</h3>
+        <p>Replacement batteries, LCD screens, and display assemblies.</p>
+        <a href="/categories/batteries" class="btn btn-secondary">View Components</a>
+      </div>
+    </div>
+  </div>
+</section>

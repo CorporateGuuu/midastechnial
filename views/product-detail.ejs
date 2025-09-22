@@ -1,0 +1,215 @@
+<div class="product-detail-header">
+  <div class="container">
+    <h1><%= product.name %></h1>
+    <div class="product-meta">
+      <span class="sku">SKU: <%= product.sku || 'N/A' %></span>
+      <% if (product.category_name) { %>
+        <span class="category">Category: <a href="/categories/<%= product.category_id %>"><%= product.category_name %></a></span>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<section class="product-detail-section">
+  <div class="container">
+    <div class="product-detail-container">
+      <!-- Product Images -->
+      <div class="product-gallery">
+        <div class="main-image">
+          <% if (product.image_url) { %>
+            <img src="<%= product.image_url %>" alt="<%= product.name %>" id="main-product-image">
+          <% } else { %>
+            <div class="no-image-large">
+              <i class="fas fa-image"></i>
+              <span>No image available</span>
+            </div>
+          <% } %>
+        </div>
+        <% if (product.image_url) { %>
+          <div class="thumbnail-gallery">
+            <img src="<%= product.image_url %>" alt="<%= product.name %>" class="thumbnail active">
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Product Information -->
+      <div class="product-info">
+        <div class="product-rating">
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <span class="rating-text">(4.8) 127 reviews</span>
+        </div>
+
+        <div class="product-price">
+          <% if (product.discount_percentage > 0) { %>
+            <span class="original-price">$<%= product.price %></span>
+            <span class="current-price">$<%= (product.price * (1 - product.discount_percentage / 100)).toFixed(2) %></span>
+            <span class="discount-badge"><%= product.discount_percentage %>% OFF</span>
+          <% } else { %>
+            <span class="current-price">$<%= product.price %></span>
+          <% } %>
+        </div>
+
+        <div class="product-stock">
+          <% if (product.stock_quantity > 0) { %>
+            <span class="stock-status in-stock">
+              <i class="fas fa-check-circle"></i>
+              In Stock (<%= product.stock_quantity %> available)
+            </span>
+          <% } else { %>
+            <span class="stock-status out-of-stock">
+              <i class="fas fa-times-circle"></i>
+              Out of Stock
+            </span>
+          <% } %>
+        </div>
+
+        <% if (product.description) { %>
+          <div class="product-description">
+            <h3>Description</h3>
+            <p><%= product.description %></p>
+          </div>
+        <% } %>
+
+        <% if (typeof specifications !== 'undefined' && specifications) { %>
+          <div class="product-specifications">
+            <h3>Specifications</h3>
+            <div class="specs-grid">
+              <% if (specifications.display) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Display:</span>
+                  <span class="spec-value"><%= specifications.display %></span>
+                </div>
+              <% } %>
+              <% if (specifications.processor) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Processor:</span>
+                  <span class="spec-value"><%= specifications.processor %></span>
+                </div>
+              <% } %>
+              <% if (specifications.memory) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Memory:</span>
+                  <span class="spec-value"><%= specifications.memory %></span>
+                </div>
+              <% } %>
+              <% if (specifications.storage) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Storage:</span>
+                  <span class="spec-value"><%= specifications.storage %></span>
+                </div>
+              <% } %>
+              <% if (specifications.camera) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Camera:</span>
+                  <span class="spec-value"><%= specifications.camera %></span>
+                </div>
+              <% } %>
+              <% if (specifications.battery) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Battery:</span>
+                  <span class="spec-value"><%= specifications.battery %></span>
+                </div>
+              <% } %>
+              <% if (specifications.connectivity) { %>
+                <div class="spec-item">
+                  <span class="spec-label">Connectivity:</span>
+                  <span class="spec-value"><%= specifications.connectivity %></span>
+                </div>
+              <% } %>
+              <% if (specifications.operating_system) { %>
+                <div class="spec-item">
+                  <span class="spec-label">OS:</span>
+                  <span class="spec-value"><%= specifications.operating_system %></span>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="product-actions">
+          <% if (product.stock_quantity > 0) { %>
+            <div class="quantity-selector">
+              <button class="quantity-btn" id="decrease-qty">-</button>
+              <input type="number" id="product-quantity" value="1" min="1" max="<%= Math.min(product.stock_quantity, 99) %>" aria-label="Quantity">
+              <button class="quantity-btn" id="increase-qty">+</button>
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn btn-primary add-to-cart-btn" id="add-to-cart-btn" data-product-id="<%= product.id %>">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+          <% } else { %>
+            <div class="out-of-stock-message">
+              <p>This product is currently out of stock. Please check back later.</p>
+              <button class="btn btn-secondary notify-btn">
+                <i class="fas fa-bell"></i>
+                Notify When Available
+              </button>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="product-badges">
+          <span class="badge free-shipping">
+            <i class="fas fa-truck"></i>
+            Free Shipping $99+
+          </span>
+          <span class="badge warranty">
+            <i class="fas fa-shield-alt"></i>
+            30 Day Warranty
+          </span>
+          <span class="badge support">
+            <i class="fas fa-headset"></i>
+            24/7 Support
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (typeof relatedProducts !== 'undefined' && relatedProducts.length > 0) { %>
+<section class="related-products-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Related Products</h2>
+      <p>You might also like these products</p>
+    </div>
+
+    <div class="products-grid">
+      <% relatedProducts.forEach(relatedProduct => { %>
+        <div class="product-card">
+          <div class="product-image">
+            <% if (relatedProduct.image_url) { %>
+              <img src="<%= relatedProduct.image_url %>" alt="<%= relatedProduct.name %>" loading="lazy">
+            <% } else { %>
+              <div class="no-image">
+                <i class="fas fa-image"></i>
+              </div>
+            <% } %>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">
+              <a href="/products/<%= relatedProduct.slug || relatedProduct.id %>"><%= relatedProduct.name %></a>
+            </h3>
+            <div class="product-price">
+              <span class="current-price">$<%= relatedProduct.price %></span>
+            </div>
+            <div class="product-actions">
+              <a href="/products/<%= relatedProduct.slug || relatedProduct.id %>" class="btn btn-primary">View Details</a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
