@@ -1,6 +1,6 @@
 [build]
   publish = "nextjs-auth-app/.next"
-  command = "cd nextjs-auth-app && npm run build"
+  command = "cd nextjs-auth-app && npm install && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
