@@ -1,6 +1,6 @@
 [build]
-  publish = "nextjs-auth-app/.next"
-  command = "cd nextjs-auth-app && npm install && npm run build"
+  publish = "."
+  command = "echo 'No build step required - serving static files'"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -16,6 +16,16 @@
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/products"
+  to = "/products.html"
+  status = 200
+
+[[redirects]]
+  from = "/products/:slug"
+  to = "/products.html"
   status = 200
 
 [[redirects]]
