@@ -1,726 +1,1472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Midas Technical Solutions - Premium Repair Parts & Tools</title>
-  <meta name="description" content="Discover premium phone, tablet, and laptop repair parts at Midas Technical Solutions. Fast shipping, competitive prices, and expert support." />
-  <meta name="keywords" content="repair parts, phone repair, laptop parts, iPhone screen, Samsung battery, premium tools" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <meta name="description" content="Professional repair parts and tools for iPhone, Samsung, MacBook, and more. Fast shipping, expert support, 30-day warranty.">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #ffffff;
+    }
+
+    /* Header Styles */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .top-bar {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.5rem 0;
+    }
+
+    .top-bar-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-bar-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .top-bar-links {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .top-bar-links a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+
+    .top-bar-links a:hover {
+      color: #374151;
+    }
+
+    .main-header {
+      padding: 1rem 0;
+    }
+
+    .main-header-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .logo-text {
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: #111827;
+    }
+
+    .logo-sub {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: -0.25rem;
+    }
+
+    .search-bar {
+      flex: 1;
+      max-width: 32rem;
+      margin: 0 2rem;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 3rem 0.5rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .header-icon {
+      position: relative;
+      padding: 0.5rem;
+      color: #6b7280;
+      text-decoration: none;
+      border-radius: 0.375rem;
+    }
+
+    .header-icon:hover {
+      color: #374151;
+      background: #f3f4f6;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -0.25rem;
+      right: -0.25rem;
+      background: #ef4444;
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+
+    /* Navigation */
+    .nav-bar {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .nav-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 3rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      color: #374151;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: #1f2937;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      padding: 0.5rem;
+      color: #6b7280;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #000000 0%, #333333 100%);
+      color: white;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 6rem 1rem;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-title .highlight {
+      color: #ffd700;
+    }
+
+    .hero-text {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: #bfdbfe;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: white;
+      color: #2563eb;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #f9fafb;
+    }
+
+    .btn-secondary {
+      border: 2px solid white;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: #2563eb;
+    }
+
+    .hero-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 1.875rem;
+      margin-bottom: 0.5rem;
+      color: #ffd700;
+    }
+
+    /* Categories Section */
+    .categories {
+      padding: 4rem 0;
+      background: #f9fafb;
+    }
+
+    .categories-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.875rem;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.125rem;
+      color: #6b7280;
+      margin-bottom: 3rem;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .category-card {
+      background: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .category-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      transform: translateY(-5px);
+    }
+
+    .category-image {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.75rem;
+      color: #6b7280;
+      transition: transform 0.3s;
+    }
+
+    .category-card:hover .category-image {
+      transform: scale(1.05);
+    }
+
+    .category-content {
+      padding: 1.5rem;
+    }
+
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-description {
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+
+    .category-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .category-count {
+      font-size: 0.875rem;
+      color: #059669;
+      font-weight: 500;
+    }
+
+    .category-arrow {
+      color: #059669;
+      transition: transform 0.2s;
+    }
+
+    .category-card:hover .category-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Products Section */
+    .products {
+      padding: 4rem 0;
+      background: white;
+    }
+
+    .products-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+      aspect-ratio: 1;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.75rem;
+      color: #d1d5db;
+      position: relative;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-new {
+      background: #ef4444;
+      color: white;
+    }
+
+    .badge-sale {
+      background: #10b981;
+      color: white;
+    }
+
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .product-card:hover .product-overlay {
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 1;
+    }
+
+    .quick-view-btn {
+      background: white;
+      color: #111827;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .quick-view-btn:hover {
+      background: #f9fafb;
+    }
+
+    .product-info {
+      padding: 1rem;
+    }
+
+    .product-title {
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stars {
+      color: #ffd700;
+    }
+
+    .rating-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .product-price {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .price-current {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .price-old {
+      font-size: 0.875rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+      margin-left: 0.5rem;
+    }
+
+    .product-status {
+      font-size: 0.875rem;
+      color: #059669;
+    }
+
+    .add-to-cart-btn {
+      width: 100%;
+      background: #ffd700;
+      color: #000000;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-to-cart-btn:hover {
+      background: #d4af37;
+    }
+
+    .view-all-btn {
+      display: block;
+      margin: 0 auto;
+      background: #111827;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      max-width: 16rem;
+      transition: background 0.2s;
+    }
+
+    .view-all-btn:hover {
+      background: #1f2937;
+    }
+
+    /* Stats Section */
+    .stats {
+      padding: 4rem 0;
+      background: #f9fafb;
+    }
+
+    .stats-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-blue {
+      color: #ffd700;
+    }
+
+    .stat-green {
+      color: #000000;
+    }
+
+    .stat-yellow {
+      color: #dc2626;
+    }
+
+    .stat-purple {
+      color: #ffffff;
+    }
+
+    .stat-label {
+      color: #6b7280;
+    }
+
+    /* Newsletter Section */
+    .newsletter {
+      padding: 4rem 0;
+      background: #2563eb;
+      color: white;
+    }
+
+    .newsletter-content {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .newsletter-title {
+      font-size: 1.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-text {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: #bfdbfe;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 1rem;
+      max-width: 32rem;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      min-width: 16rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .newsletter-btn {
+      background: white;
+      color: #2563eb;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-btn:hover {
+      background: #f9fafb;
+    }
+
+    /* Footer */
+    .footer {
+      background: #111827;
+      color: white;
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo-icon {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .footer-logo-text .footer-main {
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .footer-logo-text .footer-sub {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: -0.25rem;
+    }
+
+    .footer-description {
+      color: #9ca3af;
+      margin-bottom: 1rem;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 1.25rem;
+    }
+
+    .footer-social a:hover {
+      color: white;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: #9ca3af;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-contact li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      color: #9ca3af;
+    }
+
+    .footer-contact .icon {
+      width: 1rem;
+      text-align: center;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #374151;
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-copyright {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .footer-legal a {
+      color: #9ca3af;
+      text-decoration: none;
+    }
+
+    .footer-legal a:hover {
+      color: white;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-menu-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .mobile-menu-panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 20rem;
+      background: white;
+      box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+      transform: translateX(100%);
+      transition: transform 0.3s;
+    }
+
+    .mobile-menu.active .mobile-menu-panel {
+      transform: translateX(0);
+    }
+
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .mobile-menu-title {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .mobile-menu-close {
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .mobile-menu-nav {
+      padding: 1rem;
+    }
+
+    .mobile-menu-links {
+      list-style: none;
+    }
+
+    .mobile-menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .mobile-menu-links a {
+      color: #374151;
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      padding: 0.5rem 0;
+    }
+
+    .mobile-menu-links a:hover {
+      color: #1f2937;
+    }
+
+    .mobile-menu-divider {
+      border-top: 1px solid #e5e7eb;
+      margin: 1rem 0;
+      padding-top: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-features {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .search-bar {
+        margin: 0 1rem;
+      }
+
+      .categories-grid,
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .newsletter-input {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .top-bar-content,
+      .main-header-content,
+      .nav-content,
+      .hero-content,
+      .categories-content,
+      .products-content,
+      .stats-content,
+      .newsletter-content,
+      .footer-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .hero-title {
+        font-size: 1.75rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Loading Animation -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="loading-spinner">
-      <div class="spinner-ring"></div>
-      <div class="loading-text">MIDAS</div>
-    </div>
-  </div>
-
   <!-- Header -->
-  <header class="modern-header">
-    <div class="header-top">
-      <div class="container">
-        <div class="header-announcement">
-          <i class="fas fa-truck"></i>
-          <span>Free shipping on orders over $99 • 24/7 Expert Support</span>
+  <header>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-content">
+        <div class="top-bar-text">
+          <span>🚚</span> Free shipping on orders over $99
+          <span style="margin-left: 1rem;">🎧</span> 24/7 Expert Support
         </div>
-        <div class="header-actions">
-          <a href="sign-in.html" class="auth-link"><i class="fas fa-user"></i> Sign In</a>
-          <a href="register.html" class="auth-link"><i class="fas fa-user-plus"></i> Register</a>
+        <div class="top-bar-links">
+          <a href="/login">Sign In</a>
+          <a href="/register">Register</a>
         </div>
       </div>
     </div>
 
-    <div class="header-main">
-      <div class="container header-container">
-        <button class="menu-toggle" aria-label="Toggle menu">
-          <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="logo">
-          <div class="logo-icon">
-            <i class="fas fa-tools"></i>
-          </div>
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="main-header-content">
+        <!-- Logo -->
+        <a href="/" class="logo">
+          <div class="logo-icon">MT</div>
           <div class="logo-text">
-            <span class="logo-main">MIDAS</span>
-            <span class="logo-sub">Technical Solutions</span>
+            <div>Midas Technical</div>
+            <div class="logo-sub">Solutions</div>
           </div>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search for premium repair parts...">
+          <button class="search-btn">🔍</button>
         </div>
 
-        <div class="search-container">
-          <form class="search-form" id="search-form" action="javascript:void(0);">
-            <div class="search-input-wrapper">
-              <i class="fas fa-search search-icon"></i>
-              <input type="search" id="search-input" name="q" placeholder="Search for premium repair parts..." />
-              <button type="button" class="search-filter-btn" title="Filter search options">
-                <i class="fas fa-sliders-h"></i>
-              </button>
-            </div>
-            <button type="submit" class="search-submit-btn">
-              <i class="fas fa-search"></i>
-              <span>Search</span>
-            </button>
-          </form>
-          <div id="search-results" class="search-results"></div>
-        </div>
-
-        <div class="header-actions">
-
-          <a href="pages/cart.html" class="header-action-btn cart-btn" title="Cart">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count">0</span>
-            <span class="action-label">Cart</span>
+        <!-- Header Icons -->
+        <div class="header-icons">
+          <a href="/cart" class="header-icon">
+            <span>🛒</span>
+            <span class="cart-badge">0</span>
           </a>
+          <a href="/account" class="header-icon">👤</a>
+          <a href="/support" class="header-icon">❓</a>
         </div>
       </div>
     </div>
 
-    <nav class="main-navigation">
-      <div class="container">
-        <ul class="nav-links">
-          <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
-          <li class="dropdown">
-            <a href="pages/products.html"><i class="fas fa-box"></i> Products <i class="fas fa-chevron-down"></i></a>
-            <div class="dropdown-menu">
-              <div class="dropdown-section">
-                <h4><i class="fab fa-apple"></i> Apple Products</h4>
-                <a href="pages/iphone-parts.html">iPhone Parts</a>
-                <a href="pages/ipad-parts.html">iPad Parts</a>
-                <a href="pages/macbook-parts.html">MacBook Parts</a>
-                <a href="pages/apple-parts-program.html">Apple Parts Program</a>
-              </div>
-              <div class="dropdown-section">
-                <h4><i class="fas fa-mobile-alt"></i> Android & Others</h4>
-                <a href="pages/samsung-parts.html">Samsung Parts</a>
-                <a href="pages/categories.html">All Categories</a>
-                <a href="pages/shop-by-category.html">Shop by Category</a>
-              </div>
-              <div class="dropdown-section">
-                <h4><i class="fas fa-tools"></i> Tools & Services</h4>
-                <a href="pages/repair-tools.html">Repair Tools</a>
-                <a href="pages/lcd-buyback.html">LCD Buyback</a>
-                <a href="pages/trade-off.html">Trade-In Program</a>
-              </div>
-            </div>
-          </li>
-          <li><a href="pages/financing.html"><i class="fas fa-credit-card"></i> Financing</a></li>
-          <li><a href="pages/account.html"><i class="fas fa-user-circle"></i> Account</a></li>
-          <li><a href="pages/my-orders.html"><i class="fas fa-shopping-bag"></i> Orders</a></li>
-        </ul>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+      <div class="nav-content">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <div style="position: relative;">
+            <a href="/products" class="nav-link">Products ▼</a>
+            <!-- Mega menu would go here -->
+          </div>
+          <a href="/financing" class="nav-link">Financing</a>
+          <a href="/contact" class="nav-link">Contact</a>
+        </div>
       </div>
     </nav>
   </header>
 
-  <!-- Sidebar Menu -->
-  <aside class="sidebar-menu" id="sidebar-menu">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <i class="fas fa-tools"></i>
-        <span>MIDAS</span>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div>
+        <h1 class="hero-title">
+          Professional Repair Parts<br>
+          <span class="highlight">Made for Experts</span>
+        </h1>
+        <p class="hero-text">
+          Discover our extensive collection of premium phone, tablet, and laptop repair parts.
+          Trusted by professionals worldwide with guaranteed quality and lightning-fast delivery.
+        </p>
+        <div class="hero-buttons">
+          <a href="/products" class="btn-primary">Shop Now</a>
+          <a href="#categories" class="btn-secondary">View Categories</a>
+        </div>
       </div>
-      <button class="sidebar-close" id="sidebar-close" type="button" title="Close sidebar">
-        <i class="fas fa-times"></i>
-      </button>
+      <div class="hero-features">
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <div>100% Genuine Parts</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚚</div>
+          <div>Free Shipping $99+</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎧</div>
+          <div>24/7 Support</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⏰</div>
+          <div>30 Day Warranty</div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <nav class="sidebar-nav">
-      <div class="sidebar-section">
-        <h3><i class="fas fa-home"></i> Main</h3>
-        <ul>
-          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="pages/products.html"><i class="fas fa-box"></i> All Products</a></li>
-          <li><a href="pages/categories.html"><i class="fas fa-th-large"></i> Categories</a></li>
-        </ul>
-      </div>
+  <!-- Product Categories -->
+  <section id="categories" class="categories">
+    <div class="categories-content">
+      <h2 class="section-title">Shop by Category</h2>
+      <p class="section-subtitle">Find the perfect parts for your repair needs</p>
 
-      <div class="sidebar-section">
-        <h3><i class="fab fa-apple"></i> Apple Products</h3>
-        <ul>
-          <li><a href="pages/iphone-parts.html"><i class="fas fa-mobile-alt"></i> iPhone Parts</a></li>
-          <li><a href="pages/ipad-parts.html"><i class="fas fa-tablet-alt"></i> iPad Parts</a></li>
-          <li><a href="pages/macbook-parts.html"><i class="fas fa-laptop"></i> MacBook Parts</a></li>
-          <li><a href="pages/apple-parts-program.html"><i class="fas fa-star"></i> Premium Program</a></li>
-        </ul>
-      </div>
-
-      <div class="sidebar-section">
-        <h3><i class="fas fa-tools"></i> Tools & Services</h3>
-        <ul>
-          <li><a href="pages/repair-tools.html"><i class="fas fa-wrench"></i> Repair Tools</a></li>
-          <li><a href="pages/lcd-buyback.html"><i class="fas fa-recycle"></i> LCD Buyback</a></li>
-          <li><a href="pages/trade-off.html"><i class="fas fa-exchange-alt"></i> Trade-In</a></li>
-          <li><a href="pages/financing.html"><i class="fas fa-credit-card"></i> Financing</a></li>
-        </ul>
-      </div>
-
-      <div class="sidebar-section">
-        <h3><i class="fas fa-user"></i> Account</h3>
-        <ul>
-          <li><a href="sign-in.html"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
-          <li><a href="register.html"><i class="fas fa-user-plus"></i> Register</a></li>
-          <li><a href="pages/my-profile.html"><i class="fas fa-user-circle"></i> My Profile</a></li>
-          <li><a href="pages/my-orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-
-          <li><a href="pages/cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
-        </ul>
-      </div>
-    </nav>
-  </aside>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-background">
-        <div class="hero-gradient"></div>
-        <div class="hero-pattern"></div>
-      </div>
-
-      <div class="container hero-container">
-        <div class="hero-content">
-          <div class="hero-badge">
-            <i class="fas fa-crown"></i>
-            <span>Premium Quality Parts</span>
-          </div>
-
-          <h1 class="hero-title">
-            Professional Repair Parts<br>
-            <span class="hero-highlight">Made for Experts</span>
-          </h1>
-
-          <p class="hero-description">
-            Discover our extensive collection of premium phone, tablet, and laptop repair parts.
-            Trusted by professionals worldwide with guaranteed quality and lightning-fast delivery.
-          </p>
-
-          <div class="hero-features">
-            <div class="feature-item">
-              <i class="fas fa-shield-alt"></i>
-              <span>100% Genuine Parts</span>
-            </div>
-            <div class="feature-item">
-              <i class="fas fa-truck"></i>
-              <span>Free Shipping $99+</span>
-            </div>
-            <div class="feature-item">
-              <i class="fas fa-headset"></i>
-              <span>24/7 Expert Support</span>
+      <div class="categories-grid">
+        <!-- iPhone Parts -->
+        <a href="/products/iphone" class="category-card">
+          <div class="category-image">📱</div>
+          <div class="category-content">
+            <h3 class="category-title">iPhone Parts</h3>
+            <p class="category-description">Screens, batteries, cameras, logic boards & more</p>
+            <div class="category-meta">
+              <span class="category-count">500+ parts available</span>
+              <span class="category-arrow">→</span>
             </div>
           </div>
+        </a>
 
-        <div class="hero-actions">
-          <a href="pages/products.html" class="btn-primary">
-            <i class="fas fa-shopping-bag"></i>
-            <span>Shop Now</span>
-          </a>
-          <a href="#featured-products" class="btn-secondary">
-            <i class="fas fa-eye"></i>
-            <span>View Products</span>
-          </a>
-        </div>
+        <!-- Samsung Parts -->
+        <a href="/products/samsung" class="category-card">
+          <div class="category-image">📱</div>
+          <div class="category-content">
+            <h3 class="category-title">Samsung Parts</h3>
+            <p class="category-description">AMOLED screens, batteries, cameras & components</p>
+            <div class="category-meta">
+              <span class="category-count">300+ parts available</span>
+              <span class="category-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- MacBook Parts -->
+        <a href="/products/macbook" class="category-card">
+          <div class="category-image">💻</div>
+          <div class="category-content">
+            <h3 class="category-title">MacBook Parts</h3>
+            <p class="category-description">Displays, keyboards, batteries, logic boards & SSDs</p>
+            <div class="category-meta">
+              <span class="category-count">200+ parts available</span>
+              <span class="category-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Repair Tools -->
+        <a href="/tools" class="category-card">
+          <div class="category-image">🔧</div>
+          <div class="category-content">
+            <h3 class="category-title">Repair Tools</h3>
+            <p class="category-description">Professional toolkit for expert repairs</p>
+            <div class="category-meta">
+              <span class="category-count">150+ tools available</span>
+              <span class="category-arrow">→</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="products">
+    <div class="products-content">
+      <h2 class="section-title">Featured Products</h2>
+      <p class="section-subtitle">Handpicked premium parts for professional repairs</p>
+
+      <div class="products-grid">
+        <!-- Product Card 1 -->
+        <div class="product-card">
+          <div class="product-image">
+            📱
+            <div class="product-badge badge-new">New</div>
+            <div class="product-overlay">
+              <button class="quick-view-btn" onclick="alert('Quick view functionality')">Quick View</button>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3 class="product-title">iPhone 15 Pro Max Screen</h3>
+            <div class="product-rating">
+              <div class="stars">★★★★★</div>
+              <span class="rating-text">(4.8)</span>
+            </div>
+            <div class="product-price">
+              <span class="price-current">$299.99</span>
+              <span class="product-status">In Stock</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart(this)">Add to Cart</button>
+          </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="hero-device-showcase">
-            <div class="device iphone">
-              <div class="device-screen">
-                <i class="fas fa-mobile-alt"></i>
-              </div>
-              <div class="device-label">iPhone</div>
+        <!-- Product Card 2 -->
+        <div class="product-card">
+          <div class="product-image">
+            📱
+            <div class="product-badge badge-sale">Sale</div>
+            <div class="product-overlay">
+              <button class="quick-view-btn" onclick="alert('Quick view functionality')">Quick View</button>
             </div>
-            <div class="device ipad">
-              <div class="device-screen">
-                <i class="fas fa-tablet-alt"></i>
-              </div>
-              <div class="device-label">iPad</div>
+          </div>
+          <div class="product-info">
+            <h3 class="product-title">Samsung Galaxy S24 Battery</h3>
+            <div class="product-rating">
+              <div class="stars">★★★★★</div>
+              <span class="rating-text">(5.0)</span>
             </div>
-            <div class="device macbook">
-              <div class="device-screen">
-                <i class="fas fa-laptop"></i>
+            <div class="product-price">
+              <div>
+                <span class="price-current">$49.99</span>
+                <span class="price-old">$69.99</span>
               </div>
-              <div class="device-label">MacBook</div>
+              <span class="product-status">In Stock</span>
             </div>
+            <button class="add-to-cart-btn" onclick="addToCart(this)">Add to Cart</button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-box-open"></i>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number">15,000+</div>
-              <div class="stat-label">Premium Parts</div>
+        <!-- Product Card 3 -->
+        <div class="product-card">
+          <div class="product-image">
+            💻
+            <div class="product-overlay">
+              <button class="quick-view-btn" onclick="alert('Quick view functionality')">Quick View</button>
             </div>
           </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-users"></i>
+          <div class="product-info">
+            <h3 class="product-title">MacBook Pro 16" Display</h3>
+            <div class="product-rating">
+              <div class="stars">★★★★★</div>
+              <span class="rating-text">(4.7)</span>
             </div>
-            <div class="stat-content">
-              <div class="stat-number">50,000+</div>
-              <div class="stat-label">Happy Customers</div>
+            <div class="product-price">
+              <span class="price-current">$899.99</span>
+              <span class="product-status">In Stock</span>
             </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-star"></i>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number">4.9/5</div>
-              <div class="stat-label">Customer Rating</div>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-clock"></i>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number">24/7</div>
-              <div class="stat-label">Expert Support</div>
-            </div>
+            <button class="add-to-cart-btn" onclick="addToCart(this)">Add to Cart</button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Product Showcase Video -->
-    <section class="video-showcase-section">
-      <div class="container">
-        <div class="video-showcase-container">
-          <div class="video-content">
-            <h2>Premium Quality Repair Parts</h2>
-            <p>Watch our expert technicians demonstrate the quality and precision of our repair parts</p>
-            <div class="video-stats">
-              <div class="stat">
-                <span class="stat-number">98%</span>
-                <span class="stat-label">Success Rate</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">24/7</span>
-                <span class="stat-label">Support</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">30 Day</span>
-                <span class="stat-label">Warranty</span>
-              </div>
+        <!-- Product Card 4 -->
+        <div class="product-card">
+          <div class="product-image">
+            🔧
+            <div class="product-overlay">
+              <button class="quick-view-btn" onclick="alert('Quick view functionality')">Quick View</button>
             </div>
           </div>
-          <div class="video-player">
-            <div class="video-placeholder">
-              <i class="fas fa-play-circle"></i>
-              <span>Watch Product Demo</span>
+          <div class="product-info">
+            <h3 class="product-title">Professional Repair Kit</h3>
+            <div class="product-rating">
+              <div class="stars">★★★★★</div>
+              <span class="rating-text">(4.9)</span>
             </div>
-            <!-- Replace with actual video embed -->
-            <div class="video-embed">
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            <div class="product-price">
+              <span class="price-current">$149.99</span>
+              <span class="product-status">In Stock</span>
             </div>
+            <button class="add-to-cart-btn" onclick="addToCart(this)">Add to Cart</button>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Interactive Product Gallery -->
-    <section class="product-gallery-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Product Showcase</h2>
-          <p>Explore our premium repair parts collection</p>
+      <a href="/products" class="view-all-btn">View All Products</a>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-content">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number stat-blue">15,000+</div>
+          <div class="stat-label">Premium Parts</div>
         </div>
-
-        <div class="gallery-container">
-          <div class="gallery-main">
-            <div class="main-image">
-              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=600&h=400&fit=crop" alt="iPhone Screen Repair" id="main-gallery-image">
-              <div class="image-overlay">
-                <button type="button" class="zoom-btn" onclick="openLightbox()" title="Zoom image">
-                  <i class="fas fa-search-plus"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="gallery-thumbnails">
-            <div class="thumbnail active" onclick="changeImage('https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=600&h=400&fit=crop', this)">
-              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=150&h=100&fit=crop" alt="iPhone Screen">
-            </div>
-            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=600&h=400&fit=crop', this)">
-              <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=150&h=100&fit=crop" alt="Samsung Parts">
-            </div>
-            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop', this)">
-              <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=150&h=100&fit=crop" alt="MacBook Parts">
-            </div>
-            <div class="thumbnail" onclick="changeImage('https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=600&h=400&fit=crop', this)">
-              <img src="https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=150&h=100&fit=crop" alt="Repair Tools">
-            </div>
-          </div>
+        <div class="stat-item">
+          <div class="stat-number stat-green">50,000+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number stat-yellow">4.9/5</div>
+          <div class="stat-label">Customer Rating</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number stat-purple">24/7</div>
+          <div class="stat-label">Expert Support</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Before/After Comparison -->
-    <section class="comparison-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Before & After Results</h2>
-          <p>See the transformation with our premium repair parts</p>
-        </div>
-
-        <div class="comparison-container">
-          <div class="comparison-item">
-            <div class="comparison-images">
-              <div class="before-image">
-                <img src="https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=400&h=300&fit=crop" alt="Before Repair">
-                <span class="label">BEFORE</span>
-              </div>
-              <div class="after-image">
-                <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=400&h=300&fit=crop" alt="After Repair">
-                <span class="label">AFTER</span>
-              </div>
-            </div>
-            <div class="comparison-content">
-              <h3>iPhone Screen Replacement</h3>
-              <p>Professional-grade OLED screen with perfect color accuracy and touch sensitivity</p>
-              <div class="comparison-features">
-                <span class="feature">✓ OEM Quality</span>
-                <span class="feature">✓ Perfect Fit</span>
-                <span class="feature">✓ 30 Day Warranty</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Categories -->
-    <section class="categories-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Shop by Category</h2>
-          <p>Find the perfect parts for your repair needs</p>
-        </div>
-
-        <div class="categories-grid">
-          <a href="pages/iphone-parts.html" class="category-card">
-            <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1592282710741-2c36a6e4655f?w=400&h=300&fit=crop" alt="iPhone Parts" loading="lazy">
-              <div class="category-overlay">
-                <div class="category-icon">
-                  <i class="fab fa-apple"></i>
-                </div>
-              </div>
-            </div>
-            <div class="category-content">
-              <h3>iPhone Parts</h3>
-              <p>Screens, batteries, cameras, logic boards & more. Compatible with all iPhone models from iPhone 6 to iPhone 15 series.</p>
-              <div class="category-features">
-                <span class="feature-badge">OEM Quality</span>
-                <span class="feature-badge">Fast Shipping</span>
-                <span class="feature-badge">30 Day Warranty</span>
-              </div>
-              <div class="category-stats">500+ parts available</div>
-            </div>
-          </a>
-
-          <a href="pages/samsung-parts.html" class="category-card">
-            <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=400&h=300&fit=crop" alt="Samsung Parts" loading="lazy">
-              <div class="category-overlay">
-                <div class="category-icon">
-                  <i class="fas fa-mobile-alt"></i>
-                </div>
-              </div>
-            </div>
-            <div class="category-content">
-              <h3>Samsung Galaxy Parts</h3>
-              <p>AMOLED screens, batteries, cameras & components. Full compatibility with Galaxy S, Note, and A series.</p>
-              <div class="category-features">
-                <span class="feature-badge">Premium Screens</span>
-                <span class="feature-badge">Original Parts</span>
-                <span class="feature-badge">Expert Support</span>
-              </div>
-              <div class="category-stats">300+ parts available</div>
-            </div>
-          </a>
-
-          <a href="pages/macbook-parts.html" class="category-card">
-            <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop" alt="MacBook Parts" loading="lazy">
-              <div class="category-overlay">
-                <div class="category-icon">
-                  <i class="fas fa-laptop"></i>
-                </div>
-              </div>
-            </div>
-            <div class="category-content">
-              <h3>MacBook Parts</h3>
-              <p>Displays, keyboards, batteries, logic boards & SSDs. Compatible with MacBook Air, Pro, and Retina models.</p>
-              <div class="category-features">
-                <span class="feature-badge">Apple Certified</span>
-                <span class="feature-badge">High Performance</span>
-                <span class="feature-badge">Lifetime Support</span>
-              </div>
-              <div class="category-stats">200+ parts available</div>
-            </div>
-          </a>
-
-          <a href="pages/repair-tools.html" class="category-card">
-            <div class="category-visual">
-              <img src="https://images.unsplash.com/photo-1621905252472-943afaa19e56?w=400&h=300&fit=crop" alt="Repair Tools" loading="lazy">
-              <div class="category-overlay">
-                <div class="category-icon">
-                  <i class="fas fa-tools"></i>
-                </div>
-              </div>
-            </div>
-            <div class="category-content">
-              <h3>Professional Tools</h3>
-              <p>Complete toolkit for professional repairs. Screwdrivers, suction cups, opening tools, and specialized equipment.</p>
-              <div class="category-features">
-                <span class="feature-badge">Pro Grade</span>
-                <span class="feature-badge">Complete Kits</span>
-                <span class="feature-badge">Training Included</span>
-              </div>
-              <div class="category-stats">150+ tools available</div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Products Carousel -->
-    <section id="featured-products" class="products-carousel-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Featured Products</h2>
-          <p>Handpicked premium parts for professional repairs</p>
-        </div>
-
-        <div class="carousel-container">
-          <div class="carousel-wrapper">
-            <div class="carousel-track" id="carousel-track">
-              <!-- Products will be loaded dynamically -->
-            </div>
-          </div>
-
-          <!-- Carousel Navigation -->
-          <button class="carousel-btn carousel-prev" id="carousel-prev" aria-label="Previous products">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="carousel-btn carousel-next" id="carousel-next" aria-label="Next products">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-
-          <!-- Carousel Indicators -->
-          <div class="carousel-indicators" id="carousel-indicators">
-            <!-- Indicators will be generated dynamically -->
-          </div>
-        </div>
-
-        <div class="products-footer">
-          <a href="pages/products.html" class="btn-secondary">
-            <i class="fas fa-th-large"></i>
-            <span>View All Products</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services Section -->
-    <section class="services-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Why Choose Midas?</h2>
-          <p>Experience the difference with our premium repair solutions</p>
-        </div>
-
-        <div class="services-grid">
-          <div class="service-card">
-            <div class="service-visual">
-              <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop" alt="Quality Guarantee" loading="lazy">
-              <div class="service-overlay">
-                <div class="service-icon">
-                  <i class="fas fa-shield-alt"></i>
-                </div>
-              </div>
-            </div>
-            <div class="service-content">
-              <h3>Quality Guarantee</h3>
-              <p>All parts come with our 30-day warranty and quality assurance. Every component is tested and verified before shipping.</p>
-              <div class="service-features">
-                <span class="feature-tag">30 Day Warranty</span>
-                <span class="feature-tag">Quality Tested</span>
-                <span class="feature-tag">Genuine Parts</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="service-card">
-            <div class="service-visual">
-              <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&h=250&fit=crop" alt="Fast Shipping" loading="lazy">
-              <div class="service-overlay">
-                <div class="service-icon">
-                  <i class="fas fa-truck"></i>
-                </div>
-              </div>
-            </div>
-            <div class="service-content">
-              <h3>Lightning Fast Shipping</h3>
-              <p>Free shipping on orders over $99 with 2-3 day delivery. Express options available for urgent repairs.</p>
-              <div class="service-features">
-                <span class="feature-tag">Free $99+</span>
-                <span class="feature-tag">2-3 Day Delivery</span>
-                <span class="feature-tag">Express Options</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="service-card">
-            <div class="service-visual">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop" alt="Expert Support" loading="lazy">
-              <div class="service-overlay">
-                <div class="service-icon">
-                  <i class="fas fa-headset"></i>
-                </div>
-              </div>
-            </div>
-            <div class="service-content">
-              <h3>24/7 Expert Support</h3>
-              <p>Round-the-clock technical support from certified repair professionals. Get help with any repair challenge.</p>
-              <div class="service-features">
-                <span class="feature-tag">24/7 Support</span>
-                <span class="feature-tag">Certified Techs</span>
-                <span class="feature-tag">Expert Advice</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="service-card">
-            <div class="service-visual">
-              <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=400&h=250&fit=crop" alt="Professional Tools" loading="lazy">
-              <div class="service-overlay">
-                <div class="service-icon">
-                  <i class="fas fa-tools"></i>
-                </div>
-              </div>
-            </div>
-            <div class="service-content">
-              <h3>Premium Tools & Equipment</h3>
-              <p>Access to professional-grade repair tools and equipment. Everything you need for successful repairs.</p>
-              <div class="service-features">
-                <span class="feature-tag">Pro Tools</span>
-                <span class="feature-tag">Latest Equipment</span>
-                <span class="feature-tag">Training Available</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Newsletter Section -->
-    <section class="newsletter-section">
-      <div class="container">
-        <div class="newsletter-content">
-          <div class="newsletter-icon">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="newsletter-text">
-            <h3>Stay Updated</h3>
-            <p>Get the latest updates on new parts, special offers, and repair tips</p>
-          </div>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Enter your email" required>
-            <button type="submit">
-              <i class="fas fa-paper-plane"></i>
-              <span>Subscribe</span>
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
+  <!-- Newsletter -->
+  <section class="newsletter">
+    <div class="newsletter-content">
+      <h2 class="newsletter-title">Stay Updated</h2>
+      <p class="newsletter-text">Get the latest updates on new parts, special offers, and repair tips</p>
+      <form class="newsletter-form" onsubmit="alert('Thank you for subscribing!'); return false;">
+        <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+        <button type="submit" class="newsletter-btn">Subscribe</button>
+      </form>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="modern-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <!-- Company Info -->
+        <div>
           <div class="footer-logo">
-            <i class="fas fa-tools"></i>
-            <span>MIDAS</span>
+            <div class="footer-logo-icon">MT</div>
+            <div class="footer-logo-text">
+              <div class="footer-main">Midas Technical</div>
+              <div class="footer-sub">Solutions</div>
+            </div>
           </div>
-          <p>Your trusted partner for premium repair parts and professional tools. Quality guaranteed.</p>
-          <div class="social-links">
-            <a href="#" class="social-link" title="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/midastechnical/#" class="social-link" title="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.linkedin.com/company/midas-technical-solutions/?viewAsMember=true" class="social-link" title="Connect with us on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-link" title="Subscribe to our YouTube channel"><i class="fab fa-youtube"></i></a>
+          <p class="footer-description">
+            Your trusted partner for premium repair parts and professional tools. Quality guaranteed.
+          </p>
+          <div class="footer-social">
+            <a href="#">📘</a>
+            <a href="#">🐦</a>
+            <a href="#">📷</a>
+            <a href="#">📺</a>
           </div>
         </div>
 
-        <div class="footer-section">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="pages/products.html">All Products</a></li>
-            <li><a href="pages/categories.html">Categories</a></li>
-            <li><a href="pages/repair-tools.html">Tools</a></li>
-            <li><a href="pages/financing.html">Financing</a></li>
+        <!-- Quick Links -->
+        <div>
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/products">All Products</a></li>
+            <li><a href="/categories">Categories</a></li>
+            <li><a href="/tools">Tools</a></li>
+            <li><a href="/financing">Financing</a></li>
+            <li><a href="/contact">Contact</a></li>
           </ul>
         </div>
 
-        <div class="footer-section">
-          <h4>Customer Service</h4>
-          <ul>
-            <li><a href="pages/my-orders.html">My Orders</a></li>
-            <li><a href="pages/my-profile.html">My Profile</a></li>
-
-            <li><a href="pages/cart.html">Shopping Cart</a></li>
+        <!-- Customer Service -->
+        <div>
+          <h3>Customer Service</h3>
+          <ul class="footer-links">
+            <li><a href="/orders">My Orders</a></li>
+            <li><a href="/account">My Profile</a></li>
+            <li><a href="/cart">Shopping Cart</a></li>
+            <li><a href="/account">Account Settings</a></li>
+            <li><a href="/support">Support Center</a></li>
           </ul>
         </div>
 
-        <div class="footer-section">
-          <h4>Contact Info</h4>
-          <ul class="contact-info">
-            <li><i class="fas fa-phone"></i> +1 (240) 351-0511</li>
-            <li><i class="fas fa-envelope"></i> support@midastech.com</li>
-            <li><i class="fas fa-map-marker-alt"></i> 123 Tech Street, Silicon Valley</li>
-            <li><i class="fas fa-clock"></i> Mon-Fri: 9PM-10PM EST</li>
+        <!-- Contact Info -->
+        <div>
+          <h3>Contact Info</h3>
+          <ul class="footer-contact">
+            <li><span class="icon">📞</span> +1 (240) 351-0511</li>
+            <li><span class="icon">✉️</span> support@midastech.com</li>
+            <li><span class="icon">📍</span> 123 Tech Street, Silicon Valley</li>
+            <li><span class="icon">🕒</span> Mon-Fri: 9AM-10PM EST</li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <div class="payment-methods">
-          <i class="fab fa-cc-visa"></i>
-          <i class="fab fa-cc-mastercard"></i>
-          <i class="fab fa-cc-amex"></i>
-          <i class="fab fa-cc-paypal"></i>
-          <i class="fab fa-cc-apple-pay"></i>
+        <div class="footer-copyright">© 2024 Midas Technical Solutions. All rights reserved.</div>
+        <div class="footer-legal">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+          <a href="/shipping">Shipping Info</a>
+          <a href="/returns">Returns</a>
         </div>
-        <p>&copy; 2024 Midas Technical Solutions. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
-  <!-- Back to Top Button -->
-  <button class="back-to-top" id="back-to-top" type="button" title="Back to top">
-    <i class="fas fa-arrow-up"></i>
-  </button>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <div class="mobile-menu-backdrop" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu-panel">
+      <div class="mobile-menu-header">
+        <div class="mobile-menu-title">Menu</div>
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+      </div>
+      <nav class="mobile-menu-nav">
+        <ul class="mobile-menu-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/financing">Financing</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li class="mobile-menu-divider">
+            <a href="/login">Sign In</a>
+          </li>
+          <li>
+            <a href="/register">Register</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 
-  <!-- Scripts -->
-  <script type="module" src="js/search.js"></script>
-  <script src="js/cart.js"></script>
-  <script src="js/carousel.js"></script>
-  <script src="js/side-menu.js"></script>
-  <script src="js/modern-scripts.js"></script>
+  <script>
+    // Mobile menu functionality
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('active');
+    }
+
+    // Search functionality
+    document.querySelector('.search-btn').addEventListener('click', function() {
+      const query = document.querySelector('.search-input').value.trim();
+      if (query) {
+        window.location.href = `/products?search=${encodeURIComponent(query)}`;
+      }
+    });
+
+    document.querySelector('.search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.querySelector('.search-btn').click();
+      }
+    });
+
+    // Add to cart functionality
+    function addToCart(button) {
+      button.textContent = 'Added!';
+      button.style.background = '#dc2626';
+      button.style.color = '#ffffff';
+      setTimeout(() => {
+        button.textContent = 'Add to Cart';
+        button.style.background = '#ffd700';
+        button.style.color = '#000000';
+      }, 2000);
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
