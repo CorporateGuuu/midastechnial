@@ -40,7 +40,7 @@ export default function Newsletter() {
         ) : (
           <div className="max-w-md mx-auto">
             <p className="text-xl font-semibold">Thank you for subscribing!</p>
-            <p className="mt-2 opacity-90">We'll keep you updated with our latest offers.</p>
+            <p className="mt-2 opacity-90">We&#39;ll keep you updated with our latest offers.</p>
           </div>
         )}
       </div>

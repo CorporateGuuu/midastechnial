@@ -24,31 +24,6 @@ export default function OrderTracking({ params }: { params: { id: string } }) {
   const [events, setEvents] = useState<TrackingEvent[]>([]);
   const [live, setLive] = useState<TrackingEvent | null>(null);
 
-  useEffect(() => {
-    // Fetch order
-    fetch(`/api/orders/${params.id}`)
-      .then(r => r.json())
-      .then(data => {
-        setOrder(data);
-        if (data.trackingNumber) {
-          initMap(data.trackingNumber);
-        }
-      });
-
-    // Pusher
-    const channel = pusherClient?.subscribe(`order-${params.id}`);
-    channel?.bind("tracking-update", (data: TrackingEvent) => {
-      setLive(data);
-      setEvents(prev => [data, ...prev]);
-      addMarker(data);
-    });
-
-    return () => {
-      pusherClient?.unsubscribe(`order-${params.id}`);
-      map.current?.remove();
-    };
-  }, [params.id]);
-
   const initMap = async (trackingNumber: string) => {
     if (!mapContainer.current) return;
 
@@ -129,6 +104,31 @@ export default function OrderTracking({ params }: { params: { id: string } }) {
 
     map.current.flyTo({ center: [event.lng, event.lat], zoom: 10 });
   };
+
+  useEffect(() => {
+    // Fetch order
+    fetch(`/api/orders/${params.id}`)
+      .then(r => r.json())
+      .then(data => {
+        setOrder(data);
+        if (data.trackingNumber) {
+          initMap(data.trackingNumber);
+        }
+      });
+
+    // Pusher
+    const channel = pusherClient?.subscribe(`order-${params.id}`);
+    channel?.bind("tracking-update", (data: TrackingEvent) => {
+      setLive(data);
+      setEvents(prev => [data, ...prev]);
+      addMarker(data);
+    });
+
+    return () => {
+      pusherClient?.unsubscribe(`order-${params.id}`);
+      map.current?.remove();
+    };
+  }, [params.id]);
 
   // ... rest of timeline UI (same as before)
 

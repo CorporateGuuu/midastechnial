@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Search, ShoppingCart, User, HelpCircle, Menu } from "lucide-react";
 import { useCart } from "../store/cartStore";
 import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session } = useSession();
   const totalItems = useCart((s) => s.getTotalItems());
 
   return (
@@ -20,8 +22,17 @@ export default function Header() {
             <span>24/7 Support</span>
           </div>
           <div className="flex gap-4">
-            <Link href="/login">Sign In</Link>
-            <Link href="/register">Register</Link>
+            {session ? (
+              <Link href="/portal" className="flex items-center gap-2">
+                <User className="w-5 h-5" />
+                Portal
+              </Link>
+            ) : (
+              <>
+                <Link href="/login">Sign In</Link>
+                <Link href="/register">Register</Link>
+              </>
+            )}
           </div>
         </div>
       </div>

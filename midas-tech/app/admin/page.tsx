@@ -17,7 +17,7 @@ export default function AdminPanel() {
       <Resource
         name="orders"
         list={OrderList}
-        show={ShowGuesser}
+        show={OrderShow}
       />
     </Admin>
   );
@@ -70,8 +70,9 @@ import {
   SimpleFormIterator,
   ImageInput,
   ImageField as RAImageField,
-  useRecordContext,
 } from "react-admin";
+
+// useRecordContext imported at top for Product components
 
 // Transform function to handle image uploads
 const transform = async (data: any) => {
@@ -160,5 +161,63 @@ function OrderList({ ...props }) {
         <DateField source="createdAt" />
       </Datagrid>
     </List>
+  );
+}
+
+// Order Show Component
+import {
+  Show,
+  SimpleShowLayout,
+  UrlField,
+  useRecordContext,
+} from "react-admin";
+// TextField already imported above
+
+function RefreshTrackingButton() {
+  const record = useRecordContext();
+
+  const handleRefreshTracking = async () => {
+    if (!record?.trackingNumber) return;
+
+    try {
+      await fetch(`/api/shipping/refresh/${record.trackingNumber}`);
+      // Refresh the show view to get updated data
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to refresh tracking:', error);
+      alert('Failed to refresh tracking information');
+    }
+  };
+
+  return (
+    <button
+      style={{
+        padding: '8px 16px',
+        backgroundColor: '#2196f3',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '14px'
+      }}
+      onClick={handleRefreshTracking}
+    >
+      Refresh Tracking
+    </button>
+  );
+}
+
+function OrderShow() {
+  return (
+    <Show>
+      <SimpleShowLayout>
+        <TextField source="trackingNumber" />
+        <TextField source="carrier" />
+        <TextField source="serviceLevel" />
+        <UrlField source="trackingUrl" />
+        <UrlField source="labelUrl" label="Shipping Label" />
+        <RefreshTrackingButton />
+      </SimpleShowLayout>
+    </Show>
   );
 }

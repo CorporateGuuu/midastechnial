@@ -12,13 +12,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { items } = await request.json();
+    const {
+      items,
+      shippingAddress,
+      shippingMethod,
+      shippingCost,
+      subtotal,
+      total
+    } = await request.json();
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    // Create line items
+    // Create line items for products
     const line_items = items.map((item: any) => ({
       price_data: {
         currency: "usd",
@@ -31,6 +38,20 @@ export async function POST(request: NextRequest) {
       quantity: item.quantity,
     }));
 
+    // Add shipping as a separate line item
+    if (shippingCost > 0) {
+      line_items.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: `Shipping: ${shippingMethod}`,
+          },
+          unit_amount: Math.round(shippingCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
     // Create checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -41,6 +62,11 @@ export async function POST(request: NextRequest) {
       customer_email: session.user.email,
       metadata: {
         userId: session.user.id,
+        shippingAddress: JSON.stringify(shippingAddress),
+        shippingMethod,
+        shippingCost: shippingCost.toString(),
+        subtotal: subtotal.toString(),
+        items: JSON.stringify(items),
       },
     });
 

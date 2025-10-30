@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category");
   const search = searchParams.get("search");
 
-  let where: any = { inStock: true };
+  const where: any = { inStock: true };
 
   if (category) where.category = category;
   if (search) {

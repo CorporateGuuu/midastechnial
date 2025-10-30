@@ -47,9 +47,14 @@ model Order {
   id              String   @id @default(cuid())
   userId          String?
   user            User?    @relation(fields: [userId], references: [id])
-  items           String   // JSON array of order items
+  items           String
   total           Float
-  status          String   @default("pending")
+  status          String   @default("pending") // pending, paid, shipped, delivered
   stripeSessionId String?
+  trackingNumber  String?
+  trackingUrl     String?
+  labelUrl        String?
+  carrier         String?
+  serviceLevel    String?
   createdAt       DateTime @default(now())
 }
