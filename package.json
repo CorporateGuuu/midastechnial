@@ -22,6 +22,7 @@
   "author": "Midas Technical Solutions",
   "license": "ISC",
   "dependencies": {
+    "@react-email/render": "^1.4.0",
     "@supabase/supabase-js": "^2.57.4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -48,7 +49,10 @@
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.8",
     "pg": "^8.16.3",
-    "stripe": "^14.17.0"
+    "resend": "^6.3.0",
+    "shippo": "^2.15.0",
+    "stripe": "^14.17.0",
+    "twilio": "^5.10.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
