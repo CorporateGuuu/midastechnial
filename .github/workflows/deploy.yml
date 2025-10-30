@@ -1,0 +1,20 @@
+name: Deploy
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+        working-directory: midas-tech
+      - name: Build application
+        run: npm run build
+        working-directory: midas-tech
+      - name: Deploy to Vercel
+        run: npx vercel --yes --token ${{ secrets.VERCEL_TOKEN }}
+        working-directory: midas-tech
