@@ -5,9 +5,9 @@ import { pusherServer } from "@/lib/pusher";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { trackingNumber: string } }
+  { params }: { params: Promise<{ trackingNumber: string }> }
 ) {
-  const { trackingNumber } = params;
+  const { trackingNumber } = await params;
 
   try {
     // Find the order with this tracking number

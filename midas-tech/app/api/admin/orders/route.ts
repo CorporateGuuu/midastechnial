@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
@@ -23,14 +23,13 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Add parsed shipping information
-    const ordersWithShipping = orders.map(order => ({
+    // Add parsed information
+    const ordersWithParsedData = orders.map(order => ({
       ...order,
       items: order.items ? JSON.parse(order.items) : [],
-      shippingAddress: order.shippingAddress ? JSON.parse(order.shippingAddress) : null,
     }));
 
-    return NextResponse.json(ordersWithShipping);
+    return NextResponse.json(ordersWithParsedData);
   } catch (error) {
     console.error("Failed to fetch orders:", error);
     return NextResponse.json(

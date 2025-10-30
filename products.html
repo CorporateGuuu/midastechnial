@@ -881,6 +881,29 @@
         font-size: 1.5rem;
       }
     }
+
+    /* Inline style replacement classes */
+    .support-icon-spacing {
+      margin-left: 1rem;
+    }
+
+    .nav-link-active {
+      color: #ffd700;
+      font-weight: 600;
+    }
+
+    .nav-dropdown-container {
+      position: relative;
+    }
+
+    .breadcrumb-separator {
+      color: #6b7280;
+    }
+
+    .pagination-ellipsis {
+      color: #6b7280;
+      padding: 0 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -891,7 +914,7 @@
       <div class="top-bar-content">
         <div class="top-bar-text">
           <span>🚚</span> Free shipping on orders over $99
-          <span style="margin-left: 1rem;">🎧</span> 24/7 Expert Support
+          <span class="support-icon-spacing">🎧</span> 24/7 Expert Support
         </div>
         <div class="top-bar-links">
           <a href="/login">Sign In</a>
@@ -936,8 +959,8 @@
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open mobile menu">☰</button>
         <div class="nav-links">
           <a href="/" class="nav-link">Home</a>
-          <a href="/products" class="nav-link" style="color: #ffd700; font-weight: 600;">Products</a>
-          <div style="position: relative;">
+          <a href="/products" class="nav-link nav-link-active">Products</a>
+          <div class="nav-dropdown-container">
             <a href="/products" class="nav-link">Categories ▼</a>
           </div>
           <a href="/financing" class="nav-link">Financing</a>
@@ -952,7 +975,7 @@
     <div class="breadcrumb-content">
       <ol class="breadcrumb-list">
         <li><a href="/" class="breadcrumb-link">Home</a></li>
-        <li><span style="color: #6b7280;">/</span></li>
+        <li><span class="breadcrumb-separator">/</span></li>
         <li><span class="breadcrumb-current">All Products</span></li>
       </ol>
     </div>
@@ -1425,7 +1448,7 @@
           <a href="#" class="page-btn">2</a>
           <a href="#" class="page-btn">3</a>
           <a href="#" class="page-btn">4</a>
-          <span style="color: #6b7280; padding: 0 0.5rem;">...</span>
+          <span class="pagination-ellipsis">...</span>
           <a href="#" class="page-btn">7</a>
           <a href="#" class="page-btn">Next</a>
         </nav>

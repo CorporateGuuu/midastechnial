@@ -1,10 +1,18 @@
 import { db } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
+import { authOptions } from "@/lib/auth";
+
+interface ExtendedUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role: string;
+}
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession();
-  if ((session?.user as any)?.role !== "admin") {
+  const session = await getServerSession(authOptions);
+  if ((session?.user as ExtendedUser)?.role !== "admin") {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -33,8 +41,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession();
-  if ((session?.user as any)?.role !== "admin") {
+  const session = await getServerSession(authOptions);
+  if ((session?.user as ExtendedUser)?.role !== "admin") {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -53,8 +61,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const session = await getServerSession();
-  if ((session?.user as any)?.role !== "admin") {
+  const session = await getServerSession(authOptions);
+  if ((session?.user as ExtendedUser)?.role !== "admin") {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -73,8 +81,8 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession();
-  if ((session?.user as any)?.role !== "admin") {
+  const session = await getServerSession(authOptions);
+  if ((session?.user as ExtendedUser)?.role !== "admin") {
     return new Response("Unauthorized", { status: 401 });
   }
 

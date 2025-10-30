@@ -4,6 +4,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+interface ExtendedUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role: string;
+}
+
 export const authOptions = {
   providers: [
     GoogleProvider({

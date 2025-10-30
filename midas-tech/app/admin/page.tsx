@@ -1,9 +1,32 @@
 "use client";
 
-import { Admin, Resource, ListGuesser, EditGuesser, ShowGuesser } from "react-admin";
+import { Admin, Resource, ShowGuesser } from "react-admin";
+import { useRecordContext } from "react-admin";
 import simpleRestProvider from "ra-data-simple-rest";
+import Image from "next/image";
 
 const dataProvider = simpleRestProvider("/api/admin");
+
+interface ProductRecord {
+  id: string;
+  title: string;
+  price: number;
+  inStock: boolean;
+  images?: string;
+}
+
+interface ProductData {
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  oldPrice?: number;
+  badge?: string;
+  category: string;
+  inStock: boolean;
+  images?: string[];
+  newImage?: { rawFile: File };
+}
 
 export default function AdminPanel() {
   return (
@@ -32,7 +55,6 @@ import {
   BooleanField,
   EditButton,
   DeleteButton,
-  ImageField,
   FunctionField,
 } from "react-admin";
 
@@ -42,10 +64,10 @@ function ProductList({ ...props }) {
       <Datagrid>
         <FunctionField
           label="Image"
-          render={(record: any) => {
+          render={(record: ProductRecord) => {
             const images = record.images ? JSON.parse(record.images) : [];
             return images.length > 0 ? (
-              <img src={images[0]} alt="Product" style={{ width: 50, height: 50 }} />
+              <Image src={images[0]} alt="Product" width={48} height={48} className="w-12 h-12 object-cover" />
             ) : null;
           }}
         />
@@ -75,7 +97,7 @@ import {
 // useRecordContext imported at top for Product components
 
 // Transform function to handle image uploads
-const transform = async (data: any) => {
+const transform = async (data: ProductData) => {
   if (data.newImage?.rawFile) {
     const formData = new FormData();
     formData.append("file", data.newImage.rawFile);
@@ -135,9 +157,9 @@ function CurrentImagesField() {
   return (
     <div>
       <label>Current Images:</label>
-      <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+      <div className="flex gap-2.5 mt-2.5">
         {images.map((url: string, index: number) => (
-          <img key={index} src={url} alt="Current" style={{ width: 100, height: 100, objectFit: 'cover' }} />
+          <Image key={index} src={url} alt="Current" width={96} height={96} className="w-24 h-24 object-cover" />
         ))}
       </div>
     </div>
@@ -146,7 +168,6 @@ function CurrentImagesField() {
 
 // Order List Component
 import {
-  ReferenceField,
   DateField,
 } from "react-admin";
 
@@ -169,7 +190,6 @@ import {
   Show,
   SimpleShowLayout,
   UrlField,
-  useRecordContext,
 } from "react-admin";
 // TextField already imported above
 
@@ -191,15 +211,7 @@ function RefreshTrackingButton() {
 
   return (
     <button
-      style={{
-        padding: '8px 16px',
-        backgroundColor: '#2196f3',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '14px'
-      }}
+      className="px-4 py-2 bg-[#2196f3] text-white border-none rounded cursor-pointer text-sm"
       onClick={handleRefreshTracking}
     >
       Refresh Tracking

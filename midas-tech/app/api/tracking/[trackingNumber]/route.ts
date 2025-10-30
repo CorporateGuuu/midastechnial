@@ -6,9 +6,9 @@ import { sendTrackingNotification } from "@/lib/sendTrackingNotification";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { trackingNumber: string } }
+  { params }: { params: Promise<{ trackingNumber: string }> }
 ) {
-  const { trackingNumber } = params;
+  const { trackingNumber } = await params;
   const payload = await request.json();
 
   // Verify it's from Shippo (optional: check token)
