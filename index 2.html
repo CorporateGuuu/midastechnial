@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Midas Technical Solutions - Premium Repair Parts & Tools</title>
   <meta name="description" content="Professional repair parts and tools for iPhone, Samsung, MacBook, and more. Fast shipping, expert support, 30-day warranty.">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</head>
-<body class="bg-white text-gray-900 font-sans">
-  <!-- Header -->
-  <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-    <!-- Top Bar -->
-    <div class="bg-gray-50 border-b border-gray-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-10 text-sm">
-          <div class="flex items-center gap-4 text-gray-600">
-            <span class="flex items-center gap-1">
-              <i class="fas fa-truck text-green-600"></i>
+  <style>
+    :root {
+      /* Professional Gold/Black/White Color Palette */
+      --color-primary: #D4AF37;      /* Primary Gold */
+      --color-primary-light: #E6C462; /* Light Gold */
+      --color-primary-dark: #AC9C2C;  /* Dark Gold */
+      --color-background: #FFFFFF;    /* Pure White */
+      --color-background-alt: #FAFAFA; /* Off-White */
+      --color-text: #000000;          /* Pure Black */
+      --color-text-secondary: #121212; /* Dark Gray */
+              <i class="fas fa-truck text-gray-600"></i>
               Free shipping on orders over $99
             </span>
             <span class="flex items-center gap-1">
-              <i class="fas fa-headset text-blue-600"></i>
+              <i class="fas fa-headset text-gray-600"></i>
               24/7 Expert Support
             </span>
           </div>
@@ -38,7 +38,7 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <a href="/" class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">MT</div>
+          <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-gold-dark to-gold flex items-center justify-center text-black font-bold text-lg">MT</div>
           <div>
             <div class="font-bold text-xl text-gray-900">Midas Technical</div>
             <div class="text-xs text-gray-500 -mt-1">Solutions</div>
@@ -51,9 +51,9 @@
             <input
               type="text"
               placeholder="Search for premium repair parts..."
-              class="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
             >
-            <button class="absolute right-2 top-2 p-1 text-gray-400 hover:text-gray-600">
+            <button class="absolute right-2 top-2 p-1 text-gray-400 hover:text-gray-600" aria-label="Search">
               <i class="fas fa-search"></i>
             </button>
           </div>
@@ -81,7 +81,7 @@
         <div class="flex items-center justify-between h-12">
           <div class="flex items-center">
             <!-- Mobile menu button -->
-            <button class="lg:hidden p-2 text-gray-600">
+            <button class="lg:hidden p-2 text-gray-600" aria-label="Open mobile menu">
               <i class="fas fa-bars"></i>
             </button>
 
@@ -101,9 +101,9 @@
                         Apple Products
                       </h3>
                       <ul class="space-y-2">
-                        <li><a href="/pages/iphone-parts.html" class="text-gray-600 hover:text-blue-600">iPhone Parts</a></li>
-                        <li><a href="/pages/ipad-parts.html" class="text-gray-600 hover:text-blue-600">iPad Parts</a></li>
-                        <li><a href="/pages/macbook-parts.html" class="text-gray-600 hover:text-blue-600">MacBook Parts</a></li>
+                        <li><a href="/pages/iphone-parts.html" class="text-gray-600 hover:text-gold">iPhone Parts</a></li>
+                        <li><a href="/pages/ipad-parts.html" class="text-gray-600 hover:text-gold">iPad Parts</a></li>
+                        <li><a href="/pages/macbook-parts.html" class="text-gray-600 hover:text-gold">MacBook Parts</a></li>
                       </ul>
                     </div>
                     <div>
@@ -112,9 +112,9 @@
                         Tools & Services
                       </h3>
                       <ul class="space-y-2">
-                        <li><a href="/pages/repair-tools.html" class="text-gray-600 hover:text-blue-600">Repair Tools</a></li>
-                        <li><a href="/pages/samsung-parts.html" class="text-gray-600 hover:text-blue-600">Samsung Parts</a></li>
-                        <li><a href="/pages/categories.html" class="text-gray-600 hover:text-blue-600">All Categories</a></li>
+                        <li><a href="/pages/repair-tools.html" class="text-gray-600 hover:text-gold">Repair Tools</a></li>
+                        <li><a href="/pages/samsung-parts.html" class="text-gray-600 hover:text-gold">Samsung Parts</a></li>
+                        <li><a href="/pages/categories.html" class="text-gray-600 hover:text-gold">All Categories</a></li>
                       </ul>
                     </div>
                   </div>
@@ -130,24 +130,24 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+  <section class="relative bg-gradient-to-r from-black to-gray-900 text-white">
+    <div class="absolute inset-0 bg-gold bg-opacity-10"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <h1 class="text-4xl lg:text-6xl font-bold mb-6">
             Professional Repair Parts<br>
-            <span class="text-yellow-300">Made for Experts</span>
+            <span class="text-white">for Industry Experts</span>
           </h1>
-          <p class="text-xl mb-8 text-blue-100">
+          <p class="text-xl mb-8 text-gold-light">
             Discover our extensive collection of premium phone, tablet, and laptop repair parts.
             Trusted by professionals worldwide with guaranteed quality and lightning-fast delivery.
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="/pages/products.html" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+            <a href="/pages/products.html" class="bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
               Shop Now
             </a>
-            <a href="#categories" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+            <a href="#categories" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-black transition-colors">
               View Categories
             </a>
           </div>
@@ -155,19 +155,19 @@
         <div class="relative">
           <div class="grid grid-cols-2 gap-4">
             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center">
-              <i class="fas fa-shield-alt text-3xl mb-2 text-yellow-300"></i>
+              <i class="fas fa-shield-alt text-3xl mb-2 text-white"></i>
               <div class="font-semibold">100% Genuine Parts</div>
             </div>
             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center">
-              <i class="fas fa-truck text-3xl mb-2 text-yellow-300"></i>
+              <i class="fas fa-truck text-3xl mb-2 text-white"></i>
               <div class="font-semibold">Free Shipping $99+</div>
             </div>
             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center">
-              <i class="fas fa-headset text-3xl mb-2 text-yellow-300"></i>
+              <i class="fas fa-headset text-3xl mb-2 text-white"></i>
               <div class="font-semibold">24/7 Support</div>
             </div>
             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center">
-              <i class="fas fa-clock text-3xl mb-2 text-yellow-300"></i>
+              <i class="fas fa-clock text-3xl mb-2 text-white"></i>
               <div class="font-semibold">30 Day Warranty</div>
             </div>
           </div>
@@ -188,15 +188,15 @@
         <!-- iPhone Parts -->
         <a href="/pages/iphone-parts.html" class="group">
           <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-            <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+            <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
               <i class="fab fa-apple text-6xl text-gray-600"></i>
             </div>
             <div class="p-6">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">iPhone Parts</h3>
               <p class="text-gray-600 mb-4">Screens, batteries, cameras, logic boards & more</p>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-blue-600 font-medium">500+ parts available</span>
-                <i class="fas fa-arrow-right text-blue-600 group-hover:translate-x-1 transition-transform"></i>
+                <span class="text-sm text-gray-600 font-medium">500+ parts available</span>
+                <i class="fas fa-arrow-right text-gray-600 transition-transform"></i>
               </div>
             </div>
           </div>
@@ -205,15 +205,15 @@
         <!-- Samsung Parts -->
         <a href="/pages/samsung-parts.html" class="group">
           <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-            <div class="aspect-square bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <i class="fas fa-mobile-alt text-6xl text-green-600"></i>
+            <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <i class="fas fa-mobile-alt text-6xl text-gray-600"></i>
             </div>
             <div class="p-6">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Samsung Parts</h3>
               <p class="text-gray-600 mb-4">AMOLED screens, batteries, cameras & components</p>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-green-600 font-medium">300+ parts available</span>
-                <i class="fas fa-arrow-right text-green-600 group-hover:translate-x-1 transition-transform"></i>
+                <span class="text-sm text-gray-600 font-medium">300+ parts available</span>
+                <i class="fas fa-arrow-right text-gray-600 transition-transform"></i>
               </div>
             </div>
           </div>
@@ -222,15 +222,15 @@
         <!-- MacBook Parts -->
         <a href="/pages/macbook-parts.html" class="group">
           <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-            <div class="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <i class="fas fa-laptop text-6xl text-blue-600"></i>
+            <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <i class="fas fa-laptop text-6xl text-gray-600"></i>
             </div>
             <div class="p-6">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">MacBook Parts</h3>
               <p class="text-gray-600 mb-4">Displays, keyboards, batteries, logic boards & SSDs</p>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-blue-600 font-medium">200+ parts available</span>
-                <i class="fas fa-arrow-right text-blue-600 group-hover:translate-x-1 transition-transform"></i>
+                <span class="text-sm text-gray-600 font-medium">200+ parts available</span>
+                <i class="fas fa-arrow-right text-gray-600 transition-transform"></i>
               </div>
             </div>
           </div>
@@ -239,15 +239,15 @@
         <!-- Repair Tools -->
         <a href="/pages/repair-tools.html" class="group">
           <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-            <div class="aspect-square bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <i class="fas fa-tools text-6xl text-orange-600"></i>
+            <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <i class="fas fa-tools text-6xl text-gray-600"></i>
             </div>
             <div class="p-6">
               <h3 class="text-xl font-semibold text-gray-900 mb-2">Repair Tools</h3>
               <p class="text-gray-600 mb-4">Professional toolkit for expert repairs</p>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-orange-600 font-medium">150+ tools available</span>
-                <i class="fas fa-arrow-right text-orange-600 group-hover:translate-x-1 transition-transform"></i>
+                <span class="text-sm text-gray-600 font-medium">150+ tools available</span>
+                <i class="fas fa-arrow-right text-gray-600 transition-transform"></i>
               </div>
             </div>
           </div>
@@ -281,7 +281,7 @@
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1">iPhone 15 Pro Max Screen</h3>
             <div class="flex items-center gap-1 mb-2">
-              <div class="flex text-yellow-400">
+              <div class="flex text-gold">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -294,7 +294,7 @@
               <span class="text-2xl font-bold text-gray-900">$299.99</span>
               <span class="text-sm text-green-600">In Stock</span>
             </div>
-            <button class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <button class="w-full mt-3 bg-gold text-black py-2 rounded-lg hover:bg-gold-dark transition-colors">
               Add to Cart
             </button>
           </div>
@@ -316,7 +316,7 @@
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1">Samsung Galaxy S24 Battery</h3>
             <div class="flex items-center gap-1 mb-2">
-              <div class="flex text-yellow-400">
+              <div class="flex text-gold">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -332,7 +332,7 @@
               </div>
               <span class="text-sm text-green-600">In Stock</span>
             </div>
-            <button class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <button class="w-full mt-3 bg-gold text-black py-2 rounded-lg hover:bg-gold-dark transition-colors">
               Add to Cart
             </button>
           </div>
@@ -353,7 +353,7 @@
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1">MacBook Pro 16" Display</h3>
             <div class="flex items-center gap-1 mb-2">
-              <div class="flex text-yellow-400">
+              <div class="flex text-gold">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -366,7 +366,7 @@
               <span class="text-2xl font-bold text-gray-900">$899.99</span>
               <span class="text-sm text-green-600">In Stock</span>
             </div>
-            <button class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <button class="w-full mt-3 bg-gold text-black py-2 rounded-lg hover:bg-gold-dark transition-colors">
               Add to Cart
             </button>
           </div>
@@ -387,7 +387,7 @@
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1">Professional Repair Kit</h3>
             <div class="flex items-center gap-1 mb-2">
-              <div class="flex text-yellow-400">
+              <div class="flex text-gold">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -400,7 +400,7 @@
               <span class="text-2xl font-bold text-gray-900">$149.99</span>
               <span class="text-sm text-green-600">In Stock</span>
             </div>
-            <button class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            <button class="w-full mt-3 bg-gold text-black py-2 rounded-lg hover:bg-gold-dark transition-colors">
               Add to Cart
             </button>
           </div>
@@ -420,19 +420,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center">
-          <div class="text-4xl font-bold text-blue-600 mb-2">15,000+</div>
+          <div class="text-4xl font-bold text-gold mb-2">15,000+</div>
           <div class="text-gray-600">Premium Parts</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-bold text-green-600 mb-2">50,000+</div>
+          <div class="text-4xl font-bold text-gold mb-2">50,000+</div>
           <div class="text-gray-600">Happy Customers</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-bold text-yellow-600 mb-2">4.9/5</div>
+          <div class="text-4xl font-bold text-gold mb-2">4.9/5</div>
           <div class="text-gray-600">Customer Rating</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-bold text-purple-600 mb-2">24/7</div>
+          <div class="text-4xl font-bold text-gold mb-2">24/7</div>
           <div class="text-gray-600">Expert Support</div>
         </div>
       </div>
@@ -440,17 +440,17 @@
   </section>
 
   <!-- Newsletter -->
-  <section class="py-16 bg-blue-600 text-white">
+  <section class="py-16 bg-black text-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl font-bold mb-4">Stay Updated</h2>
-      <p class="text-xl mb-8 text-blue-100">Get the latest updates on new parts, special offers, and repair tips</p>
+      <h2 class="text-3xl font-bold mb-4">Industry Updates</h2>
+      <p class="text-xl mb-8 text-gold-light">Receive technical bulletins, product announcements, and professional repair insights</p>
       <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
         <input
           type="email"
           placeholder="Enter your email"
           class="flex-1 px-4 py-3 rounded-lg text-gray-900"
         >
-        <button class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+        <button class="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
           Subscribe
         </button>
       </div>
@@ -464,7 +464,7 @@
         <!-- Company Info -->
         <div>
           <div class="flex items-center gap-3 mb-4">
-            <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">MT</div>
+            <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-gold-dark to-gold flex items-center justify-center text-black font-bold text-lg">MT</div>
             <div>
               <div class="font-bold text-xl">Midas Technical</div>
               <div class="text-sm text-gray-400">Solutions</div>
@@ -549,10 +549,10 @@
     <div class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300" id="mobile-menu-panel">
       <div class="flex items-center justify-between p-4 border-b border-gray-200">
         <div class="flex items-center gap-3">
-          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold">MT</div>
+          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-gold-dark to-gold flex items-center justify-center text-black font-bold">MT</div>
           <span class="font-semibold">Menu</span>
         </div>
-        <button id="mobile-menu-close" class="p-2 text-gray-600">
+        <button id="mobile-menu-close" class="p-2 text-gray-600" aria-label="Close mobile menu">
           <i class="fas fa-times"></i>
         </button>
       </div>

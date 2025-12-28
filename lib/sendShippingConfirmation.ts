@@ -1,5 +1,5 @@
-import { resend } from "./email";
-import ShippingEmail from "../midas-tech/components/emails/ShippingEmail";
+import { resend } from "../../lib/email";
+import ShippingEmail from "../components/emails/ShippingEmail";
 import { render } from "@react-email/render";
 
 interface SendShippingParams {
@@ -17,7 +17,7 @@ export async function sendShippingConfirmation({
   trackingUrl,
   estimatedDelivery,
 }: SendShippingParams) {
-  const html = render(
+  const html = await render(
     ShippingEmail({ orderId, trackingNumber, trackingUrl, estimatedDelivery })
   );
 

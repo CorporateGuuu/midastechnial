@@ -1,5 +1,5 @@
 // lib/sendTrackingNotification.ts
-import { resend } from "./email";
+import { resend } from "../../lib/email";
 import twilio from "twilio";
 
 export async function sendTrackingNotification({

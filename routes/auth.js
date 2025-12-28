@@ -16,7 +16,7 @@ router.get('/login', (req, res) => {
   if (req.session.userId) {
     return res.redirect('/');
   }
-  res.render('auth/login', { title: 'Login' });
+  res.render('auth/login', { title: 'Login', layout: false });
 });
 
 // Register page
@@ -24,7 +24,7 @@ router.get('/register', (req, res) => {
   if (req.session.userId) {
     return res.redirect('/');
   }
-  res.render('auth/register', { title: 'Register' });
+  res.render('auth/register', { title: 'Register', layout: false });
 });
 
 // Login POST

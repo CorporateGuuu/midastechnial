@@ -1,8 +1,10 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
+const { Pool } = require('pg');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const fs = require('fs');
@@ -22,9 +24,21 @@ const {
 const { sendOrderConfirmationEmail } = require('./utils/email-service');
 
 // Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL || 'your_supabase_url_here';
-const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || 'your_supabase_key_here';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.SUPABASE_URL || 'https://demo.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || 'demo_key';
+let supabase;
+
+try {
+  if (supabaseUrl && supabaseUrl !== 'your_supabase_url_here' && supabaseUrl !== 'https://demo.supabase.co') {
+    supabase = createClient(supabaseUrl, supabaseKey);
+  } else {
+    console.log('Warning: Supabase not configured - running in demo mode');
+    supabase = null;
+  }
+} catch (error) {
+  console.log('Warning: Supabase initialization failed - running in demo mode');
+  supabase = null;
+}
 
 
 
@@ -124,10 +138,10 @@ function validateAndSanitizePath(requestedPath) {
 // Initialize Supabase connection
 async function initializeDatabase() {
   try {
-    console.log('✅ Supabase connection initialized');
-    console.log(`📍 Supabase URL: ${supabaseUrl}`);
+    console.log('Supabase connection initialized');
+    console.log(`Supabase URL: ${supabaseUrl}`);
   } catch (error) {
-    console.error('❌ Supabase initialization error:', error);
+    console.error('Supabase initialization error:', error);
   }
 }
 
@@ -441,7 +455,7 @@ async function handlePaymentSuccess(paymentIntent) {
     // Send order confirmation email
     await sendOrderConfirmationEmail(paymentIntent.metadata.order_id);
 
-    console.log(`✅ Payment succeeded for order ${paymentIntent.metadata.order_id}`);
+    console.log(`Payment succeeded for order ${paymentIntent.metadata.order_id}`);
   } catch (error) {
     console.error('Payment success handling error:', error);
   }
@@ -464,7 +478,7 @@ async function handlePaymentFailure(paymentIntent) {
       throw error;
     }
 
-    console.log(`❌ Payment failed for order ${paymentIntent.metadata.order_id}`);
+    console.log(`Payment failed for order ${paymentIntent.metadata.order_id}`);
   } catch (error) {
     console.error('Payment failure handling error:', error);
   }
@@ -566,6 +580,7 @@ const { getCachedData, cacheData } = require('./utils/cache');
 const { getRelatedProducts } = require('./utils/related-products');
 
 // Import routes
+const authRoutes = require('./routes/auth');
 
 // Home page - serve static HTML
 app.get('/', (req, res) => {
@@ -575,6 +590,121 @@ app.get('/', (req, res) => {
 // Products page - serve static HTML
 app.get('/products', (req, res) => {
   res.sendFile(path.join(__dirname, 'products.html'));
+});
+
+// Contact page - serve static HTML
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, 'contact.html'));
+});
+
+// Financing page - serve static HTML
+app.get('/financing', (req, res) => {
+  res.sendFile(path.join(__dirname, 'financing.html'));
+});
+
+// PS5 replacement parts page - proxy to Next.js app
+app.get('/ps5', (req, res) => {
+  // Proxy to Next.js app running on port 3001
+  const http = require('http');
+  const options = {
+    hostname: 'localhost',
+    port: 3001,
+    path: req.url,
+    method: req.method,
+    headers: req.headers
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (e) => {
+    console.error('Proxy error:', e);
+    res.status(500).send('Proxy error');
+  });
+
+  req.pipe(proxyReq);
+});
+
+// Also proxy /ps5/* routes
+app.get('/ps5/*', (req, res) => {
+  // Proxy to Next.js app running on port 3001
+  const http = require('http');
+  const options = {
+    hostname: 'localhost',
+    port: 3001,
+    path: req.url,
+    method: req.method,
+    headers: req.headers
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (e) => {
+    console.error('Proxy error:', e);
+    res.status(500).send('Proxy error');
+  });
+
+  req.pipe(proxyReq);
+});
+
+// Xbox Series X replacement parts page - proxy to Next.js app
+app.get('/xbox-series-x', (req, res) => {
+  // Proxy to Next.js app running on port 3001
+  const http = require('http');
+  const options = {
+    hostname: 'localhost',
+    port: 3001,
+    path: req.url,
+    method: req.method,
+    headers: req.headers
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (e) => {
+    console.error('Proxy error:', e);
+    res.status(500).send('Proxy error');
+  });
+
+  req.pipe(proxyReq);
+});
+
+// Also proxy /xbox-series-x/* routes
+app.get('/xbox-series-x/*', (req, res) => {
+  // Proxy to Next.js app running on port 3001
+  const http = require('http');
+  const options = {
+    hostname: 'localhost',
+    port: 3001,
+    path: req.url,
+    method: req.method,
+    headers: req.headers
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (e) => {
+    console.error('Proxy error:', e);
+    res.status(500).send('Proxy error');
+  });
+
+  req.pipe(proxyReq);
+});
+
+// Bulk components page - serve static HTML
+app.get('/bulk-components', (req, res) => {
+  res.sendFile(path.join(__dirname, 'bulk-components.html'));
 });
 
 app.get('/products/:slug', (req, res) => {
@@ -590,7 +720,7 @@ app.get('/categories/:slug', (req, res) => {
 });
 
 // Register routes
-// app.use('/', authRoutes);
+app.use('/', authRoutes);
 // app.use('/user', userRoutes);
 // app.use('/cart', cartRoutes);
 // app.use('/search', searchRoutes);
@@ -682,13 +812,13 @@ pool.query(`
 
 // Start the server
 app.listen(port, () => {
-  console.log(`🚀 Midas Technical Solutions Server running at http://localhost:${port}/`);
-  console.log(`🔒 Security features enabled: CSP, HSTS, Rate Limiting, Input Validation`);
-  console.log(`💳 Stripe payment processing integrated`);
-  console.log(`📧 Email notifications configured`);
-  console.log(`🗄️ Database integration active`);
-  console.log(`📊 Request logging and monitoring active`);
+  console.log(`Midas Technical Solutions Server running at http://localhost:${port}/`);
+  console.log(`Security features enabled: CSP, HSTS, Rate Limiting, Input Validation`);
+  console.log(`Stripe payment processing integrated`);
+  console.log(`Email notifications configured`);
+  console.log(`Database integration active`);
+  console.log(`Request logging and monitoring active`);
   if (isProduction) {
-    console.log(`🔐 Production mode: Enhanced security measures active`);
+    console.log(`Production mode: Enhanced security measures active`);
   }
 });
