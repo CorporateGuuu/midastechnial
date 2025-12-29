@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync-repairdesk": "node -e \"const RepairDeskIntegration = require('./api/repairdesk-integration.js'); const rd = new RepairDeskIntegration(); rd.fullSync();\"",
+    "sync-repairdesk": "node scripts/repairdesk-sync.js",
     "db:migrate": "node -e \"console.log('Database migration completed')\"",
     "db:seed": "node -e \"console.log('Database seeded with sample data')\""
   },
@@ -21,6 +21,9 @@
   ],
   "author": "Midas Technical Solutions",
   "license": "ISC",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "@react-email/components": "^0.5.7",
@@ -36,7 +39,8 @@
     "mapbox-gl": "^3.16.0",
     "meilisearch": "^0.54.0",
     "next": "16.0.1",
-    "next-auth": "^4.24.7",
+    "next-auth": "^4.24.13",
+    "pg": "^8.16.3",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0",
     "ra-data-simple-rest": "^4.16.5",
@@ -44,14 +48,17 @@
     "react-admin": "^4.16.5",
     "react-dom": "^18.0.0",
     "react-email": "^4.3.2",
+    "resend": "^6.6.0",
     "shippo": "^2.15.0",
     "stripe": "^19.2.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
+    "twilio": "^5.11.1",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -59,6 +66,7 @@
     "eslint-config-next": "16.0.1",
     "prisma": "^5.14.0",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "engines": {

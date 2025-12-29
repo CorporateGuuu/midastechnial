@@ -1,4 +1,4 @@
-import { db } from '../../lib/prisma';
+import { db } from '@/lib/prisma';
 
 export default async function ProductsPage({ searchParams }: { searchParams?: { category?: string } }) {
   const category = searchParams?.category;

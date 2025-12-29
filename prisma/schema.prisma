@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -24,21 +24,22 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String?
-  description String?
-  price       Float
-  oldPrice    Float?
-  rating      Float
-  reviews     Int
-  badge       String?
-  inStock     Boolean  @default(true)
-  category    String
-  image       String?
-  images      String?  // JSON array of image URLs
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(cuid())
+  title         String
+  slug          String?
+  description   String?
+  price         Float
+  oldPrice      Float?
+  rating        Float
+  reviews       Int
+  badge         String?
+  inStock       Int      @default(0)
+  category      String
+  image         String?
+  images        String?  // JSON array of image URLs
+  stripePriceId String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("products")
 }

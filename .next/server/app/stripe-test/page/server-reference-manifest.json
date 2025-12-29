@@ -1,0 +1,20 @@
+{
+  "node": {
+    "402a152b2ad607474ffbdcd86bccdc2c021f5fb333": {
+      "workers": {
+        "app/stripe-test/page": {
+          "moduleId": 836243,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "app/stripe-test/page.tsx"
+        }
+      },
+      "layer": {
+        "app/stripe-test/page": "rsc"
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "app/stripe-test/page.tsx"
+    }
+  },
+  "edge": {}
+}

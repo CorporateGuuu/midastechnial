@@ -1,0 +1,3 @@
+{
+  "/api/tracking/webhook/route": "app/api/tracking/webhook/route.js"
+}

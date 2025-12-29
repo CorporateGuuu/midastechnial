@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart } from '../../hooks/useCart'
+import { useCart } from '@/hooks/useCart'
 import { loadStripe } from '@stripe/stripe-js'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
@@ -24,7 +24,7 @@ export default function CartPage() {
         return
       }
 
-      const response = await fetch('/api/create-checkout-session', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

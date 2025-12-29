@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MeiliSearch } from 'meilisearch'
-import { getAllProducts } from '../../../lib/db'
-import { Product } from '../../../types'
+import { getAllProducts } from '@/lib/db'
+import { Product } from '@/types'
 
 const client = new MeiliSearch({
   host: process.env.MEILISEARCH_HOST || 'http://localhost:7700',

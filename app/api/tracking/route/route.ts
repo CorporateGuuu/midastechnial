@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTrackingRoute } from "../../../../../lib/mapUtils";
+import { getTrackingRoute } from "@/lib/mapUtils";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

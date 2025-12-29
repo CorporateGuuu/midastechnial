@@ -95,27 +95,23 @@ export default function CheckoutPage() {
     const shippingCost = selectedOption?.cost || 0;
     const total = subtotal + shippingCost;
 
-    const res = await fetch("/api/checkout", {
+    const res = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items,
-        shippingAddress: JSON.stringify(shippingAddress),
-        shippingMethod: selectedOption?.name || '',
-        shippingCost,
-        subtotal,
-        total
+        items: items.map(item => ({
+          priceId: item.stripePriceId,
+          quantity: item.quantity,
+        })),
       }),
     });
 
-    const { id } = await res.json();
+    const { url } = await res.json();
 
-    const { error } = await stripe!.redirectToCheckout({
-      sessionId: id
-    });
-
-    if (error) {
-      console.error(error);
+    if (url) {
+      window.location.href = url;
+    } else {
+      alert('Failed to create checkout session');
       setLoading(false);
     }
   };

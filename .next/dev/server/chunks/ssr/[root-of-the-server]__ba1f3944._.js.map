@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///Users/apple/Desktop/Websites%20Code/Midastechnical/app/Providers.tsx"],"sourcesContent":["'use client'\n\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\nimport { SessionProvider } from 'next-auth/react'\n\nconst queryClient = new QueryClient()\n\nexport default function Providers({\n  children,\n}: {\n  children: React.ReactNode\n}) {\n  return (\n    <SessionProvider>\n      <QueryClientProvider client={queryClient}>\n        {children}\n      </QueryClientProvider>\n    </SessionProvider>\n  )\n}\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AACA;AAHA;;;;AAKA,MAAM,cAAc,IAAI,4LAAW;AAEpB,SAAS,UAAU,EAChC,QAAQ,EAGT;IACC,qBACE,8OAAC,iKAAe;kBACd,cAAA,8OAAC,6MAAmB;YAAC,QAAQ;sBAC1B;;;;;;;;;;;AAIT","debugId":null}}]
+}
