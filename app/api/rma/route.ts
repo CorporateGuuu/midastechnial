@@ -55,29 +55,33 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation email
     try {
-      await resend.emails.send({
-        from: 'support@yourcompany.com',
-        to: contactEmail,
-        subject: `RMA Request Received - Order ${orderId.slice(0, 8)}`,
-        html: `
-          <h2>RMA Request Confirmation</h2>
-          <p>Dear Customer,</p>
-          <p>We have received your RMA request for order <strong>${orderId.slice(0, 8)}</strong>.</p>
+      if (resend) {
+        await resend.emails.send({
+          from: 'support@yourcompany.com',
+          to: contactEmail,
+          subject: `RMA Request Received - Order ${orderId.slice(0, 8)}`,
+          html: `
+            <h2>RMA Request Confirmation</h2>
+            <p>Dear Customer,</p>
+            <p>We have received your RMA request for order <strong>${orderId.slice(0, 8)}</strong>.</p>
 
-          <h3>Request Details:</h3>
-          <ul>
-            <li><strong>Reason:</strong> ${reason}</li>
-            <li><strong>Description:</strong> ${description}</li>
-            <li><strong>Order ID:</strong> ${orderId.slice(0, 8)}</li>
-          </ul>
+            <h3>Request Details:</h3>
+            <ul>
+              <li><strong>Reason:</strong> ${reason}</li>
+              <li><strong>Description:</strong> ${description}</li>
+              <li><strong>Order ID:</strong> ${orderId.slice(0, 8)}</li>
+            </ul>
 
-          <p>Our team will review your request and contact you within 2-3 business days.</p>
+            <p>Our team will review your request and contact you within 2-3 business days.</p>
 
-          <p>Thank you for your patience.</p>
+            <p>Thank you for your patience.</p>
 
-          <p>Best regards,<br>Your Support Team</p>
-        `
-      });
+            <p>Best regards,<br>Your Support Team</p>
+          `
+        });
+      } else {
+        console.log('Resend not configured, skipping RMA confirmation email');
+      }
     } catch (emailError) {
       console.error('Failed to send RMA confirmation email:', emailError);
     }
@@ -87,7 +91,7 @@ export async function POST(request: NextRequest) {
       message: 'RMA request submitted successfully'
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("RMA submission error:", error);
     return NextResponse.json(
       { error: "Failed to submit RMA request" },
