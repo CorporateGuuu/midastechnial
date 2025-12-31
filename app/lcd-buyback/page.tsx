@@ -142,7 +142,7 @@ export default function LCDBuybackPage() {
                 <tbody>
                   {/* iPhone Models */}
                   <tr className="bg-blue-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan="4">iPhone Displays</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan={4}>iPhone Displays</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3">iPhone 15 Pro Max</td>
@@ -195,7 +195,7 @@ export default function LCDBuybackPage() {
 
                   {/* Samsung Models */}
                   <tr className="bg-green-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan="4">Samsung Displays</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan={4}>Samsung Displays</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3">Galaxy S24 Ultra</td>
@@ -242,7 +242,7 @@ export default function LCDBuybackPage() {
 
                   {/* iPad Models */}
                   <tr className="bg-purple-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan="4">iPad Displays</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan={4}>iPad Displays</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3">iPad Pro 12.9"</td>
@@ -271,7 +271,7 @@ export default function LCDBuybackPage() {
 
                   {/* Laptop Models */}
                   <tr className="bg-orange-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan="4">Laptop Displays</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan={4}>Laptop Displays</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3">MacBook Pro 16"</td>
@@ -312,7 +312,7 @@ export default function LCDBuybackPage() {
 
                   {/* Wearables */}
                   <tr className="bg-pink-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan="4">Wearable Displays</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold" colSpan={4}>Wearable Displays</td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3">Apple Watch Ultra</td>
