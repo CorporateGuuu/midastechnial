@@ -43,6 +43,14 @@ export async function POST(request: NextRequest) {
 
     // Send email via Resend
     try {
+      if (!resend) {
+        console.log('Resend not configured, skipping email send');
+        return NextResponse.json({
+          success: true,
+          message: 'Email functionality disabled (Resend not configured)'
+        });
+      }
+
       await resend.emails.send({
         from: 'orders@yourcompany.com',
         to: customerEmail,
@@ -60,7 +68,7 @@ export async function POST(request: NextRequest) {
 
           <h4>Order Items:</h4>
           <ul>
-            ${items.map((item: any) => `
+            ${items.map((item: { title: string; price: number; quantity: number }) => `
               <li>${item.title} × ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}</li>
             `).join('')}
           </ul>
@@ -86,7 +94,7 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'Email update sent successfully'
       });
-    } catch (emailError: any) {
+    } catch (emailError) {
       console.error('Resend email error:', emailError);
       return NextResponse.json(
         { error: "Failed to send email" },
@@ -94,7 +102,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Email update error:", error);
     return NextResponse.json(
       { error: "Failed to send email update" },
