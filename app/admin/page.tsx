@@ -18,6 +18,13 @@ import {
   XCircle
 } from 'lucide-react';
 
+interface ExtendedUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role: string;
+}
+
 interface AdminStats {
   totalUsers: number;
   totalOrders: number;
@@ -43,8 +50,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/admin');
-    } else if (session && session.user?.email !== 'admin@example.com') {
-      // In a real app, check for admin role
+    } else if (session && (session.user as ExtendedUser)?.role !== 'admin') {
       router.push('/');
     }
   }, [status, session, router]);
@@ -60,7 +66,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!session || session.user?.email !== 'admin@example.com') {
+  if (!session || (session.user as ExtendedUser)?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
