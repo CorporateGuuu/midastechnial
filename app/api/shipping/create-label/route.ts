@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
     };
 
     // Create parcel based on items
-    const totalWeight = items.reduce((sum: any, item: any) => {
-      return sum + (item.weight || 100) * item.quantity;
+    const totalWeight = items.reduce((sum: number, item: any) => {
+      return sum + ((item as any).weight || 100) * (item as any).quantity;
     }, 0);
 
     const parcel = {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       distanceUnit: "in",
       weight: totalWeight.toString(),
       massUnit: "g"
-    } as any;
+    };
 
     // Create shipment for label
     const shipment = await shippo.shipments.create({
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     } as any);
 
     // Get the first rate (you might want to choose based on service level)
-    const rate = shipment.rates[0];
+    const rate = shipment?.rates?.[0];
     if (!rate) {
       return NextResponse.json({ error: "No shipping rates available" }, { status: 400 });
     }
@@ -69,18 +69,19 @@ export async function POST(request: NextRequest) {
     await db.order.update({
       where: { id: orderId },
       data: {
-        trackingNumber: (transaction as any).trackingNumber,
-        carrier: (transaction as any).carrier,
-        labelUrl: (transaction as any).labelUrl,
+        trackingNumber: (transaction as any)?.trackingNumber,
+        carrier: (transaction as any)?.carrier,
+        labelUrl: (transaction as any)?.labelUrl,
+        estimatedDelivery: (transaction as any)?.eta ? new Date((transaction as any).eta) : null,
       },
     });
 
     const responseData = {
-      trackingNumber: (transaction as any).trackingNumber,
-      carrier: (transaction as any).carrier,
-      labelUrl: (transaction as any).labelUrl,
-      estimatedDelivery: (transaction as any).eta,
-      status: (transaction as any).status
+      trackingNumber: (transaction as any)?.trackingNumber,
+      carrier: (transaction as any)?.carrier,
+      labelUrl: (transaction as any)?.labelUrl,
+      estimatedDelivery: (transaction as any)?.eta,
+      status: (transaction as any)?.status
     };
 
     return NextResponse.json(responseData);
