@@ -52,7 +52,7 @@ export default function ReceiptEmail({
 
           <Section style={orderSection}>
             <Text style={orderTitle}>Order Details</Text>
-            <Text style={orderId}>Order ID: #{orderId.slice(0, 8)}</Text>
+            <Text style={orderIdStyle}>Order ID: #{orderId.slice(0, 8)}</Text>
             <Text style={orderDate}>Date: {date}</Text>
           </Section>
 
@@ -104,7 +104,7 @@ const h1 = { color: "#1a1a1a", fontSize: "24px", margin: "10px 0" };
 const text = { color: "#333", fontSize: "16px", lineHeight: "24px" };
 const orderSection = { backgroundColor: "#fff", padding: "20px", borderRadius: "8px", margin: "20px 0" };
 const orderTitle = { fontSize: "18px", fontWeight: "bold", margin: "0 0 10px" };
-const orderId = { margin: "5px 0", fontFamily: "monospace" };
+const orderIdStyle = { margin: "5px 0", fontFamily: "monospace" };
 const orderDate = { margin: "5px 0", color: "#666" };
 const itemsSection = { backgroundColor: "#fff", padding: "20px", borderRadius: "8px" };
 const itemRow = { padding: "8px 0" };
