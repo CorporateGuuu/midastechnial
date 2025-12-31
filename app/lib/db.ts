@@ -3,13 +3,14 @@ import { Product } from "../types";
 
 export const getFeaturedProducts = async (): Promise<Product[]> => {
   try {
-    const products = await db.product.findMany({
-      where: { inStock: true },
-      take: 4,
+    // Get products and filter in JavaScript to avoid Prisma type issues
+    const allProducts = await db.product.findMany({
       orderBy: { createdAt: "desc" },
     });
 
-    return products.map(product => ({
+    const inStockProducts = allProducts.filter(product => product.inStock > 0);
+
+    return inStockProducts.slice(0, 4).map(product => ({
       id: product.id,
       title: product.title,
       price: product.price,
@@ -17,7 +18,7 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
       rating: product.rating,
       reviews: product.reviews,
       badge: product.badge as "new" | "sale" | undefined,
-      inStock: product.inStock,
+      inStock: product.inStock, // Return the actual number from database
       category: product.category,
       image: product.image || undefined,
     }));
@@ -41,7 +42,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
       rating: product.rating,
       reviews: product.reviews,
       badge: product.badge as "new" | "sale" | undefined,
-      inStock: product.inStock,
+      inStock: product.inStock, // Return the actual number from database
       category: product.category,
       image: product.image || undefined,
     }));

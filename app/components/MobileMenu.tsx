@@ -10,19 +10,112 @@ interface Props {
 }
 
 export default function MobileMenu({ open, onClose }: Props) {
-  const [preOwnedExpanded, setPreOwnedExpanded] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
-  const preOwnedSubItems = [
-    { name: 'Grade A iPhones', href: '/products?category=pre-owned&device=iphones&grade=a' },
-    { name: 'Grade B iPhones', href: '/products?category=pre-owned&device=iphones&grade=b' },
-    { name: 'Grade C iPhones', href: '/products?category=pre-owned&device=iphones&grade=c' },
-    { name: 'Grade A Android Phones', href: '/products?category=pre-owned&device=android&grade=a' },
-    { name: 'Grade B Android Phones', href: '/products?category=pre-owned&device=android&grade=b' },
-    { name: 'Grade A Gaming Consoles', href: '/products?category=pre-owned&device=consoles&grade=a' },
-    { name: 'Grade B Gaming Consoles', href: '/products?category=pre-owned&device=consoles&grade=b' },
-    { name: 'Tested Refurbished Devices', href: '/products?category=pre-owned&condition=tested' },
-    { name: 'All Pre-Owned Devices', href: '/products?category=pre-owned' },
+  const categories = [
+    {
+      name: 'Apple',
+      hasDropdown: true,
+      href: '/products?category=apple',
+      subcategories: [
+        { name: 'iPhone 16 Series', href: '/products?category=apple&device=iphone16' },
+        { name: 'iPhone 15 Series', href: '/products?category=apple&device=iphone15' },
+        { name: 'iPhone 14 Series', href: '/products?category=apple&device=iphone14' },
+        { name: 'iPad', href: '/products?category=apple&device=ipad' },
+        { name: 'MacBook', href: '/products?category=apple&device=macbook' },
+        { name: 'All Apple Parts', href: '/products?category=apple' }
+      ]
+    },
+    {
+      name: 'Samsung',
+      hasDropdown: true,
+      href: '/products?category=samsung',
+      subcategories: [
+        { name: 'Galaxy S Series', href: '/products?category=samsung&device=galaxys' },
+        { name: 'Galaxy Note Series', href: '/products?category=samsung&device=galaxynote' },
+        { name: 'Galaxy A Series', href: '/products?category=samsung&device=galaxya' },
+        { name: 'Galaxy Tab', href: '/products?category=samsung&device=galaxytab' },
+        { name: 'All Samsung Parts', href: '/products?category=samsung' }
+      ]
+    },
+    {
+      name: 'Motorola',
+      hasDropdown: true,
+      href: '/products?category=motorola',
+      subcategories: [
+        { name: 'Moto G Series', href: '/products?category=motorola&device=motog' },
+        { name: 'Moto Edge Series', href: '/products?category=motorola&device=motoedge' },
+        { name: 'Moto One Series', href: '/products?category=motorola&device=motoone' },
+        { name: 'All Motorola Parts', href: '/products?category=motorola' }
+      ]
+    },
+    {
+      name: 'Google',
+      hasDropdown: true,
+      href: '/products?category=google',
+      subcategories: [
+        { name: 'Pixel Series', href: '/products?category=google&device=pixel' },
+        { name: 'Pixel XL Series', href: '/products?category=google&device=pixelxl' },
+        { name: 'Pixel Fold', href: '/products?category=google&device=pixelfold' },
+        { name: 'All Google Parts', href: '/products?category=google' }
+      ]
+    },
+    {
+      name: 'Other Parts',
+      hasDropdown: false,
+      href: '/products?category=other'
+    },
+    {
+      name: 'Game Console',
+      hasDropdown: false,
+      href: '/products?category=game-console'
+    },
+    {
+      name: 'Accessories',
+      hasDropdown: false,
+      href: '/products?category=accessories',
+      hasNewBadge: true
+    },
+    {
+      name: 'Tools & Supplies',
+      hasDropdown: false,
+      href: '/products?category=tools-supplies'
+    },
+    {
+      name: 'Refurbishing',
+      hasDropdown: false,
+      href: '/products?category=refurbishing'
+    },
+    {
+      name: 'Board Components',
+      hasDropdown: false,
+      href: '/products?category=board-components'
+    },
+    {
+      name: 'Pre-Owned Devices',
+      hasDropdown: true,
+      href: '/products?category=pre-owned',
+      subcategories: [
+        { name: 'Grade A iPhones', href: '/products?category=pre-owned&device=iphones&grade=a' },
+        { name: 'Grade B iPhones', href: '/products?category=pre-owned&device=iphones&grade=b' },
+        { name: 'Grade C iPhones', href: '/products?category=pre-owned&device=iphones&grade=c' },
+        { name: 'Grade A Android Phones', href: '/products?category=pre-owned&device=android&grade=a' },
+        { name: 'Grade B Android Phones', href: '/products?category=pre-owned&device=android&grade=b' },
+        { name: 'Grade A Gaming Consoles', href: '/products?category=pre-owned&device=consoles&grade=a' },
+        { name: 'Grade B Gaming Consoles', href: '/products?category=pre-owned&device=consoles&grade=b' },
+        { name: 'Tested Refurbished Devices', href: '/products?category=pre-owned&condition=tested' },
+        { name: 'All Pre-Owned Devices', href: '/products?category=pre-owned' }
+      ]
+    }
   ];
+
+  const toggleCategory = (categoryName: string) => {
+    setExpandedCategories(prev =>
+      prev.includes(categoryName)
+        ? prev.filter(name => name !== categoryName)
+        : [...prev, categoryName]
+    );
+  };
 
   if (!open) return null;
 
@@ -38,39 +131,57 @@ export default function MobileMenu({ open, onClose }: Props) {
           <ul className="space-y-3">
             <li><Link href="/" onClick={onClose} className="block py-2">Home</Link></li>
 
-            {/* Pre-Owned Devices Category with Expandable Submenu */}
-            <li>
-              <button
-                onClick={() => setPreOwnedExpanded(!preOwnedExpanded)}
-                className="flex items-center justify-between w-full py-2 text-left bg-blue-600 text-white px-3 rounded-md font-semibold"
-                aria-expanded={preOwnedExpanded ? "true" : "false"}
-              >
-                Pre-Owned Devices
-                <ChevronDown className={`w-4 h-4 transition-transform ${preOwnedExpanded ? 'rotate-180' : ''}`} />
-              </button>
-
-              {preOwnedExpanded && (
-                <div className="mt-2 ml-4 space-y-2">
-                  <div className="text-sm font-semibold text-gray-900 border-b border-gray-100 pb-1">
-                    Pre-Owned & Refurbished Devices
-                  </div>
-                  {preOwnedSubItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={onClose}
-                      className="block py-1 text-sm text-gray-700 hover:text-blue-600 transition-colors"
+            {categories.map((category) => (
+              <li key={category.name}>
+                {category.hasDropdown ? (
+                  <>
+                    <button
+                      onClick={() => toggleCategory(category.name)}
+                      className="flex items-center justify-between w-full py-2 text-left hover:bg-gray-100 px-3 rounded transition-colors"
                     >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </li>
+                      <span className="flex items-center gap-2">
+                        {category.name}
+                        {category.hasNewBadge && (
+                          <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-medium">
+                            NEW
+                          </span>
+                        )}
+                      </span>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${expandedCategories.includes(category.name) ? 'rotate-180' : ''}`} />
+                    </button>
 
-            <li><Link href="/products" onClick={onClose} className="block py-2">Other Products</Link></li>
-            <li><Link href="/financing" onClick={onClose} className="block py-2">Financing</Link></li>
-            <li><Link href="/contact" onClick={onClose} className="block py-2">Contact</Link></li>
+                    {expandedCategories.includes(category.name) && (
+                      <div className="mt-2 ml-4 space-y-2">
+                        {category.subcategories?.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            onClick={onClose}
+                            className="block py-1 text-sm text-gray-700 hover:text-red-600 transition-colors"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href={category.href}
+                    onClick={onClose}
+                    className="flex items-center gap-2 py-2 hover:bg-gray-100 px-3 rounded transition-colors"
+                  >
+                    {category.name}
+                    {category.hasNewBadge && (
+                      <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-medium">
+                        NEW
+                      </span>
+                    )}
+                  </Link>
+                )}
+              </li>
+            ))}
+
             <li className="pt-3 border-t">
               <Link href="/login" onClick={onClose} className="block py-2">Sign In</Link>
             </li>

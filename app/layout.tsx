@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import Providers from "./Providers";
+import ChatWidget from "./components/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>{children}</Providers>
+        <ChatWidget />
       </body>
     </html>
   );

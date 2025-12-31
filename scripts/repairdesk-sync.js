@@ -11,11 +11,17 @@ class RepairDeskIntegration {
         this.apiKey = process.env.REPAIRDESK_API_KEY;
         this.baseUrl = process.env.REPAIRDESK_BASE_URL || 'https://api.repairdesk.co/api/web/v1';
 
-        // PostgreSQL database configuration
+        // PostgreSQL database configuration - ensure correct connection
         this.dbConfig = {
-            connectionString: process.env.DATABASE_URL,
+            connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/mdtstech_store',
             ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
         };
+
+        console.log('🔧 Repair Desk Database Config:', {
+            connectionString: this.dbConfig.connectionString.replace(/:[^:]*@/, ':***@'), // Hide password
+            apiKey: this.apiKey ? '***configured***' : 'not set',
+            baseUrl: this.baseUrl
+        });
     }
 
     // Make API request to RepairDesk
@@ -83,7 +89,7 @@ class RepairDeskIntegration {
             for (const rdProduct of repairdeskProducts.items || []) {
                 // Check if product exists in local database
                 const existingProducts = await client.query(
-                    'SELECT id FROM products WHERE repairdesk_id = $1',
+                    'SELECT id FROM products WHERE "repairdeskId" = $1',
                     [rdProduct.id]
                 );
 
@@ -96,7 +102,7 @@ class RepairDeskIntegration {
                             price = $3,
                             "inStock" = $4,
                             "updatedAt" = NOW()
-                        WHERE repairdesk_id = $5`,
+                        WHERE "repairdeskId" = $5`,
                         [
                             rdProduct.name,
                             rdProduct.description || '',
@@ -142,13 +148,13 @@ class RepairDeskIntegration {
 
             // Get all products with RepairDesk IDs
             const products = await client.query(
-                'SELECT id FROM products WHERE repairdesk_id IS NOT NULL'
+                'SELECT id FROM products WHERE "repairdeskId" IS NOT NULL'
             );
 
             for (const product of products.rows) {
                 try {
                     // Get current inventory from RepairDesk
-                    const rdProduct = await this.makeAPIRequest(`/inventory/${product.repairdesk_id}`);
+                    const rdProduct = await this.makeAPIRequest(`/inventory/${product.repairdeskId}`);
 
                     // Update local inventory
                     await client.query(
@@ -179,7 +185,7 @@ class RepairDeskIntegration {
             const rdOrderData = {
                 customer_id: orderData.customer_id,
                 items: orderData.items.map(item => ({
-                    inventory_id: item.repairdesk_id,
+                    inventory_id: item.repairdeskId,
                     quantity: item.quantity,
                     price: item.price
                 })),

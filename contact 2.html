@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Midas Technical Solutions</title>
+  <meta name="description" content="Get in touch with our expert support team. We're here to help with your repair parts and equipment needs 24/7.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ===== CONTACT PAGE STYLES ===== */
+    body {
+      background-color: #FFFFFF;
+      color: #000000;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .contact-hero {
+      background-color: #FFFFFF;
+      padding: 8rem 2rem 6rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .contact-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    }
+
+    .contact-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 2rem;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+
+    .contact-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: #666666;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+      line-height: 1.7;
+    }
+
+    .contact-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem 8rem;
+    }
+
+    .contact-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .contact-info {
+      background-color: #FFFFFF;
+      padding: 0;
+    }
+
+    .info-section {
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .info-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .info-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background-color: #D4AF37;
+    }
+
+    .info-item {
+      margin-bottom: 1.5rem;
+      padding-left: 0;
+    }
+
+    .info-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .info-value {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      color: #333333;
+      line-height: 1.6;
+    }
+
+    .contact-form-container {
+      background-color: #FFFFFF;
+      padding: 0;
+      position: relative;
+    }
+
+    .contact-form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -2rem;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, #D4AF37, transparent);
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .contact-form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .form-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.5rem 0;
+      border: none;
+      border-bottom: 1px solid #E0E0E0;
+      background-color: transparent;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #000000;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-bottom-color: #D4AF37;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: #999999;
+      font-style: italic;
+    }
+
+    .form-textarea {
+      resize: none;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    .form-submit {
+      width: 100%;
+      background-color: transparent;
+      color: #D4AF37;
+      padding: 1.25rem 2rem;
+      border: 2px solid #D4AF37;
+      border-radius: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background-color: #D4AF37;
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .form-submit:hover {
+      color: #000000;
+      border-color: #D4AF37;
+    }
+
+    .form-submit:hover::before {
+      left: 0;
+    }
+
+    .required {
+      color: #D4AF37;
+      font-weight: 600;
+    }
+
+    .optional-note {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #999999;
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .contact-content {
+        gap: 4rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .contact-hero {
+        padding: 6rem 1rem 4rem;
+      }
+
+      .contact-title {
+        font-size: 2.5rem;
+      }
+
+      .contact-subtitle {
+        font-size: 1.125rem;
+      }
+
+      .contact-container {
+        padding: 0 1rem 6rem;
+      }
+
+      .contact-content {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+
+      .contact-form-container::before {
+        display: none;
+      }
+
+      .info-title::after {
+        width: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-title {
+        font-size: 2rem;
+      }
+
+      .contact-hero {
+        padding: 4rem 1rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-content">
+        <div class="top-bar-text">
+          Free shipping on orders over $99 • 24/7 Expert Support
+        </div>
+        <div class="top-bar-links">
+          <a href="/login">Sign In</a>
+          <a href="/register">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="main-header-content">
+        <!-- Logo -->
+        <a href="/" class="logo">
+          <div class="logo-icon">MT</div>
+          <div class="logo-text">
+            <div>Midas Technical</div>
+            <div class="logo-sub">Solutions</div>
+          </div>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search for premium repair parts..." aria-label="Search for repair parts">
+          <button class="search-btn" aria-label="Submit search" type="button">Search</button>
+        </div>
+
+        <!-- Header Icons -->
+        <div class="header-icons">
+          <a href="/cart" class="header-icon" aria-label="Shopping cart">
+            <span class="cart-icon">Cart</span>
+            <span class="cart-badge">0</span>
+          </a>
+          <a href="/account" class="header-icon" aria-label="Account">Account</a>
+          <a href="/support" class="header-icon" aria-label="Support">Support</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" role="navigation">
+      <div class="nav-content">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open mobile menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <div class="nav-dropdown-container">
+            <a href="/products" class="nav-link">Products ▼</a>
+          </div>
+          <a href="/financing" class="nav-link">Financing</a>
+          <a href="/contact" class="nav-link nav-link-active">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="contact-container">
+    <div class="contact-header">
+      <h1 class="contact-title">Contact Us</h1>
+      <p class="contact-subtitle">Get in touch with our expert support team. We're here to help with all your repair parts and equipment needs.</p>
+    </div>
+
+    <div class="contact-content">
+      <!-- Contact Information -->
+      <div class="contact-info">
+        <div class="info-section">
+          <h2 class="info-title">Company Information</h2>
+          <div class="info-item">
+            <div class="info-label">Email:</div>
+            <div class="info-value">support@midastech.com</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone:</div>
+            <div class="info-value">+1 (240) 351-0511</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Address:</div>
+            <div class="info-value">
+              123 Tech Street<br>
+              Silicon Valley, CA 94043<br>
+              United States
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h2 class="info-title">Support Hours</h2>
+          <div class="info-item">
+            <div class="info-label">Monday - Friday:</div>
+            <div class="info-value">9:00 AM - 10:00 PM EST</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Saturday:</div>
+            <div class="info-value">10:00 AM - 6:00 PM EST</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Sunday:</div>
+            <div class="info-value">12:00 PM - 5:00 PM EST</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Emergency Support:</div>
+            <div class="info-value">24/7 for critical issues</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-container">
+        <h2 class="form-title">Send Us a Message</h2>
+        <form class="contact-form" onsubmit="handleContactSubmit(); return false;">
+          <div class="form-group">
+            <label class="form-label" for="name">Name <span class="required">*</span></label>
+            <input type="text" id="name" class="form-input" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone <span class="optional-note">(optional)</span></label>
+            <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 123-4567">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="message">Message <span class="required">*</span></label>
+            <textarea id="message" class="form-textarea" placeholder="Please describe your inquiry in detail..." required></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <!-- Company Info -->
+        <div>
+          <div class="footer-logo">
+            <div class="footer-logo-icon">MT</div>
+            <div class="footer-logo-text">
+              <div class="footer-main">Midas Technical</div>
+              <div class="footer-sub">Solutions</div>
+            </div>
+          </div>
+          <p class="footer-description">
+            Your trusted partner for premium repair parts and professional tools. Quality guaranteed.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook">Facebook</a>
+            <a href="#" aria-label="Twitter">Twitter</a>
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="YouTube">YouTube</a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/products">All Products</a></li>
+            <li><a href="/categories">Categories</a></li>
+            <li><a href="/tools">Tools</a></li>
+            <li><a href="/financing">Financing</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div>
+          <h3>Customer Service</h3>
+          <ul class="footer-links">
+            <li><a href="/orders">My Orders</a></li>
+            <li><a href="/account">My Profile</a></li>
+            <li><a href="/cart">Shopping Cart</a></li>
+            <li><a href="/account">Account Settings</a></li>
+            <li><a href="/support">Support Center</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h3>Contact Info</h3>
+          <ul class="footer-contact">
+            <li><span class="icon">Phone:</span> +1 (240) 351-0511</li>
+            <li><span class="icon">Email:</span> support@midastech.com</li>
+            <li><span class="icon">Address:</span> 123 Tech Street, Silicon Valley</li>
+            <li><span class="icon">Hours:</span> Mon-Fri: 9AM-10PM EST</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">© 2024 Midas Technical Solutions. All rights reserved.</div>
+        <div class="footer-legal">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+          <a href="/shipping">Shipping Info</a>
+          <a href="/returns">Returns</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <div class="mobile-menu-backdrop" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu-panel">
+      <div class="mobile-menu-header">
+        <div class="mobile-menu-title">Menu</div>
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close mobile menu">×</button>
+      </div>
+      <nav class="mobile-menu-nav">
+        <ul class="mobile-menu-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/financing">Financing</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li class="mobile-menu-divider">
+            <a href="/login">Sign In</a>
+          </li>
+          <li>
+            <a href="/register">Register</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu functionality
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const isOpen = menu.classList.contains('active');
+
+      if (isOpen) {
+        menu.classList.remove('active');
+        document.body.style.overflow = '';
+      } else {
+        menu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    // Contact form submission
+    function handleContactSubmit() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const message = document.getElementById('message').value;
+
+      if (!name || !email || !message) {
+        showNotification('Please fill in all required fields.', 'error');
+        return;
+      }
+
+      // Simulate form submission
+      showNotification('Thank you for your message! We will get back to you within 2 hours.', 'success');
+
+      // Clear form
+      document.getElementById('name').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('message').value = '';
+    }
+
+    // Notification system
+    function showNotification(message, type) {
+      // Remove existing notification
+      const existingNotification = document.querySelector('.notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+
+      // Style notification
+      Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#D4AF37',
+        color: 'white',
+        padding: '1rem 1.5rem',
+        borderRadius: '0.5rem',
+        boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+        zIndex: '1000',
+        fontWeight: '500',
+        maxWidth: '400px'
+      });
+
+      document.body.appendChild(notification);
+
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 5000);
+    }
+
+    // Search functionality
+    document.querySelector('.search-btn').addEventListener('click', function() {
+      const query = document.querySelector('.search-input').value.trim();
+      if (query) {
+        window.location.href = `/products?search=${encodeURIComponent(query)}`;
+      }
+    });
+
+    document.querySelector('.search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.querySelector('.search-btn').click();
+      }
+    });
+  </script>
+</body>
+</html>

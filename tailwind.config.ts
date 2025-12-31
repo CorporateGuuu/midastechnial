@@ -1,8 +1,6 @@
 import type { Config } from 'tailwindcss'
-import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config: Config = {
-  darkMode: "class",
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -25,8 +23,8 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#2563eb",
-          foreground: "#ffffff",
+          DEFAULT: "#D4AF37",
+          foreground: "#000000",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -58,23 +56,9 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [],
 } satisfies Config
 
 export default config

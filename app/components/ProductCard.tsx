@@ -1,12 +1,65 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useCart } from "@/store/cartStore";
 import { Product } from "@/types";
 import { Badge } from "./ui/badge";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const addItem = useCart((s) => s.addItem);
+
+  // Only gate pre-owned products
+  const isPreOwnedProduct = product.category === 'pre-owned' ||
+                           product.title.toLowerCase().includes('pre-owned') ||
+                           product.badge?.toLowerCase().includes('pre-owned');
+
+
+
+  if (status === "loading" && isPreOwnedProduct) {
+    return (
+      <div className="bg-white border rounded-lg overflow-hidden animate-pulse">
+        <div className="aspect-square bg-gray-200"></div>
+        <div className="p-4">
+          <div className="h-4 bg-gray-200 rounded mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isPreOwnedProduct && !session) {
+    return (
+      <div className="bg-white border rounded-lg overflow-hidden relative">
+        <div className="aspect-square bg-gray-100 flex items-center justify-center text-6xl relative">
+          <div className="text-gray-400">
+            {product.category === "iphone" ? "Phone" : product.category === "macbook" ? "Laptop" : "Tool"}
+          </div>
+          {/* Overlay for login required */}
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="text-center text-white p-4">
+              <div className="text-sm font-medium mb-2">Login Required</div>
+              <div className="text-xs mb-3">Login Required to View Pre-Owned Stock</div>
+              <button
+                onClick={() => router.push(`/login?callbackUrl=${encodeURIComponent(window.location.href)}`)}
+                className="bg-yellow-500 text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-600 transition"
+              >
+                Sign In to View
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="p-4">
+          <h3 className="font-semibold text-lg mb-2">{product.title}</h3>
+          <div className="text-sm text-gray-600 mb-3">Pre-owned device - Login required</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white border rounded-lg overflow-hidden hover:shadow-xl transition-shadow">

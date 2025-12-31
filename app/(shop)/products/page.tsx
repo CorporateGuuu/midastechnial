@@ -1,7 +1,13 @@
 import { db } from '@/lib/prisma';
+import { Product } from '@/types';
+import ProductsPageClient from './ProductsPageClient';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
-export default async function ProductsPage({ searchParams }: { searchParams?: { category?: string } }) {
-  const category = searchParams?.category;
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ category?: string, search?: string }> }) {
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams?.category;
+  const search = resolvedSearchParams?.search;
 
   const products = category
     ? await db.product.findMany({
@@ -11,32 +17,32 @@ export default async function ProductsPage({ searchParams }: { searchParams?: { 
       })
     : await db.product.findMany();
 
+  // Ensure products is always an array and transform to match Product interface
+  const safeProducts = (products || []).map(product => ({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    oldPrice: product.oldPrice || undefined, // Convert null to undefined
+    rating: product.rating,
+    reviews: product.reviews,
+    badge: product.badge || undefined, // Convert null to undefined
+    inStock: product.inStock, // Keep as number from database
+    category: product.category,
+    image: product.image || undefined, // Convert null to undefined
+  })) as unknown as Product[];
+
   const categoryName = getCategoryDisplayName(category);
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8">{categoryName}</h1>
-      {products.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No products found in this category.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((p) => {
-            const images = p.images ? JSON.parse(p.images) : [];
-            return (
-              <div key={p.id} className="border p-4 rounded">
-                <img src={images[0] || p.image || '/placeholder.jpg'} alt={p.title} className="w-full h-48 object-cover" />
-                <h3>{p.title}</h3>
-                <p>${p.price}</p>
-                {p.oldPrice && <p className="text-gray-500 line-through">${p.oldPrice}</p>}
-                {p.badge && <span className="bg-blue-500 text-white px-2 py-1 rounded text-sm">{p.badge}</span>}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
+    <>
+      <Header />
+      <ProductsPageClient
+        products={safeProducts}
+        categoryName={categoryName}
+        searchQuery={search}
+      />
+      <Footer />
+    </>
   );
 }
 
@@ -49,7 +55,270 @@ function getCategoryDisplayName(category?: string): string {
     'macbook': 'MacBook Parts',
     'ipad': 'iPad Parts',
     'tools': 'Tools & Accessories',
-    'google': 'Google Pixel Parts'
+    'google': 'Google Pixel Parts',
+    'pre-owned': 'Pre-Owned Devices',
+    'apple': 'Apple Parts',
+    'motorola': 'Motorola Parts',
+    'other-parts': 'Other Parts',
+    'game-console': 'Game Console Parts',
+    'accessories': 'Accessories',
+    'refurbishing': 'Refurbishing Parts',
+    'board-components': 'Board Components',
+    'apollo-2-5-pc-ssd': 'Apollo 2.5 PC SSD',
+    'apollo-s-mac': 'Apollo S Mac',
+    'apollo-sl-mac-ss': 'Apollo SL Mac SS',
+    'apollo-s3-mac-ssd': 'Apollo S3 Mac SSD',
+    'apollo-s3-plus-mac-ssd': 'Apollo S3 Plus Mac SSD',
+    'apollo-s4-mac': 'Apollo S4 Mac',
+    'airpods-max-2nd-gen': 'AirPods Max 2nd Gen (2020)',
+    'airpods-max-1st-gen': 'AirPods Max 1st Gen (2020)',
+    'airpods-pro-2nd-gen': 'AirPods Pro 2nd Gen (2022)',
+    'airpods-pro-1st-gen': 'AirPods Pro 1st Gen (2019)',
+    'airpods-3rd-gen': 'AirPods 3rd Gen (2021)',
+    'airpods-2nd-gen': 'AirPods 2nd Gen (2019)',
+    'airpods-1st-gen': 'AirPods 1st Gen (2016)',
+    'imac-27-a2115-2019-2020': 'iMac 27" A2115 (2019-2020)',
+    'imac-27-a1862-2017': 'iMac 27" A1862 (2017)',
+    'imac-27-a1419-2017': 'iMac 27" A1419 (2017)',
+    'imac-21-a1419-2016': 'iMac 21" A1419 (2016)',
+    'imac-27-a1419-2015': 'iMac 27" A1419 (2015)',
+    'imac-27-a1419-2014': 'iMac 27" A1419 (2014)',
+    'imac-21-a1419-2013': 'iMac 21" A1419 (2013)',
+    'imac-27-a1419-2012': 'iMac 27" A1419 (2012)',
+    'imac-24-a3137-2024-m4': 'iMac 24" A3137 (2024) M4',
+    'imac-24-a3247-2024-m4': 'iMac 24" A3247 (2024) M4',
+    'imac-24-a2833-2023-m3': 'iMac 24" A2833 (2023) M3',
+    'imac-24-a2844-2023-m3': 'iMac 24" A2844 (2023) M3',
+    'imac-24-a2438-2021-m1': 'iMac 24" A2438 (2021) M1',
+    'imac-24-a2439-2021-m1': 'iMac 24" A2439 (2021) M1',
+    'imac-21-5-a1418-2017': 'iMac 21.5" A1418 (2017)',
+    'imac-21-5-a1418-2016': 'iMac 21.5" A1418 (2016)',
+    'imac-21-5-a1418-2015': 'iMac 21.5" A1418 (2015)',
+    'imac-21-5-a1418-2014': 'iMac 21.5" A1418 (2014)',
+    'imac-21-5-a1418-2013': 'iMac 21.5" A1418 (2013)',
+    'imac-21-5-a1418-2012': 'iMac 21.5" A1418 (2012)',
+    'mac-mini-a2943-2024-m4': 'Mac Mini A2943 (2024) M4',
+    'mac-mini-a2816-2023-m2-pro': 'Mac Mini A2816 (2023) M2 Pro',
+    'mac-mini-a2816-2023-m2': 'Mac Mini A2816 (2023) M2',
+    'mac-mini-a2348-2020-m1': 'Mac Mini A2348 (2020) M1',
+    'mac-mini-a1347-2010-2014': 'Mac Mini A1347 (2010-2014)',
+    'mac-pro-tower-a2786-2023-m2-ultra': 'Mac Pro Tower A2786 (2023) M2 Ultra',
+    'mac-pro-rack-a2787-2023-m2-ultra': 'Mac Pro Rack A2787 (2023) M2 Ultra',
+    'mac-pro-a1991-2019': 'Mac Pro A1991 (2019)',
+    'mac-studio-a3143-2025-m4': 'Mac Studio A3143 (2025) M4',
+    'mac-studio-a2901-2023-m2-max-ultra': 'Mac Studio A2901 (2023) M2 Max / M2 Ultra',
+    'mac-studio-a2615-2022-m1-max-ultra': 'Mac Studio A2615 (2022) M1 Max / M1 Ultra',
+    'studio-display-27-2022': 'Studio Display 27" (2022)',
+    'macbook-12-a1534-2017': 'MacBook 12" A1534 (2017)',
+    'macbook-12-a1534-2015': 'MacBook 12" A1534 (2015)',
+    'macbook-12-a1634-2016': 'MacBook 12" A1634 (2016)',
+    'macbook-13-a1342-2010': 'MacBook 13" A1342 (2010)',
+    'macbook-13-a1342-2009': 'MacBook 13" A1342 (2009)',
+    'macbook-13-a1278-2008': 'MacBook 13" A1278 (2008)',
+    'macbook-13-a1181-2009': 'MacBook 13" A1181 (2009)',
+    'macbook-13-a1181-2007': 'MacBook 13" A1181 (2007)',
+    'macbook-13-a1181-2006': 'MacBook 13" A1181 (2006)',
+    'ipod-touch-7': 'iPod Touch 7',
+    'ipod-touch-6': 'iPod Touch 6',
+    'ipod-touch-5': 'iPod Touch 5',
+    'ipod-touch-4': 'iPod Touch 4',
+    'watch-series-ultra-3rd-gen-49mm': 'Watch Series Ultra (3rd Gen) (49MM)',
+    'watch-series-10-46mm': 'Watch Series 10 (46MM)',
+    'watch-series-10-42mm': 'Watch Series 10 (42MM)',
+    'watch-series-9-45mm': 'Watch Series 9 (45MM)',
+    'watch-series-9-41mm': 'Watch Series 9 (41MM)',
+    'watch-series-ultra-2nd-gen-49mm': 'Watch Series Ultra (2nd Gen) (49MM)',
+    'watch-series-ultra-1st-gen-49mm': 'Watch Series Ultra (1st Gen) (49MM)',
+    'watch-series-8-45mm': 'Watch Series 8 (45MM)',
+    'watch-series-8-41mm': 'Watch Series 8 (41MM)',
+    'watch-series-se-2nd-gen-44mm': 'Watch Series SE (2nd Gen) (44MM)',
+    'watch-series-se-2nd-gen-40mm': 'Watch Series SE (2nd Gen) (40MM)',
+    'watch-series-7-45mm': 'Watch Series 7 (45MM)',
+    'watch-series-7-41mm': 'Watch Series 7 (41MM)',
+    'watch-series-6-44mm': 'Watch Series 6 (44MM)',
+    'watch-series-6-40mm': 'Watch Series 6 (40MM)',
+    'watch-series-se-1st-gen-44mm': 'Watch Series SE (1st Gen) (44MM)',
+    'watch-series-se-1st-gen-40mm': 'Watch Series SE (1st Gen) (40MM)',
+    'watch-series-5-44mm': 'Watch Series 5 (44MM)',
+    'watch-series-5-40mm': 'Watch Series 5 (40MM)',
+    'watch-series-4-44mm': 'Watch Series 4 (44MM)',
+    'watch-series-4-40mm': 'Watch Series 4 (40MM)',
+    'watch-series-3-42mm': 'Watch Series 3 (42MM)',
+    'watch-series-3-38mm': 'Watch Series 3 (38MM)',
+    'watch-series-2-42mm': 'Watch Series 2 (42MM)',
+    'watch-series-2-38mm': 'Watch Series 2 (38MM)',
+    'watch-series-1-42mm': 'Watch Series 1 (42MM)',
+    'watch-series-1-38mm': 'Watch Series 1 (38MM)',
+    'iphone-17-pro-max': 'iPhone 17 Pro Max',
+    'iphone-17-pro': 'iPhone 17 Pro',
+    'iphone-17': 'iPhone 17',
+    'iphone-16e': 'iPhone 16e',
+    'iphone-16-pro-max': 'iPhone 16 Pro Max',
+    'iphone-16-pro': 'iPhone 16 Pro',
+    'iphone-16-plus': 'iPhone 16 Plus',
+    'iphone-16': 'iPhone 16',
+    'iphone-15-pro-max': 'iPhone 15 Pro Max',
+    'iphone-15-pro': 'iPhone 15 Pro',
+    'iphone-15-plus': 'iPhone 15 Plus',
+    'iphone-15': 'iPhone 15',
+    'iphone-14-pro-max': 'iPhone 14 Pro Max',
+    'iphone-14-pro': 'iPhone 14 Pro',
+    'iphone-14-plus': 'iPhone 14 Plus',
+    'iphone-14': 'iPhone 14',
+    'iphone-13-pro-max': 'iPhone 13 Pro Max',
+    'iphone-13-pro': 'iPhone 13 Pro',
+    'iphone-13': 'iPhone 13',
+    'iphone-13-mini': 'iPhone 13 Mini',
+    'iphone-se-2022': 'iPhone SE (2022)',
+    'iphone-12-pro-max': 'iPhone 12 Pro Max',
+    'iphone-12-pro': 'iPhone 12 Pro',
+    'iphone-12-mini': 'iPhone 12 Mini',
+    'iphone-11-pro-max': 'iPhone 11 Pro Max',
+    'iphone-11-pro': 'iPhone 11 Pro',
+    'iphone-11': 'iPhone 11',
+    'iphone-xs-max': 'iPhone XS Max',
+    'iphone-xs': 'iPhone XS',
+    'iphone-xr': 'iPhone XR',
+    'iphone-x': 'iPhone X',
+    'iphone-se-2020': 'iPhone SE (2020)',
+    'iphone-8-plus': 'iPhone 8 Plus',
+    'iphone-8': 'iPhone 8',
+    'iphone-7-plus': 'iPhone 7 Plus',
+    'iphone-7': 'iPhone 7',
+    'iphone-6s-plus': 'iPhone 6S Plus',
+    'iphone-6s': 'iPhone 6S',
+    'iphone-6-plus': 'iPhone 6 Plus',
+    'iphone-6': 'iPhone 6',
+    'iphone-se-2016': 'iPhone SE (2016)',
+    'iphone-5s': 'iPhone 5S',
+    'iphone-5c': 'iPhone 5C',
+    'iphone-5': 'iPhone 5',
+    'iphone-4-and-4s': 'iPhone 4 And 4S',
+    'ipad-pro-13-8th-gen-2025': 'iPad Pro 13" 8th Gen (2025)',
+    'ipad-pro-11-8th-gen-2025': 'iPad Pro 11" 8th Gen (2025)',
+    'ipad-pro-13-7th-gen-2024': 'iPad Pro 13" 7th Gen (2024)',
+    'ipad-pro-12-9-6th-gen-2022': 'iPad Pro 12.9" 6th Gen (2022)',
+    'ipad-pro-12-9-5th-gen-2021': 'iPad Pro 12.9" 5th Gen (2021)',
+    'ipad-pro-12-9-4th-gen-2020': 'iPad Pro 12.9" 4th Gen (2020)',
+    'ipad-pro-12-9-3rd-gen-2018': 'iPad Pro 12.9" 3rd Gen (2018)',
+    'macbook-air-15-a2941': 'MacBook Air 15" (A2941)',
+    'macbook-air-13-a3113': 'MacBook Air 13" (A3113)',
+    'macbook-air-13-a2681': 'MacBook Air 13" (A2681)',
+    'macbook-air-13-a2337': 'MacBook Air 13" (A2337)',
+    'macbook-air-13-a2179': 'MacBook Air 13" (A2179)',
+    'ipod-nano-7': 'iPod Nano 7',
+    'apollo-s1-mac-ssd': 'Apollo S1 Mac SSD',
+    'apollo-s2-mac-ssd': 'Apollo S2 Mac SSD',
+    'macbook-pro-14-a3434-2025-m5': 'MacBook Pro 14" A3434 (2025) M5',
+    'macbook-pro-14-a3112-2024-m4': 'MacBook Pro 14" A3112 (2024) M4',
+    'macbook-pro-14-a3105-2024-m4-max': 'MacBook Pro 14" A3105 (2024) M4 Max',
+    'macbook-pro-14-a3401-2024-m4-pro': 'MacBook Pro 14" A3401 (2024) M4 Pro',
+    'macbook-pro-14-a2993-2023-m3-max': 'MacBook Pro 14" A2993 (2023) M3 Max',
+    'macbook-pro-14-a2992-2023-m3-pro': 'MacBook Pro 14" A2992 (2023) M3 Pro',
+    'macbook-pro-14-a2918-2023-m3': 'MacBook Pro 14" A2918 (2023) M3',
+    'macbook-pro-14-a2779-2023-m2-pro': 'MacBook Pro 14" A2779 (2023) M2 Pro',
+    'macbook-pro-14-a2442-2021-m1-pro': 'MacBook Pro 14" A2442 (2021) M1 Pro',
+    'macbook-pro-16-a3403-2024-m4-pro': 'MacBook Pro 16" A3403 (2024) M4 Pro',
+    'macbook-pro-16-a3186-2024-m4-max': 'MacBook Pro 16" A3186 (2024) M4 Max',
+    'macbook-pro-16-a2991-2023-m3-pro': 'MacBook Pro 16" A2991 (2023) M3 Pro',
+    'macbook-pro-16-a2780-2023-m2-pro': 'MacBook Pro 16" A2780 (2023) M2 Pro',
+    'macbook-pro-16-a2485-2021-m1-pro': 'MacBook Pro 16" A2485 (2021) M1 Pro',
+    'macbook-pro-16-a2141-2019': 'MacBook Pro 16" A2141 (2019)',
+    'macbook-pro-13-a2338-2020-2023': 'MacBook Pro 13" A2338 (2020-2023)',
+    'macbook-pro-13-a2289-2020': 'MacBook Pro 13" A2289 (2020)',
+    'macbook-pro-13-a2251-2020': 'MacBook Pro 13" A2251 (2020)',
+    'macbook-pro-13-a1989-2018-2019': 'MacBook Pro 13" A1989 (2018-2019)',
+    'macbook-pro-13-a1706-2016-2017': 'MacBook Pro 13" A1706 (2016-2017)',
+    'macbook-pro-13-a1708-2016-2017': 'MacBook Pro 13" A1708 (2016-2017)',
+    'macbook-pro-13-a2159-2019': 'MacBook Pro 13" A2159 (2019)',
+    'macbook-pro-13-a1502-2013-2015': 'MacBook Pro 13" A1502 (2013-2015)',
+    'macbook-pro-13-a1425-2012-2013': 'MacBook Pro 13" A1425 (2012-2013)',
+    'macbook-pro-13-a1278-2012': 'MacBook Pro 13" A1278 (2012)',
+    'macbook-pro-13-a1278-2011': 'MacBook Pro 13" A1278 (2011)',
+    'macbook-pro-13-a1278-2010': 'MacBook Pro 13" A1278 (2010)',
+    'macbook-pro-13-a1278-2009': 'MacBook Pro 13" A1278 (2009)',
+    'macbook-pro-15-a1990-2018-2019': 'MacBook Pro 15" A1990 (2018-2019)',
+    'macbook-pro-15-a1707-2016-2017': 'MacBook Pro 15" A1707 (2016-2017)',
+    'macbook-pro-15-a1398-2012-2015': 'MacBook Pro 15" A1398 (2012-2015)',
+    'macbook-pro-15-a1286-2012': 'MacBook Pro 15" A1286 (2012)',
+    'macbook-pro-15-a1286-2011': 'MacBook Pro 15" A1286 (2011)',
+    'macbook-pro-15-a1286-2010': 'MacBook Pro 15" A1286 (2010)',
+    'macbook-pro-15-a1286-2009': 'MacBook Pro 15" A1286 (2009)',
+    'macbook-pro-15-a1286-2008': 'MacBook Pro 15" A1286 (2008)',
+    'macbook-pro-15-a1260-2008': 'MacBook Pro 15" A1260 (2008)',
+    'macbook-pro-17-a1297-2011': 'MacBook Pro 17" A1297 (2011)',
+    'macbook-pro-17-a1297-2010': 'MacBook Pro 17" A1297 (2010)',
+    'macbook-pro-17-a1297-2009': 'MacBook Pro 17" A1297 (2009)',
+    'macbook-pro-17-a1261-2006-2008': 'MacBook Pro 17" A1261 (2006-2008)',
+    'macbook-air-15-a3241-2025-m4': 'MacBook Air 15" A3241 (2025) M4',
+    'macbook-air-15-a3114-2024-m3': 'MacBook Air 15" A3114 (2024) M3',
+    'macbook-air-16-a2941-2023-m2': 'MacBook Air 16" A2941 (2023) M2',
+    'macbook-air-13-a3240-2024-m4': 'MacBook Air 13" A3240 (2024) M4',
+    'macbook-air-13-a1932-2019': 'MacBook Air 13" A1932 (2019)',
+    'macbook-air-13-a1932-2018': 'MacBook Air 13" A1932 (2018)',
+    'macbook-air-13-a1466-2017': 'MacBook Air 13" A1466 (2017)',
+    'macbook-air-13-a1466-2015': 'MacBook Air 13" A1466 (2015)',
+    'macbook-air-13-a1466-2014': 'MacBook Air 13" A1466 (2014)',
+    'macbook-air-13-a1466-2013': 'MacBook Air 13" A1466 (2013)',
+    'macbook-air-13-a1466-2012': 'MacBook Air 13" A1466 (2012)',
+    'macbook-air-13-a1369-2011': 'MacBook Air 13" A1369 (2011)',
+    'macbook-air-13-a1369-2010': 'MacBook Air 13" A1369 (2010)',
+    'macbook-air-13-a1304-2009': 'MacBook Air 13" A1304 (2009)',
+    'macbook-air-13-a1304-2008': 'MacBook Air 13" A1304 (2008)',
+    'macbook-air-13-a1237-2008': 'MacBook Air 13" A1237 (2008)',
+    'macbook-air-11-a1465-2015': 'MacBook Air 11" A1465 (2015)',
+    'macbook-air-11-a1465-2014': 'MacBook Air 11" A1465 (2014)',
+    'macbook-air-11-a1465-2013': 'MacBook Air 11" A1465 (2013)',
+    'macbook-air-11-a1465-2012': 'MacBook Air 11" A1465 (2012)',
+    'macbook-air-11-a1370-2011': 'MacBook Air 11" A1370 (2011)',
+    'macbook-air-11-a1370-2010': 'MacBook Air 11" A1370 (2010)',
+    'ipad-pro-12-9-2nd-gen-2017': 'iPad Pro 12.9" 2nd Gen (2017)',
+    'ipad-pro-12-9-1st-gen-2015': 'iPad Pro 12.9" 1st Gen (2015)',
+    'ipad-pro-11-5th-gen-2024': 'iPad Pro 11" 5th Gen (2024)',
+    'ipad-pro-11-4th-gen-2022': 'iPad Pro 11" 4th Gen (2022)',
+    'ipad-pro-11-3rd-gen-2021': 'iPad Pro 11" 3rd Gen (2021)',
+    'ipad-pro-11-2nd-gen-2020': 'iPad Pro 11" 2nd Gen (2020)',
+    'ipad-pro-11-1st-gen-2018': 'iPad Pro 11" 1st Gen (2018)',
+    'ipad-pro-10-5-2017': 'iPad Pro 10.5" (2017)',
+    'ipad-pro-9-7-2016': 'iPad Pro 9.7" (2016)',
+    'ipad-air-13-2025': 'iPad Air 13" (2025)',
+    'ipad-air-11-2025': 'iPad Air 11" (2025)',
+    'ipad-air-13-2024': 'iPad Air 13" (2024)',
+    'ipad-air-11-2024': 'iPad Air 11" (2024)',
+    'ipad-air-5-2022': 'iPad Air 5 (2022)',
+    'ipad-air-4-2020': 'iPad Air 4 (2020)',
+    'ipad-air-3-2019': 'iPad Air 3 (2019)',
+    'ipad-air-2-2014': 'iPad Air 2 (2014)',
+    'ipad-air-1-2013': 'iPad Air 1 (2013)',
+    'ipad-11-2025': 'iPad 11 (2025)',
+    'ipad-10-2022': 'iPad 10 (2022)',
+    'ipad-9-2021': 'iPad 9 (2021)',
+    'ipad-8-2020': 'iPad 8 (2020)',
+    'ipad-7-2019': 'iPad 7 (2019)',
+    'ipad-6-2018': 'iPad 6 (2018)',
+    'ipad-5-2017': 'iPad 5 (2017)',
+    'ipad-4-2012': 'iPad 4 (2012)',
+    'ipad-3-2012': 'iPad 3 (2012)',
+    'ipad-2-2011': 'iPad 2 (2011)',
+    'ipad-mini-7-2024': 'iPad Mini 7 (2024)',
+    'ipad-mini-6-2021': 'iPad Mini 6 (2021)',
+    'ipad-mini-5-2019': 'iPad Mini 5 (2019)',
+    'ipad-mini-4-2015': 'iPad Mini 4 (2015)',
+    'ipad-mini-3-2014': 'iPad Mini 3 (2014)',
+    'ipad-mini-2-2013': 'iPad Mini 2 (2013)',
+    'ipad-mini-1-2012': 'iPad Mini 1 (2012)',
+    'galaxy-book-pro-360-13-3': 'Galaxy Book Pro 360 13.3"',
+    'galaxy-book-pro-15-6': 'Galaxy Book Pro 15.6"',
+    'galaxy-book2-12': 'Galaxy Book2 12"',
+    'galaxy-book2-pro-360-15-6': 'Galaxy Book2 Pro 360 15.6"',
+    'galaxy-book2-pro-360-13-3': 'Galaxy Book2 Pro 360 13.3"',
+    'galaxy-book3-ultra-16': 'Galaxy Book3 Ultra 16"',
+    'galaxy-book3-pro-15-6': 'Galaxy Book3 Pro 15.6"',
+    'galaxy-book3-pro-16': 'Galaxy Book3 Pro 16"',
+    'galaxy-book-flex-15-6': 'Galaxy Book Flex 15.6"',
+    'galaxy-book-flex2-13-3': 'Galaxy Book Flex2 13.3"',
+    'galaxy-book-ion-15-6': 'Galaxy Book Ion 15.6"',
+    'galaxy-book-15-6': 'Galaxy Book 15.6"'
   };
 
   return categoryMap[category] || `${category.charAt(0).toUpperCase() + category.slice(1)} Parts`;

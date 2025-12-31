@@ -6,7 +6,7 @@ export type Product = {
   rating: number;
   reviews: number;
   badge?: "new" | "sale";
-  inStock: boolean;
+  inStock: number; // Database stores as integer, convert to boolean at boundary
   category: string;
   image?: string;
   stripePriceId?: string;

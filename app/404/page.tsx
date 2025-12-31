@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 export const metadata: Metadata = {
   title: '404 - Page Not Found',
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="text-center">
@@ -41,5 +45,7 @@ export default function NotFound() {
         </div>
       </div>
     </div>
+      <Footer />
+    </>
   )
 }
