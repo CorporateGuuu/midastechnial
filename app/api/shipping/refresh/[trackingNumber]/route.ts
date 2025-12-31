@@ -3,6 +3,9 @@ import { db } from "@/lib/prisma";
 import { shippo } from "@/lib/shippo";
 import { pusherServer } from "@/lib/pusher";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ trackingNumber: string }> }
