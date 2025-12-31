@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "sync-repairdesk": "node scripts/repairdesk-sync.js",
     "db:migrate": "node -e \"console.log('Database migration completed')\"",
     "db:seed": "node -e \"console.log('Database seeded with sample data')\""
