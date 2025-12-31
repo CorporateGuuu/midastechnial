@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { shippo } from "@/lib/shippo";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { pusherServer } from "@/lib/pusher";
 import { sendTrackingNotification } from "@/lib/sendTrackingNotification";
 
@@ -28,13 +28,13 @@ export async function POST(
 
   const newStatus = statusMap[tracking_status.status] || tracking_status.status.toLowerCase();
 
-  const order = await db.order.findFirst({
+  const order = await prisma.order.findFirst({
     where: { trackingNumber },
   });
 
   if (!order) return new Response("Order not found", { status: 404 });
 
-  await db.order.update({
+  await prisma.order.update({
     where: { id: order.id },
     data: { status: newStatus },
   });
@@ -49,7 +49,7 @@ export async function POST(
 
   // === SEND TRACKING NOTIFICATION ===
   if (newStatus !== order.status) {
-    const user = await db.user.findUnique({ where: { id: order.userId! } });
+    const user = await prisma.user.findUnique({ where: { id: order.userId! } });
     if (user?.email) {
       await sendTrackingNotification({
         email: user.email,

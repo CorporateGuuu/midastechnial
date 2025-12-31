@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { sendReceipt } from "@/lib/sendReceipt";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, eventId: string) {
   try {
     // Check for idempotency - prevent duplicate processing
-    const existingOrder = await db.order.findUnique({
+    const existingOrder = await prisma.order.findUnique({
       where: { stripeSessionId: session.id }
     });
 
@@ -81,7 +81,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, 
     }
 
     // Create order in database (items stored as JSON string)
-    const order = await db.order.create({
+    const order = await prisma.order.create({
       data: {
         userId,
         stripeSessionId: session.id,

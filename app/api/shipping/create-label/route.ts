@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { shippo } from "@/lib/shippo";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get order with shipping information
-    const order = await db.order.findUnique({
+    const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     } as any);
 
     // Update order with shipping label information
-    await db.order.update({
+    await prisma.order.update({
       where: { id: orderId },
       data: {
         trackingNumber: (transaction as any)?.trackingNumber,

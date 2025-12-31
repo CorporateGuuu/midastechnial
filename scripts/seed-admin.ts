@@ -1,9 +1,9 @@
-import { db } from '../app/lib/prisma';
+import { prisma } from '../app/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 async function seed() {
   const hashed = await bcrypt.hash('admin123', 10);
-  await db.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'admin@midastech.com' },
     update: {},
     create: {
