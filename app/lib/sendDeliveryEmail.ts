@@ -1,4 +1,4 @@
-import { resend } from "../../lib/email";
+import { resend } from "./email";
 import DeliveryEmail from "../components/emails/DeliveryEmail";
 import { render } from "@react-email/render";
 

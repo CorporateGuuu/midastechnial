@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
         trackingNumber: (transaction as any).trackingNumber,
         carrier: (transaction as any).carrier,
         labelUrl: (transaction as any).labelUrl,
-        estimatedDelivery: (transaction as any).eta ? new Date((transaction as any).eta) : null,
       },
     });
 
