@@ -11,7 +11,7 @@ async function main() {
       rating: 4.8,
       reviews: 234,
       badge: 'new',
-      inStock: true,
+      inStock: 10,
       category: 'iphone',
       image: '/api/placeholder/300/300',
       images: JSON.stringify(['/api/placeholder/300/300', '/api/placeholder/300/301', '/api/placeholder/300/302'])
@@ -21,7 +21,7 @@ async function main() {
       price: 39.99,
       rating: 4.7,
       reviews: 156,
-      inStock: true,
+      inStock: 10,
       category: 'iphone',
       image: '/api/placeholder/300/303',
       images: JSON.stringify(['/api/placeholder/300/303'])
@@ -31,7 +31,7 @@ async function main() {
       price: 24.99,
       rating: 4.6,
       reviews: 89,
-      inStock: true,
+      inStock: 10,
       category: 'iphone',
       image: '/api/placeholder/300/304',
       images: JSON.stringify(['/api/placeholder/300/304'])
@@ -41,7 +41,7 @@ async function main() {
       price: 79.99,
       rating: 4.5,
       reviews: 67,
-      inStock: true,
+      inStock: 10,
       category: 'iphone',
       image: '/api/placeholder/300/305',
       images: JSON.stringify(['/api/placeholder/300/305'])
@@ -55,7 +55,7 @@ async function main() {
       rating: 5.0,
       reviews: 189,
       badge: 'sale',
-      inStock: true,
+      inStock: 10,
       category: 'samsung',
       image: '/api/placeholder/300/306',
       images: JSON.stringify(['/api/placeholder/300/306'])
@@ -65,7 +65,7 @@ async function main() {
       price: 199.99,
       rating: 4.6,
       reviews: 123,
-      inStock: true,
+      inStock: 10,
       category: 'samsung',
       image: '/api/placeholder/300/307',
       images: JSON.stringify(['/api/placeholder/300/307'])
@@ -75,7 +75,7 @@ async function main() {
       price: 18.99,
       rating: 4.4,
       reviews: 45,
-      inStock: true,
+      inStock: 10,
       category: 'samsung',
       image: '/api/placeholder/300/308',
       images: JSON.stringify(['/api/placeholder/300/308'])
@@ -87,7 +87,7 @@ async function main() {
       price: 899.99,
       rating: 4.7,
       reviews: 92,
-      inStock: true,
+      inStock: 10,
       category: 'macbook',
       image: '/api/placeholder/300/309',
       images: JSON.stringify(['/api/placeholder/300/309'])
@@ -97,7 +97,7 @@ async function main() {
       price: 149.99,
       rating: 4.8,
       reviews: 134,
-      inStock: true,
+      inStock: 10,
       category: 'macbook',
       image: '/api/placeholder/300/310',
       images: JSON.stringify(['/api/placeholder/300/310'])
@@ -107,7 +107,7 @@ async function main() {
       price: 89.99,
       rating: 4.5,
       reviews: 78,
-      inStock: true,
+      inStock: 10,
       category: 'macbook',
       image: '/api/placeholder/300/311',
       images: JSON.stringify(['/api/placeholder/300/311'])
@@ -119,7 +119,7 @@ async function main() {
       price: 34.99,
       rating: 4.6,
       reviews: 156,
-      inStock: true,
+      inStock: 10,
       category: 'ipad',
       image: '/api/placeholder/300/312',
       images: JSON.stringify(['/api/placeholder/300/312'])
@@ -129,7 +129,7 @@ async function main() {
       price: 299.99,
       rating: 4.7,
       reviews: 98,
-      inStock: true,
+      inStock: 10,
       category: 'ipad',
       image: '/api/placeholder/300/313',
       images: JSON.stringify(['/api/placeholder/300/313'])
@@ -141,7 +141,7 @@ async function main() {
       price: 149.99,
       rating: 4.9,
       reviews: 412,
-      inStock: true,
+      inStock: 10,
       category: 'tools',
       image: '/api/placeholder/300/314',
       images: JSON.stringify(['/api/placeholder/300/314'])
@@ -151,7 +151,7 @@ async function main() {
       price: 29.99,
       rating: 4.6,
       reviews: 267,
-      inStock: true,
+      inStock: 10,
       category: 'tools',
       image: '/api/placeholder/300/315',
       images: JSON.stringify(['/api/placeholder/300/315'])
@@ -161,7 +161,7 @@ async function main() {
       price: 89.99,
       rating: 4.8,
       reviews: 145,
-      inStock: true,
+      inStock: 10,
       category: 'tools',
       image: '/api/placeholder/300/316',
       images: JSON.stringify(['/api/placeholder/300/316'])
@@ -174,7 +174,7 @@ async function main() {
       rating: 4.4,
       reviews: 78,
       badge: 'new',
-      inStock: true,
+      inStock: 10,
       category: 'google',
       image: '/api/placeholder/300/317',
       images: JSON.stringify(['/api/placeholder/300/317'])
@@ -184,7 +184,7 @@ async function main() {
       price: 34.99,
       rating: 4.3,
       reviews: 56,
-      inStock: true,
+      inStock: 10,
       category: 'google',
       image: '/api/placeholder/300/318',
       images: JSON.stringify(['/api/placeholder/300/318'])
