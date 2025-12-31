@@ -1,6 +1,6 @@
 // midas-tech/scripts/test-email.ts
 import { render } from "@react-email/render";
-import ReceiptEmail from "../components/emails/ReceiptEmail";
+import ReceiptEmail from "../app/components/emails/ReceiptEmail";
 
 // Temporarily render and log HTML instead of sending
 (async () => {
