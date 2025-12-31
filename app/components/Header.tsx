@@ -1,29 +1,44 @@
 "use client";
 
 import Link from 'next/link'
-import { Search, ShoppingCart, User, HelpCircle } from "lucide-react";
+import { Search, ShoppingCart, User, HelpCircle, ChevronDown } from "lucide-react";
 import { useCart } from "@/store/cartStore";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const categories = [
-  { name: 'Apple', href: '/products?category=apple' },
-  { name: 'Samsung', href: '/products?category=samsung' },
-  { name: 'Motorola', href: '/products?category=motorola' },
-  { name: 'Google', href: '/products?category=google' },
-  { name: 'Other Parts', href: '/products?category=other-parts' },
-  { name: 'Game Console', href: '/products?category=game-console' },
-  { name: 'Accessories', href: '/products?category=accessories' },
-  { name: 'Tools & Supplies', href: '/products?category=tools-supplies' },
-  { name: 'Refurbishing', href: '/products?category=refurbishing' },
-  { name: 'Board Components', href: '/products?category=board-components' },
-  { name: 'Pre-Owned Devices', href: '/products?category=pre-owned' }
+const navigationItems = [
+  { name: 'Apple', type: 'dropdown', items: [
+    { name: 'iPhone', href: '/products?category=iphone' },
+    { name: 'iPad', href: '/products?category=ipad' },
+    { name: 'MacBooks', href: '/products?category=macbook' },
+    { name: 'All Apple Parts', href: '/products?category=apple' }
+  ]},
+  { name: 'Samsung', type: 'dropdown', items: [
+    { name: 'Galaxy S Series', href: '/products?category=galaxy-s-series' },
+    { name: 'Galaxy Note Series', href: '/products?category=galaxy-note-series' },
+    { name: 'Galaxy A Series', href: '/products?category=galaxy-a-series' },
+    { name: 'Galaxy J Series', href: '/products?category=galaxy-j-series' },
+    { name: 'Galaxy Tab Series', href: '/products?category=galaxy-tab-series' },
+    { name: 'Galaxy Watch', href: '/products?category=watch' },
+    { name: 'All Samsung Parts', href: '/products?category=samsung' }
+  ]},
+  { name: 'Motorola', type: 'dropdown', items: [
+    { name: 'Moto G Series', href: '/products?category=motorola&subcategory=moto-g-series' },
+    { name: 'All Motorola Parts', href: '/products?category=motorola' }
+  ]},
+  { name: 'Google', type: 'dropdown', items: [
+    { name: 'Pixel Phones', href: '/products?category=google&subcategory=pixel-series' },
+    { name: 'All Google Parts', href: '/products?category=google' }
+  ]},
+  { name: 'Board Components', href: '/board-components', type: 'link' },
+  { name: 'Pre-Owned Devices', href: '/products?category=pre-owned', type: 'link' }
 ]
 
 export default function Header() {
   const totalItems = useCart((s) => s.getTotalItems());
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +47,9 @@ export default function Header() {
     }
   };
 
-  const handleSearchKeyPress = (e: React.KeyboardEvent) => {
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch(e as any);
+      handleSearch(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
 
@@ -99,15 +114,41 @@ export default function Header() {
       <nav className="bg-gray-50 border-t">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-12">
-            <div className="flex items-center gap-6 text-sm font-medium">
-              {categories.map((category) => (
-                <Link
-                  key={category.name}
-                  href={category.href}
-                  className="text-gray-700 hover:text-[#D4AF37] transition-colors"
-                >
-                  {category.name}
-                </Link>
+            <div className="flex items-center gap-6 text-sm font-medium relative">
+              {navigationItems.map((item) => (
+                <div key={item.name} className="relative">
+                  {item.type === 'dropdown' ? (
+                    <div
+                      className="flex items-center gap-1 text-gray-700 hover:text-[#D4AF37] transition-colors cursor-pointer"
+                      onMouseEnter={() => setOpenDropdown(item.name)}
+                      onMouseLeave={() => setOpenDropdown(null)}
+                    >
+                      {item.name}
+                      <ChevronDown className="w-3 h-3" />
+                      {openDropdown === item.name && (
+                        <div className="absolute top-full left-0 z-50 bg-white border border-gray-200 rounded-md shadow-lg py-2 min-w-48">
+                          {item.items?.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              href={subItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#D4AF37] transition-colors"
+                              onClick={() => setOpenDropdown(null)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href!}
+                      className="text-gray-700 hover:text-[#D4AF37] transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
             <div className="flex items-center gap-4 text-sm">

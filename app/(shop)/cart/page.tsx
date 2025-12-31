@@ -40,11 +40,18 @@ export default function CartPage() {
         },
         body: JSON.stringify({
           items: items.map(item => ({
-            priceId: item.stripePriceId,
+            priceId: item.stripePriceId || undefined,
             quantity: item.quantity,
+            title: item.title,
+            price: item.price,
           })),
         }),
       })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create checkout session')
+      }
 
       const { url } = await response.json()
 
