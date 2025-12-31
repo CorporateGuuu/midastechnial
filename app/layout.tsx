@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import Providers from "./Providers";
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>{children}</Providers>
         <ChatWidget />
+        <Analytics />
       </body>
     </html>
   );
