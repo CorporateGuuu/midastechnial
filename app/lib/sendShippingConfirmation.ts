@@ -17,6 +17,11 @@ export async function sendShippingConfirmation({
   trackingUrl,
   estimatedDelivery,
 }: SendShippingParams) {
+  if (!resend) {
+    console.warn("Resend not configured - skipping email send");
+    return;
+  }
+
   const html = await render(
     ShippingEmail({ orderId, trackingNumber, trackingUrl, estimatedDelivery })
   );

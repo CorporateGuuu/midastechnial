@@ -1,4 +1,17 @@
 import { Resend } from 'resend';
 
-const apiKey = process.env.RESEND_API_KEY;
-export const resend = apiKey && apiKey !== 're_XXXXXXXXXXXXXXXXXXXXXXXX' ? new Resend(apiKey) : null;
+let resendInstance: Resend | null = null;
+
+export const getResendInstance = (): Resend | null => {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (apiKey && apiKey !== 're_XXXXXXXXXXXXXXXXXXXXXXXX') {
+      resendInstance = new Resend(apiKey);
+    } else {
+      console.warn('RESEND_API_KEY missing or invalid - email sending disabled');
+    }
+  }
+  return resendInstance;
+};
+
+export const resend = getResendInstance();

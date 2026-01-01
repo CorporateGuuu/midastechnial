@@ -33,12 +33,16 @@ export async function sendTrackingNotification({
   `;
 
   // Send Email
-  await resend.emails.send({
-    from: `Midas Tracking <${process.env.FROM_EMAIL}>`,
-    to: email,
-    subject: `Package Update: ${status}`,
-    html,
-  });
+  if (resend) {
+    await resend.emails.send({
+      from: `Midas Tracking <${process.env.FROM_EMAIL}>`,
+      to: email,
+      subject: `Package Update: ${status}`,
+      html,
+    });
+  } else {
+    console.warn("Resend not configured - skipping email send");
+  }
 
   // Send SMS if phone is provided
   if (phone && process.env.TWILIO_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {

@@ -13,6 +13,11 @@ export async function sendDeliveryEmail({
   customerEmail,
   trackingNumber,
 }: SendDeliveryParams) {
+  if (!resend) {
+    console.warn("Resend not configured - skipping email send");
+    return;
+  }
+
   const html = await render(
     DeliveryEmail({ orderId, trackingNumber })
   );

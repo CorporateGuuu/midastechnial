@@ -28,6 +28,11 @@ export async function sendReceipt({
     ReceiptEmail({ orderId, customerEmail, items, total, date })
   );
 
+  if (!resend) {
+    console.warn("Resend not configured - skipping email send");
+    return;
+  }
+
   try {
     await resend.emails.send({
       from: `Midas Technical <${process.env.FROM_EMAIL}>`,
