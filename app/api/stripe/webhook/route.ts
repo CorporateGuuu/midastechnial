@@ -4,6 +4,9 @@ import Stripe from 'stripe'
 import { db } from '@/lib/prisma'
 import { sendReceipt } from '@/lib/sendReceipt'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover'
 })
