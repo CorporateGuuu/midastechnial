@@ -24,6 +24,9 @@ export async function sendReceipt({
   trackingNumber,
   shippingAddress,
 }: SendReceiptParams) {
+  // Prevent execution during build time
+  if (!process.env.VERCEL) return;
+
   const emailHtml = await render(
     ReceiptEmail({ orderId, customerEmail, items, total, date })
   );

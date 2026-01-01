@@ -15,6 +15,9 @@ export async function sendTrackingNotification({
   trackingNumber: string;
   trackingUrl: string;
 }) {
+  // Prevent execution during build time
+  if (!process.env.VERCEL) return;
+
   // Create HTML email template
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

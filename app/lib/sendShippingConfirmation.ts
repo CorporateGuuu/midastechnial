@@ -17,6 +17,9 @@ export async function sendShippingConfirmation({
   trackingUrl,
   estimatedDelivery,
 }: SendShippingParams) {
+  // Prevent execution during build time
+  if (!process.env.VERCEL) return;
+
   if (!resend) {
     console.warn("Resend not configured - skipping email send");
     return;
