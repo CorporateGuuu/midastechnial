@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
+export const dynamic = 'force-dynamic'
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 console.log('Stripe initialized with key starting:', process.env.STRIPE_SECRET_KEY?.substring(0, 10))

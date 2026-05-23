@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 import { authOptions } from "@/lib/auth";
 
+export const dynamic = 'force-dynamic'
+
 interface ExtendedUser {
   id: string;
   name?: string | null;

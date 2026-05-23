@@ -4,6 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+export const dynamic = 'force-dynamic'
+
 interface ExtendedUser {
   id: string;
   name?: string | null;

@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { resend } from "@/lib/resend";
 
+export const dynamic = 'force-dynamic'
+
 interface RMARequest {
   orderId: string;
   reason: string;

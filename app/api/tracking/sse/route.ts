@@ -1,6 +1,8 @@
 import { db } from "@/lib/prisma";
 import { shippo } from "@/lib/shippo";
 
+export const dynamic = 'force-dynamic'
+
 const statusMap: Record<string, string> = {
   UNKNOWN: "pending",
   PRE_TRANSIT: "label_created",

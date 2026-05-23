@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { twilioClient } from "@/lib/twilio";
 
+export const dynamic = 'force-dynamic'
+
 interface SMSUpdateRequest {
   orderId: string;
 }

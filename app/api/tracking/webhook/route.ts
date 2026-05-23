@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const payload = await request.json();
   const trackingNumber = payload.tracking_status.tracking_number;

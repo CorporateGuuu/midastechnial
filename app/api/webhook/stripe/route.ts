@@ -7,6 +7,8 @@ import { sendReceipt } from "@/lib/sendReceipt";
 import { sendShippingConfirmation } from "@/lib/sendShippingConfirmation";
 import { format } from "date-fns";
 
+export const dynamic = 'force-dynamic'
+
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: NextRequest) {

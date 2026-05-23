@@ -3,6 +3,8 @@ import { shippo } from "@/lib/shippo";
 import { db } from "@/lib/prisma";
 import { warehouseAddress } from "@/lib/shipping";
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { orderId, customer } = await request.json();
