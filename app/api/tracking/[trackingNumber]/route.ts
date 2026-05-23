@@ -43,12 +43,14 @@ export async function POST(
   });
 
   // === BROADCAST TO ALL CLIENTS ===
-  await pusherServer.trigger(`order-${order.id}`, "tracking-update", {
-    status: newStatus,
-    description: tracking_status.status_details,
-    location: tracking_status.tracking_history?.[0]?.location || null,
-    timestamp: new Date().toISOString(),
-  });
+  if (pusherServer) {
+    await pusherServer.trigger(`order-${order.id}`, "tracking-update", {
+      status: newStatus,
+      description: tracking_status.status_details,
+      location: tracking_status.tracking_history?.[0]?.location || null,
+      timestamp: new Date().toISOString(),
+    });
+  }
 
   // === SEND TRACKING NOTIFICATION ===
   if (newStatus !== order.status) {

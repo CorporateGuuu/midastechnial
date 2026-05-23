@@ -60,7 +60,7 @@ export async function POST(
       });
 
       // Broadcast update via Pusher
-      await pusherServer.trigger(`order-${order.id}`, "tracking-update", {
+      if (pusherServer) await pusherServer.trigger(`order-${order.id}`, "tracking-update", {
         status: newStatus,
         description: track.tracking_status?.status_details,
         location: track.tracking_status?.tracking_history?.[0]?.location || null,
